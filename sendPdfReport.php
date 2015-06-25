@@ -238,7 +238,7 @@ class sendPdfReport extends PluginBase {
             {
                 if($sBaseDir=$this->get("basesavedirectory"))
                 {
-                    if(is_dir($sBaseDir) && is_dir($sBaseDir))
+                    if(is_dir($sBaseDir) && is_writable($sBaseDir))
                     {
                         $sBaseDir=rtrim($sBaseDir,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
                         rename($sFile,$sBaseDir.basename($sFile));

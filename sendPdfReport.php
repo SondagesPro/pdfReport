@@ -7,7 +7,7 @@
  * @copyright 2015 Denis Chenu <http://sondages.pro>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license GPL v3
- * @version 0.9
+ * @version 1.0
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
  
 class sendPdfReport extends PluginBase {
     protected $storage = 'DbStorage';    
-    static protected $description = 'Send a PDF report to specific email (v0.9).';
+    static protected $description = 'Send a PDF report to specific email (v1.0).';
     static protected $name = 'sendPdfReport';
 
     private $iSurveyId;
@@ -36,7 +36,38 @@ class sendPdfReport extends PluginBase {
         $this->subscribe('newSurveySettings');
         $this->subscribe('afterSurveyComplete', 'mailPdfReport');
     }
-
+    protected $settings = array(
+        'filenameend'=>array(
+            'type'=>'select',
+            'label'=>'Use token (if exist) for file name.',
+            'options'=>array(
+                'token'=>'Yes',
+                'responseid'=>'No',
+            ),
+            'default'=>'token',
+        ),
+        'name_confirm'=>array(
+            'type'=>'string',
+            'label'=>'Base file name for confirmation pdf file',
+            'default'=>'confirm',
+        ),
+        'name_admin_notification'=>array(
+            'type'=>'string',
+            'label'=>'Base file name for admin_notification pdf file',
+            'default'=>'admin_notification',
+        ),
+        'name_admin_responses'=>array(
+            'type'=>'string',
+            'label'=>'Base file name for admin_responses pdf file',
+            'default'=>'admin_responses',
+        ),
+        'basesavedirectory'=>array(
+            'type'=>'string',
+            'label'=>'Directory on the server to move the file after send (set to empty to remove the file)',
+            'default'=>'',
+        ),
+        
+    );
     /**
      * This event is fired by the administration panel to gather extra settings
      * available for a survey.
@@ -161,10 +192,7 @@ class sendPdfReport extends PluginBase {
             else
                 $aSettings[$sMailType]=null;
         }
-        //~ echo "<pre>";
-        //~ print_r(Yii::app()->session["survey_{$iSurveyId}"],1);
-        //~ echo "</pre>";
-        //~ die();
+
         if(count($aSettings)==0)
             return;
         if($iResponseId===null)
@@ -207,7 +235,23 @@ class sendPdfReport extends PluginBase {
                 }
             }
             if($sFile)
-                unlink($sFile);
+            {
+                if($sBaseDir=$this->get("basesavedirectory"))
+                {
+                    if(is_dir($sBaseDir) && is_dir($sBaseDir))
+                    {
+                        $sBaseDir=rtrim($sBaseDir,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+                        rename($sFile,$sBaseDir.basename($sFile));
+                    }
+                    else
+                    {
+                        tracevar("ivalid $sBaseDir");
+                        @unlink($sFile);
+                    }
+                }
+                else
+                    @unlink($sFile);
+            }
         }
     }
     private function getEmailContent($sType)
@@ -284,24 +328,6 @@ class sendPdfReport extends PluginBase {
         $sHeader=templatereplace($sHeader,array(),$aReData,'',false,null,array(),true);
         $sSubHeader = $this->get("pdf_subheader", 'Survey', $this->iSurveyId,"{SURVEYNAME}");
         $sSubHeader=templatereplace($sSubHeader,array(),$aReData,'',false,null,array(),true);
-        $oPurifier = new CHtmlPurifier();
-        $oPurifier->options = array(
-            'AutoFormat.RemoveEmpty'=>false,
-            'Core.NormalizeNewlines'=>false,
-            'CSS.AllowTricky'=>true, // Allow display:none; (and other)
-            'CSS.Trusted' => true,
-            'Attr.EnableID'=>true, // Allow to set id
-            'Attr.AllowedFrameTargets'=>array('_blank','_self'),
-            'URI.AllowedSchemes'=>array(
-                'http' => true,
-                'https' => true,
-                'mailto' => true,
-                'ftp' => true,
-                'nntp' => true,
-                'news' => true,
-                )
-        );
-
 
 
         //~ return;
@@ -321,7 +347,10 @@ class sendPdfReport extends PluginBase {
         $aPdfLanguageSettings=pdfHelper::getPdfLanguageSettings($this->sLanguage);
 
         $oPDF = new pdfReport();
-        if(false && function_exists ("tidy_parse_string")) // Call to undefined function tidy_parse_string() in ./application/third_party/tcpdf/include/tcpdf_static.php on line 2099
+        $pdfSpecific=array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<page>','</page>');
+        $pdfReplaced=array('<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>page</span>','<span>/page</span>');
+        $sText=str_replace($pdfSpecific, $pdfReplaced, $sText);
+        if(function_exists ("tidy_parse_string")) // Call to undefined function tidy_parse_string() in ./application/third_party/tcpdf/include/tcpdf_static.php on line 2099
         { 
             $tidy_options = array (
 				'clean' => 1,
@@ -347,13 +376,28 @@ class sendPdfReport extends PluginBase {
         {
             // TODO : Find the good way to use pagebreak="true", verify i page is used in tcpdf
             // ALT : explode/implode
-            $pdfSpecific=array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<page>','</page>');
-            $pdfReplaced=array('<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>page</span>','<span>/page</span>');
-            $sText=str_replace($pdfSpecific, $pdfReplaced, $sText);
+            $oPurifier = new CHtmlPurifier();
+            $oPurifier->options = array(
+                'AutoFormat.RemoveEmpty'=>false,
+                'Core.NormalizeNewlines'=>false,
+                'CSS.AllowTricky'=>true, // Allow display:none; (and other)
+                'CSS.Trusted' => true,
+                'Attr.EnableID'=>true, // Allow to set id
+                'Attr.AllowedFrameTargets'=>array('_blank','_self'),
+                'URI.AllowedSchemes'=>array(
+                    'http' => true,
+                    'https' => true,
+                    'mailto' => true,
+                    'ftp' => true,
+                    'nntp' => true,
+                    'news' => true,
+                    )
+            );
             $sText=$oPurifier->purify($sText);
-            $sText=str_replace($pdfReplaced, $pdfSpecific, $sText);
-            $sText="<style>\n{$sCssContent}\n</style>\n$sText\n";
+
         }
+        $sText=str_replace($pdfReplaced, $pdfSpecific, $sText);
+        $sText="<style>\n{$sCssContent}\n</style>\n$sText\n";
         //~ $this->event->getContent($this)
               //~ ->addContent(htmlentities($sText));
         $aLogo=$this->getLogoPaths();
@@ -365,7 +409,18 @@ class sendPdfReport extends PluginBase {
         $oPDF->writeHTML($sText, true, false, true, false, '');
 
         $oPDF->lastPage();
-        $sFilePdfName=Yii::app()->getConfig("tempdir")."/{$sType}_{$this->iSurveyId}_{$this->iResponseId}.pdf";
+        $sFilePdfName=Yii::app()->getConfig("tempdir").DIRECTORY_SEPARATOR.$this->get("name_{$sType}",null,null,$this->settings["name_{$sType}"]["default"])."_{$this->iSurveyId}_";
+        $oSessionSurvey=Yii::app()->session["survey_{$this->iSurveyId}"];
+        if(!empty($oSessionSurvey['token']) && $this->get("filenameend",null,null,$this->settingd['filenameend']['default'])=='token')
+        {
+            $sFilePdfName.="{$oSessionSurvey['token']}.pdf";
+
+        }
+        else
+        {
+            $sFilePdfName.="{$this->iResponseId}.pdf";
+        }
+        $sFilePdfName="{$this->iResponseId}.pdf";
         $oPDF->Output($sFilePdfName, 'F');
         return $sFilePdfName;
     }
@@ -411,5 +466,54 @@ class sendPdfReport extends PluginBase {
             );
         }
         return array('error'=>"File not found in your survey.");
+    }
+
+    public function saveSettings($settings)
+    {
+        if(isset($settings['basesavedirectory']) && !empty($settings['basesavedirectory']))
+        {
+            if (!is_dir($settings['basesavedirectory']))
+            {
+                Yii::app()->setFlashMessage("Directory not found, base directory is set to none",'error');
+                $settings['basesavedirectory']="";
+            }
+            elseif (!is_writable($settings['basesavedirectory']))
+            {
+                Yii::app()->setFlashMessage("Directory found but not writable, base directory is set to none",'error');
+                $settings['basesavedirectory']="";
+            }
+        }
+        $updated =false;
+        if(isset($settings['name_confirm']))
+        {
+            $settings['name_confirm']=preg_replace('/[^a-z0-9-]/i', '', $settings['name_confirm']);
+            if(empty($settings['name_confirm']))
+            {
+                $settings['name_confirm']=$this->settings['name_confirm']['default'];
+                $updated=true;
+            }
+        }
+        if(isset($settings['name_admin_notification']))
+        {
+            $settings['name_admin_notification']=preg_replace('/[^a-z0-9-]/i', '', $settings['name_admin_notification']);
+            if(empty($settings['name_admin_notification']) || $settings['name_admin_notification']==$settings['name_confirm'])
+            {
+                $settings['name_admin_notification']=$this->settings['name_admin_notification']['default'];
+                $updated=true;
+            }
+        }
+        if(isset($settings['name_admin_responses']))
+        {
+            $settings['name_admin_responses']=preg_replace('/[^a-z0-9-]/i', '', $settings['name_admin_responses']);
+            if(empty($settings['name_admin_responses']) || $settings['name_admin_responses']==$settings['name_confirm'] || $settings['name_admin_responses']==$settings['name_admin_notification'] )
+            {
+                $settings['name_admin_responses']=$this->settings['name_admin_responses']['default'];
+                $updated=true;
+            }
+        }
+        if($updated)
+            Yii::app()->setFlashMessage("One or more of PDF file name was updated. Review the filenames.",'error');
+
+        parent::saveSettings($settings);
     }
 }

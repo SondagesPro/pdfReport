@@ -245,7 +245,7 @@ class sendPdfReport extends PluginBase {
                     }
                     else
                     {
-                        tracevar("ivalid $sBaseDir");
+                        //tracevar("invalid $sBaseDir");
                         @unlink($sFile);
                     }
                 }
@@ -332,8 +332,8 @@ class sendPdfReport extends PluginBase {
 
         //~ return;
         $sCssContent=file_get_contents(dirname(__FILE__).'/base.css');
-        $sHeader=strip_tags($oPurifier->purify($sHeader));
-        $sSubHeader=strip_tags($oPurifier->purify($sSubHeader));
+        $sHeader=strip_tags($sHeader);
+        $sSubHeader=strip_tags($sSubHeader);
 
         $aSurvey=getSurveyInfo($this->iSurveyId,$this->sLanguage);
         $sSurveyName = $aSurvey['surveyls_title'];
@@ -420,7 +420,6 @@ class sendPdfReport extends PluginBase {
         {
             $sFilePdfName.="{$this->iResponseId}.pdf";
         }
-        $sFilePdfName="{$this->iResponseId}.pdf";
         $oPDF->Output($sFilePdfName, 'F');
         return $sFilePdfName;
     }
@@ -444,6 +443,14 @@ class sendPdfReport extends PluginBase {
             return array('error'=>"Please, use only png,gif or jpg image.");
         }
         $uploadBase="../../../upload";
+        $sTemplate=Survey::model()->findByPk($iSurveyId)->template;
+        if(is_file(Yii::app()->getConfig('uploaddir')."/templates/{$sTemplate}/${sLogoName}"))
+        {
+            return array(
+                'path'=>"{$uploadBase}/templates/{$sTemplate}/${sLogoName}",
+                'url'=>Yii::app()->getConfig('uploadurl')."/templates/{$sTemplate}/${sLogoName}",
+            );
+        }
         if(is_file(Yii::app()->getConfig('uploaddir')."/surveys/{$iSurveyId}/images/{$sLogoName}"))
         {
             return array(

@@ -241,11 +241,14 @@ class sendPdfReport extends PluginBase {
                     if(is_dir($sBaseDir) && is_writable($sBaseDir))
                     {
                         $sBaseDir=rtrim($sBaseDir,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-                        rename($sFile,$sBaseDir.basename($sFile));
+                        if(rename($sFile,$sBaseDir.basename($sFile)))
+                            tracevar("File is now at ".$sBaseDir.basename($sFile));
+                        else
+                            tracevar("An error happen when try to move to $sBaseDir");
                     }
                     else
                     {
-                        //tracevar("invalid $sBaseDir");
+                        tracevar("invalid $sBaseDir");
                         @unlink($sFile);
                     }
                 }

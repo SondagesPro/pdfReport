@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * This file is part of sendPdfReport plugin
+ * @see sendPdfReport <http://extensions.sondages.pro/sendpdfreport>
+ **/
 class pdfReport extends pdf
 {
   var $htmlHeader;
@@ -53,11 +56,11 @@ class pdfReport extends pdf
   {
     if ($file[0] === '@' || $file[0] === '*')
     {
-      return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $fitonpage=false, $alt, $altimgs);
+      return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
     }
     if (@file_exists($file))
     {
-      return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $fitonpage=false, $alt, $altimgs);
+      return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
     }
     if($file[0] === '/')
     {
@@ -66,9 +69,9 @@ class pdfReport extends pdf
     $headers=@get_headers($file);
     if(isset($headers[0]) && $headers[0] == 'HTTP/1.1 200 OK')
     {
-      return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $fitonpage=false, $alt, $altimgs);
+      return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $alt, $altimgs);
     }
-    Yii::log("Image ".$$file." not found, replaced by a white image",'warning','application.plugins.sendMailCron');
-    return parent::Image($this->sImageBlank, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $fitonpage=false, $alt, $altimgs);
+    Yii::log("Image ".$file." not found, replaced by a white image",'warning','application.plugins.sendMailCron');
+    return parent::Image($this->sImageBlank, $x, $y, 1, 1, '', $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, true, true);
   }
 }

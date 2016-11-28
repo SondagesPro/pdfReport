@@ -7,7 +7,7 @@
  * @copyright 2015-2016 Denis Chenu <http://sondages.pro>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license GPL v3
- * @version 1.1
+ * @version 1.2
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -353,7 +353,7 @@ class sendPdfReport extends PluginBase {
 
         $oPDF = new pdfReport();
         $oPDF->sImageBlank = realpath(dirname(__FILE__))."/blank.png";
-        $oPDF->sAbsoluteUrl= App()->request->getBaseUrl(true);
+        $oPDF->sAbsoluteUrl= App()->request->getHostInfo();
         $pdfSpecific=array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<page>','</page>');
         $pdfReplaced=array('<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>page</span>','<span>/page</span>');
         $sText=str_replace($pdfSpecific, $pdfReplaced, $sText);

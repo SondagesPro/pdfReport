@@ -4,32 +4,32 @@
  * Use question text to create a report and send it by email.
  *
  * @author Denis Chenu <denis@sondages.pro>
- * @copyright 2015 Denis Chenu <http://sondages.pro>
+ * @copyright 2015-2016 Denis Chenu <http://sondages.pro>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license GPL v3
- * @version 1.0
+ * @version 1.1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
- 
+
 class sendPdfReport extends PluginBase {
-    protected $storage = 'DbStorage';    
-    static protected $description = 'Send a PDF report to specific email (v1.0).';
+    protected $storage = 'DbStorage';
+    static protected $description = 'Send a PDF report to specific email (v1.1).';
     static protected $name = 'sendPdfReport';
 
     private $iSurveyId;
     private $iResponseId;
     private $sLanguage;
 
-    public function __construct(PluginManager $manager, $id) 
+    public function __construct(PluginManager $manager, $id)
     {
         parent::__construct($manager, $id);
         $this->subscribe('beforeSurveySettings');
@@ -66,7 +66,7 @@ class sendPdfReport extends PluginBase {
             'label'=>'Directory on the server to move the file after send (set to empty to remove the file)',
             'default'=>'',
         ),
-        
+
     );
     /**
      * This event is fired by the administration panel to gather extra settings
@@ -78,24 +78,24 @@ class sendPdfReport extends PluginBase {
     {
         $event = $this->event;
         $aLogo=$this->getLogoPaths();
-        if(!empty($aLogo['url']))
+        if(!empty($aLogo['url'])){
             $sLogoComplement="&nbsp;<img src='{$aLogo['url']}' alt='logo' style='width:100px' />";
-        elseif(!empty($aLogo['error']))
+        }elseif(!empty($aLogo['error'])){
             $sLogoComplement="&nbsp;<span class='label label-warning'>{$aLogo['error']}</span>";
-        else
+        }else{
             $sLogoComplement="";
+        }
 
         $event->set("surveysettings.{$this->id}", array(
             'name' => get_class($this),
             'settings' => array(
                 'pdf_info' => array(
                     'type'=> 'info',
-                    'content'=>"<p class='alert'><strong>Attention</strong> : Don't use default mail sending by LimeSurvey and set Send confirmation emails? to NO if you use confirmation email.</p>".
-                    "<p  class='alert'>The PDF attached are the content of the question text choosen</p>",
+                    'content'=>"<p class='alert alert-info'><strong>Attention</strong> : Don't use default mail sending by LimeSurvey and set Send confirmation emails? to NO if you use confirmation email.</p>",
                 ),
                 'pdf_global' => array(
                     'type'=> 'info',
-                    'content'=>"<p class='alert alert-info'>".gt("Global settings")."</p>",
+                    'content'=>"<p class='label label-info'>".gt("Global settings")."</p>",
                 ),
                 'pdf_header' => array(
                     'type'=> 'string',
@@ -114,7 +114,7 @@ class sendPdfReport extends PluginBase {
                 ),
                 'pdf_confirm' => array(
                     'type'=> 'info',
-                    'content'=>"<p class='alert alert-info'>".gt("Confirmation email")."</p>",
+                    'content'=>"<p class='label label-info'>".gt("Confirmation email")."</p>",
                 ),
                 'pdf_confirm_to' => array(
                     'type'=> 'string',
@@ -128,7 +128,7 @@ class sendPdfReport extends PluginBase {
                 ),
                 'pdf_admin_notification' => array(
                     'type'=> 'info',
-                    'content'=>"<p class='alert alert-info'>".gt("Basic admin notification")."</p>",
+                    'content'=>"<p class='label label-info'>".gt("Basic admin notification")."</p>",
                 ),
                 'pdf_admin_notification_to' => array(
                     'type'=> 'string',
@@ -142,7 +142,7 @@ class sendPdfReport extends PluginBase {
                 ),
                 'pdf_admin_responses' => array(
                     'type'=> 'info',
-                    'content'=>"<p class='alert alert-info'>".gt("Detailed admin notification")."</p>",
+                    'content'=>"<p class='label label-info'>".gt("Detailed admin notification")."</p>",
                 ),
                 'pdf_admin_responses_to' => array(
                     'type'=> 'string',
@@ -154,7 +154,7 @@ class sendPdfReport extends PluginBase {
                     'label'=>gt("Detailed notification attachments:")." (".gt("Question code").")",
                     'current'=>$this->get('pdf_admin_responses_attachment','Survey',$event->get('survey')),
                 ),
-                
+
             )
         ));
     }
@@ -171,7 +171,7 @@ class sendPdfReport extends PluginBase {
     /*
      * Below are the actual methods that handle events
      */
-    public function mailPdfReport() 
+    public function mailPdfReport()
     {
         $oEvent      = $this->getEvent();
         $this->iSurveyId=$iSurveyId   = $oEvent->get('surveyId');
@@ -182,24 +182,27 @@ class sendPdfReport extends PluginBase {
         $aSettings=array();
         foreach($aMailType as $sMailType)
         {
-            if($this->get("pdf_{$sMailType}_to", 'Survey', $iSurveyId))
-            {
+            if($this->get("pdf_{$sMailType}_to", 'Survey', $iSurveyId)){
                 $aSettings[$sMailType]=array(
                     "to"=>$this->get("pdf_{$sMailType}_to", 'Survey', $iSurveyId),
                     "attachement"=>$this->get("pdf_{$sMailType}_attachment", 'Survey', $iSurveyId),
                 );
             }
-            else
+            else{
                 $aSettings[$sMailType]=null;
+            }
         }
 
-        if(count($aSettings)==0)
+        if(count($aSettings)==0){
             return;
-        if($iResponseId===null)
+        }
+        if($iResponseId===null){
             return;
+        }
         $oSessionSurvey=Yii::app()->session["survey_{$iSurveyId}"];
-        if(!isset($oSessionSurvey['s_lang']))
+        if(!isset($oSessionSurvey['s_lang'])){
             return;
+        }
         $this->sLanguage=$sLanguage=$oSessionSurvey['s_lang'];
         foreach($aSettings as $sType=>$aMailing)
         {
@@ -225,13 +228,11 @@ class sendPdfReport extends PluginBase {
             {
                 if (!SendEmailMessage($aMessage['message'], $aMessage['subject'],$sRecipient,"{$oSurvey->admin} <{$oSurvey->adminemail}>" , Yii::app()->getConfig("sitename"), true, getBounceEmail($iSurveyId), $aAttachments))
                 {
-                    //~ $oEvent->getContent($this)
-                          //~ ->addContent('Email could not be sent.');
+                    Yii::log("Email with ".$sFile." can not be sent due to a mail error",'error','application.plugins.sendMailCron');
                 }
                 else
                 {
-                    //~ $oEvent->getContent($this)
-                          //~ ->addContent('Email sent.');
+                    Yii::log("Email with ".$sFile." sent",'info','application.plugins.sendMailCron');
                 }
             }
             if($sFile)
@@ -241,28 +242,29 @@ class sendPdfReport extends PluginBase {
                     if(is_dir($sBaseDir) && is_writable($sBaseDir))
                     {
                         $sBaseDir=rtrim($sBaseDir,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-                        if(rename($sFile,$sBaseDir.basename($sFile)))
-                            tracevar("File is now at ".$sBaseDir.basename($sFile));
-                        else
-                            tracevar("An error happen when try to move to $sBaseDir");
+                        if(rename($sFile,$sBaseDir.basename($sFile))){
+                            Yii::log("File is now at ".$sBaseDir.basename($sFile),'info','application.plugins.sendMailCron');
+                        }else{
+                            Yii::log("An error happen when try to move to $sBaseDir",'error','application.plugins.sendMailCron');
+                        }
                     }
                     else
                     {
-                        tracevar("invalid $sBaseDir");
+                        Yii::log("Invalid directoty $sBaseDir",'error','application.plugins.sendMailCron');
                         @unlink($sFile);
                     }
                 }
-                else
+                else{
                     @unlink($sFile);
+                }
             }
         }
     }
     private function getEmailContent($sType)
     {
-
         $thissurvey=$aSurvey=getSurveyInfo($this->iSurveyId,$this->sLanguage);
         $aReplacementVars=$this->getReplacementVars($sType=='confirm');
-        
+
         //~ $sSubject=LimeExpressionManager::ProcessString($aSurvey["email_{$sType}_subj"], NULL, $aReplacementVars, false, 3, 0, false, false, true);
         //~ $sMessage=LimeExpressionManager::ProcessString($aSurvey["email_{$sType}"], NULL, $aReplacementVars, false, 3, 0, false, false, true);
         $aReData=array(
@@ -350,34 +352,36 @@ class sendPdfReport extends PluginBase {
         $aPdfLanguageSettings=pdfHelper::getPdfLanguageSettings($this->sLanguage);
 
         $oPDF = new pdfReport();
+        $oPDF->sImageBlank = realpath(dirname(__FILE__))."/blank.png";
+        $oPDF->sAbsoluteUrl= App()->request->getBaseUrl(true);
         $pdfSpecific=array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<page>','</page>');
         $pdfReplaced=array('<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>page</span>','<span>/page</span>');
         $sText=str_replace($pdfSpecific, $pdfReplaced, $sText);
         if(function_exists ("tidy_parse_string")) // Call to undefined function tidy_parse_string() in ./application/third_party/tcpdf/include/tcpdf_static.php on line 2099
-        { 
+        {
             $tidy_options = array (
-				'clean' => 1,
-				'drop-empty-paras' => 0,
-				'drop-proprietary-attributes' => 0,
-				'fix-backslash' => 1,
-				'hide-comments' => 1,
-				'join-styles' => 1,
-				'lower-literals' => 1,
-				'merge-divs' => 1,
-				'merge-spans' => 1,
-				'output-xhtml' => 1,
-				'word-2000' => 0,
-				'wrap' => 0,
-				'output-bom' => 0,
-				'char-encoding' => 'utf8',
-				'input-encoding' => 'utf8',
-				'output-encoding' => 'utf8'
-			);// Fix UTF8 and <br preakpage="true" />
-            $sText=$oPDF->fixHTMLCode($sText,$sCssContent,'',$tidy_options); 
+                'clean' => 1,
+                'drop-empty-paras' => 0,
+                'drop-proprietary-attributes' => 0,
+                'fix-backslash' => 1,
+                'hide-comments' => 1,
+                'join-styles' => 1,
+                'lower-literals' => 1,
+                'merge-divs' => 1,
+                'merge-spans' => 1,
+                'output-xhtml' => 1,
+                'word-2000' => 0,
+                'wrap' => 0,
+                'output-bom' => 0,
+                'char-encoding' => 'utf8',
+                'input-encoding' => 'utf8',
+                'output-encoding' => 'utf8'
+            );// Fix UTF8 and <br preakpage="true" />
+            $sText=$oPDF->fixHTMLCode($sText,$sCssContent,'',$tidy_options);
         }
         else
         {
-            // TODO : Find the good way to use pagebreak="true", verify i page is used in tcpdf
+            // TODO : Find the good way to use pagebreak="true", verify if page is used in tcpdf
             // ALT : explode/implode
             $oPurifier = new CHtmlPurifier();
             $oPurifier->options = array(
@@ -428,7 +432,7 @@ class sendPdfReport extends PluginBase {
     }
     private function getLogoPaths()
     {
-        
+
         $iSurveyId=$this->event->get('survey');
         if(empty($iSurveyId))
             $iSurveyId=$this->event->get('surveyId');
@@ -521,8 +525,9 @@ class sendPdfReport extends PluginBase {
                 $updated=true;
             }
         }
-        if($updated)
+        if($updated){
             Yii::app()->setFlashMessage("One or more of PDF file name was updated. Review the filenames.",'error');
+        }
 
         parent::saveSettings($settings);
     }

@@ -1,38 +1,23 @@
 <?php
 
-class pdfReport extends pdf 
+class pdfReport extends pdf
 {
-    var $htmlHeader;
+  var $htmlHeader;
 
-    private $_config = array();
-    private $_aSurveyInfo = array();
-    public $sLogoFile;
+  private $_config = array();
+  private $_aSurveyInfo = array();
+  public $sLogoFile;
+  public $sImageBlank;
+  public $sAbsoluteUrl;
 
-    function __construct() {
-        parent::__construct();
-    }
+  function __construct() {
+      parent::__construct();
+  }
 
-    //~ function addHeader($aPdfLanguageSettings, $sSiteName, $sDefaultHeaderString,$sLogoFileName="")
-    //~ {
-      //~ $this->setHtmlHeader($sDefaultHeaderString);
-    //~ }
-
-
-    //~ public function setHtmlHeader($htmlHeader) {
-        //~ $this->htmlHeader = $htmlHeader;
-    //~ }
-
-    //~ public function Header() {
-        //~ $this->writeHTMLCell(
-            //~ $w = 0, $h = 0, $x = '', $y = '',
-            //~ $this->htmlHeader, $border = array('B' => array('width' => 1, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0))), $ln = 1, $fill = 0,
-            //~ $reseth = true, $align = 'C', $autopadding = false);
-        //~ //$this->writeHTML($this->htmlHeader);
-    //~ }
-    public function addTitle($sTitle, $sSubtitle = '') 
-    {
-        
-    }
+  public function addTitle($sTitle, $sSubtitle = '')
+  {
+    // Used in LS pdf, no update here
+  }
 
   function addHeader($aPdfLanguageSettings, $sTitle, $sSubHeader)
   {
@@ -48,7 +33,6 @@ class pdfReport extends pdf
       $this->SetHeaderFont(Array($aPdfLanguageSettings['pdffont'], '', 25));
       $this->SetFooterFont(Array($aPdfLanguageSettings['pdffont'], '', 10));
     }
-
   }
   function initAnswerPDF($aSurveyInfo, $aPdfLanguageSettings, $sTitle, $sSubHeader, $sDefaultHeaderString = '')
   {
@@ -64,18 +48,27 @@ class pdfReport extends pdf
     $this->AddPage();
     $this->SetFillColor(220, 220, 220);
   }
-  /**
-  * TODO : fix if image are not found
-  */
-    //~ public function Image($file, $x='', $y='', $w=0, $h=0, $type='', $link='', $align='', $resize=false, $dpi=300, $palign='', $ismask=false, $imgmask=false, $border=0, $fitbox=false, $hidden=false, $fitonpage=false, $alt=false, $altimgs=array())
-    //~ {
-        //~ 
-        //~ if($file[0]=="/" && !is_file($file) && !is_file(Yii::app()->getConfig("homedir").$file) )// Working only on linux
-        //~ {
-            //~ tracevar(K_PATH_IMAGES.$file);
-//~ 
-            //~ $file=dirname(__FILE__)."/blank.png";
-        //~ }
-        //~ return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $fitonpage, $alt, $altimgs);
-    //~ }
+
+  public function Image($file, $x='', $y='', $w=0, $h=0, $type='', $link='', $align='', $resize=false, $dpi=300, $palign='', $ismask=false, $imgmask=false, $border=0, $fitbox=false, $hidden=false, $fitonpage=false, $alt=false, $altimgs=array())
+  {
+    if ($file[0] === '@' || $file[0] === '*')
+    {
+      return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $fitonpage=false, $alt, $altimgs);
+    }
+    if (@file_exists($file))
+    {
+      return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $fitonpage=false, $alt, $altimgs);
+    }
+    if($file[0] === '/')
+    {
+      $file=$this->sAbsoluteUrl.$file;
+    }
+    $headers=@get_headers($file);
+    if(isset($headers[0]) && $headers[0] == 'HTTP/1.1 200 OK')
+    {
+      return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $fitonpage=false, $alt, $altimgs);
+    }
+    Yii::log("Image ".$$file." not found, replaced by a white image",'warning','application.plugins.sendMailCron');
+    return parent::Image($this->sImageBlank, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $fitonpage=false, $alt, $altimgs);
+  }
 }

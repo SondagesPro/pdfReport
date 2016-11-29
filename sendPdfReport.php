@@ -228,11 +228,11 @@ class sendPdfReport extends PluginBase {
             {
                 if (!SendEmailMessage($aMessage['message'], $aMessage['subject'],$sRecipient,"{$oSurvey->admin} <{$oSurvey->adminemail}>" , Yii::app()->getConfig("sitename"), true, getBounceEmail($iSurveyId), $aAttachments))
                 {
-                    Yii::log("Email with ".$sFile." can not be sent due to a mail error",'error','application.plugins.sendMailCron');
+                    Yii::log("Email with ".$sFile." can not be sent due to a mail error",'error','application.plugins.sendPdfReport');
                 }
                 else
                 {
-                    Yii::log("Email with ".$sFile." sent",'info','application.plugins.sendMailCron');
+                    Yii::log("Email with ".$sFile." sent",'info','application.plugins.sendPdfReport');
                 }
             }
             if($sFile)
@@ -243,14 +243,14 @@ class sendPdfReport extends PluginBase {
                     {
                         $sBaseDir=rtrim($sBaseDir,DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
                         if(rename($sFile,$sBaseDir.basename($sFile))){
-                            Yii::log("File is now at ".$sBaseDir.basename($sFile),'info','application.plugins.sendMailCron');
+                            Yii::log("File is now at ".$sBaseDir.basename($sFile),'info','application.plugins.sendPdfReport');
                         }else{
-                            Yii::log("An error happen when try to move to $sBaseDir",'error','application.plugins.sendMailCron');
+                            Yii::log("An error happen when try to move to $sBaseDir",'error','application.plugins.sendPdfReport');
                         }
                     }
                     else
                     {
-                        Yii::log("Invalid directoty $sBaseDir",'error','application.plugins.sendMailCron');
+                        Yii::log("Invalid directoty $sBaseDir",'error','application.plugins.sendPdfReport');
                         @unlink($sFile);
                     }
                 }

@@ -71,7 +71,7 @@ class pdfReport extends pdf
     {
       return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $alt, $altimgs);
     }
-    Yii::log("Image ".$file." not found, replaced by a white image",'warning','application.plugins.sendMailCron');
+    Yii::log("Image ".$file." not found, replaced by a white image",'warning','application.plugins.sendPdfReport');
     return parent::Image($this->sImageBlank, $x, $y, 1, 1, '', $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, true, true);
   }
 }

@@ -79,13 +79,12 @@ class sendPdfReport extends PluginBase {
         $event = $this->event;
         $aLogo=$this->getLogoPaths();
         if(!empty($aLogo['url'])){
-            $sLogoComplement="&nbsp;<img src='{$aLogo['url']}' alt='logo' style='width:100px' />";
+            $sLogoComplement="&nbsp;<img src='{$aLogo['url']}' alt='{$aLogo['url']}' style='max-width:8em;max-height:2em;' />";
         }elseif(!empty($aLogo['error'])){
             $sLogoComplement="&nbsp;<span class='label label-warning'>{$aLogo['error']}</span>";
         }else{
             $sLogoComplement="";
         }
-
         $event->set("surveysettings.{$this->id}", array(
             'name' => get_class($this),
             'settings' => array(
@@ -316,7 +315,9 @@ class sendPdfReport extends PluginBase {
     }
     private function getPdfFile($sType)
     {
+        Yii::log("getPdfFile start for {$sType} in {$this->iSurveyId}",'trace','application.plugins.sendPdfReport');
         $sQuestionCode=$this->get("pdf_{$sType}_attachment", 'Survey', $this->iSurveyId);
+
         if(empty($sQuestionCode))
             return;
         $oQuestion=Question::model()->find("sid=:sid AND title=:title AND language=:language",array(':sid'=>$this->iSurveyId,':title'=>$sQuestionCode,':language'=>$this->sLanguage));
@@ -428,6 +429,7 @@ class sendPdfReport extends PluginBase {
             $sFilePdfName.="{$this->iResponseId}.pdf";
         }
         $oPDF->Output($sFilePdfName, 'F');
+        Yii::log("getPdfFile done for {$sType} in {$this->iSurveyId}",'trace','application.plugins.sendPdfReport');
         return $sFilePdfName;
     }
     private function getLogoPaths()

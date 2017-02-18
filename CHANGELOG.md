@@ -2,7 +2,7 @@
 Only partial changelog, [commit history](https://framagit.org/Shnoulle/LimeSurvey/commits/2.06_SondagesPro) show all changelog.
 
 
-## Unreleased
+## [1.2.1] 2017-02-18
 
 ### Feature
 - Allow usage of data URI for image src

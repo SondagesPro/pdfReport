@@ -67,6 +67,9 @@ class pdfReport extends pdf
     {
       $file=$this->sAbsoluteUrl.$file;
     }
+    if(strpos($file,"data:image")===0){
+      return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
+    }
     $imageInfo=$this->getImageInfo($file);
     if($imageInfo['size'][0] && $imageInfo['size'][1])
     {

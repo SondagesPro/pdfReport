@@ -7,6 +7,9 @@ Only partial changelog, [commit history](https://framagit.org/Shnoulle/LimeSurve
 ### Feature
 - Allow usage of data URI for image src
 
+### Licence
+- Move to Affero GPL
+
 ## [1.2.0] 2016-08-10 (Stable working release)
 
 ### Feature

@@ -20,7 +20,7 @@
  * GNU General Public License for more details.
  */
 
-class sendPdfReport extends PluginBase {
+class sendPdfReport extends \ls\pluginmanager\PluginBase {
     protected $storage = 'DbStorage';
     static protected $description = 'Send a PDF report to specific email (v1.1).';
     static protected $name = 'sendPdfReport';
@@ -29,9 +29,8 @@ class sendPdfReport extends PluginBase {
     private $iResponseId;
     private $sLanguage;
 
-    public function __construct(PluginManager $manager, $id)
+    public function init()
     {
-        parent::__construct($manager, $id);
         $this->subscribe('beforeSurveySettings');
         $this->subscribe('newSurveySettings');
         $this->subscribe('afterSurveyComplete', 'mailPdfReport');

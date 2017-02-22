@@ -419,7 +419,7 @@ class sendPdfReport extends \ls\pluginmanager\PluginBase {
         $oPDF->lastPage();
         $sFilePdfName=Yii::app()->getConfig("tempdir").DIRECTORY_SEPARATOR.$this->get("name_{$sType}",null,null,$this->settings["name_{$sType}"]["default"])."_{$this->iSurveyId}_";
         $oSessionSurvey=Yii::app()->session["survey_{$this->iSurveyId}"];
-        if(!empty($oSessionSurvey['token']) && $this->get("filenameend",null,null,$this->settingd['filenameend']['default'])=='token')
+        if(!empty($oSessionSurvey['token']) && $this->get("filenameend",null,null,$this->settings['filenameend']['default'])=='token')
         {
             $sFilePdfName.="{$oSessionSurvey['token']}.pdf";
 

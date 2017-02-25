@@ -1,7 +1,7 @@
 # Change Log
-Only partial changelog, [commit history](https://framagit.org/Shnoulle/LimeSurvey/commits/2.06_SondagesPro) show all changelog.
+Only partial changelog, [commit history](https://framagit.org/SondagePro-LimeSurvey-plugin/sendPdfReport/commits/master) show all changelog.
 
-## [unreleased]
+## [1.2.2] 2017-02-25
 
 ### fix
 - Undefined property: sendPdfReport::$settingd Thanks to [Dr. Marcel Minke ](https://framagit.org/SondagePro-LimeSurvey-plugin/sendPdfReport/issues/1)

@@ -43,7 +43,8 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
         $this->subscribe('newQuestionAttributes','addPdfReportAttribute');
         /* Generate and save pdfReport when submit */
         $this->subscribe('afterSurveyComplete', 'afterSurveyComplete');
-
+        /* Remove answers (and help) part */
+        $this->subscribe('beforeQuestionRender', 'removeAnswersPart');
         /* To add own translation message source */
         $this->subscribe('afterPluginLoad');
 
@@ -115,11 +116,38 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
                 'category'=>$this->_translate('pdf report'),
                 'sortorder'=>20,
                 'inputtype'=>'text',
-                'default'=>'{SAVEDID}',
+                'default'=>'',
                 'i18n'=>true,
                 'expression'=>1,
                 'help'=>$this->_translate('By default usage of questioncode_{SAVEDID}.pdf'),
                 'caption'=>$this->_translate('Name of saved PDF file.'),
+            ),
+            'pdfReportSendByEmailMail'=>array(
+                'types'=>'|', /* upload question type */
+                'category'=>$this->_translate('pdf report'),
+                'sortorder'=>40,
+                'inputtype'=>'text',
+                'default'=>'',
+                'i18n'=>false,
+                'expression'=>1,
+                'help'=>$this->_translate('Optionnal email to send pdf Report.'),
+                'caption'=>$this->_translate('Send it by email to'),
+            ),
+            'pdfReportSendByEmailContent'=>array(
+                'types'=>'|', /* upload question type */
+                'category'=>$this->_translate('pdf report'),
+                'sortorder'=>45,
+                'inputtype'=>'singleselect',//'buttongroup',
+                'options'=>array(
+                    'confirm'=>$this->_translate('Confirmation email'),
+                    'admin_notification'=>$this->_translate('Basic admin notification'),
+                    'admin_responses'=>$this->_translate('Detailed admin notification'),
+                ),
+                'default'=>'admin_notification',
+                'i18n'=>false,
+                'expression'=>1,
+                'help'=>$this->_translate('This don\'t deactivate limesurvey other email system.'),
+                'caption'=>$this->_translate('Content and subject of the email'),
             ),
         );
         if(method_exists($this->getEvent(),'append')) {
@@ -131,12 +159,39 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
         }
     }
 
+    /**
+     * Do all the pdf after survey is submitted, and each action if needed
+     */
     public function afterSurveyComplete()
     {
         $this->_iSurveyId=$this->getEvent()->get('surveyId');
         $this->_iResponseId=$this->getEvent()->get('responseId');
         $this->doPdfReports();
     }
+
+    /**
+     * Do all the pdf after survey is submitted, and each action if needed
+     */
+    public function removeAnswersPart()
+    {
+        if($this->getEvent()->get('type')=='|') {
+            $oEvent=$this->getEvent();
+            $oQuestionPdfReport = intval(QuestionAttribute::model()->count(
+                "attribute=:attribute and qid=:qid and value=:value",
+                array(':attribute'=>'pdfReport',':qid'=>$oEvent->get('qid'),':value'=>1)
+            ));
+            if($oQuestionPdfReport) {
+                $inputName="{$oEvent->get('surveyId')}X{$oEvent->get('gid')}X{$oEvent->get('qid')}";
+                $answers = \CHtml::hiddenField($inputName , '', array('id' => $inputName)) // LS bug : must fix (id starting by number)
+                         . \CHtml::hiddenField("{$inputName}_filecount" , '', array('id' => "{$inputName}_filecount"));
+                $oEvent->set('answers',$answers);
+                $oEvent->set('file_valid_message','');
+                $oEvent->set('valid_message','');
+                $oEvent->set('class', $oEvent->get('class')." pdfreport-question");
+            }
+        }
+    }
+
     /**
      * Do all reports needed
      */
@@ -157,6 +212,8 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
                     if($oQuestion->type=="|"){
                         $this->_saveInFileUpload($oQuestion);
                     }
+                    $this->_sendByEMail($oQuestion);
+
                     unlink($pdfFile);
                 }
             }
@@ -369,6 +426,47 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
         $oResponse->$sAnswerCountColumn=1;
         $oResponse->save();
     }
+
+    /**
+     * Save the pdf by email
+     * @param
+     * @retuen void
+     */
+    private function _sendByEmail($oQuestion)
+    {
+        $aQuestionsAttributes=QuestionAttribute::model()->getQuestionAttributes($oQuestion->qid,Yii::app()->getLanguage());
+        $questionAttributeEmails=trim($aQuestionsAttributes['pdfReportSendByEmailMail']);
+        if($questionAttributeEmails==""){
+            return;
+        }
+        $questionAttributeEmails=$this->_EMProcessString($questionAttributeEmails);
+        $aRecipient=explode(";", $questionAttributeEmails);
+        $aValidRecipient=array();
+        foreach($aRecipient as $sRecipient)
+        {
+            $sRecipient=trim($sRecipient);
+            if(validateEmailAddress($sRecipient))
+            {
+                $aValidRecipient[]=$sRecipient;
+            }
+        }
+        $oSurvey=Survey::model()->findByPk($this->_iSurveyId);
+        $aMessage=$this->_getEmailContent($aQuestionsAttributes['pdfReportSendByEmailContent']);
+        $sFile=$this->_getPdfFileName($oQuestion->title);
+        $aAttachments = array($this->_getPdfFileName($oQuestion->title));
+        foreach ($aValidRecipient as $sRecipient)
+        {
+            if (!SendEmailMessage($aMessage['message'], $aMessage['subject'],$sRecipient,"{$oSurvey->admin} <{$oSurvey->adminemail}>" , Yii::app()->getConfig("sitename"), true, getBounceEmail($this->_iSurveyId), $aAttachments))
+            {
+                Yii::log("Email with ".$sFile." can not be sent due to a mail error",'error','application.plugins.pdfReport');
+            }
+            else
+            {
+                Yii::log("Email with ".$sFile." sent",'info','application.plugins.pdfReport');
+            }
+        }
+
+    }
     /**
      * Generate unique pdf filename
      * @param string $qCode question code
@@ -378,7 +476,6 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
     private function _getPdfFileName($qCode,$onlyFile=false)
     {
         $aFilePdfName=array(
-            "pdfReport",
             $qCode,
             $this->_iSurveyId,
         );
@@ -395,11 +492,69 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
              $aFilePdfName[]=$this->_iResponseId;
         }
         $sPdfFileName=implode("_",$aFilePdfName);
+        $sPdfFileName.=".pdf";
         if($onlyFile) {
             return $sPdfFileName;
         } else {
             return Yii::app()->getRuntimePath()."/".$sPdfFileName;
         }
+    }
+
+    /**
+     * Get fixed content by email
+     */
+    private function _getEmailContent($sType)
+    {
+        $aReplacementVars=$this->_getReplacementVars($sType=='confirm');
+        $aSurvey=getSurveyInfo($this->_iSurveyId,Yii::app()->language);
+        $aReData=array(
+            'saved_id'=>$this->_iResponseId,
+            'thissurvey'=>$aSurvey,
+        );
+        $sSubject=templatereplace($aSurvey["email_{$sType}_subj"],$aReplacementVars,$aReData,'',false,null,array(),true);
+        $sMessage=templatereplace($aSurvey["email_{$sType}"],$aReplacementVars,$aReData,'',false,null,array(),true);
+
+        return array(
+            'subject'=>$sSubject,
+            'message'=>$sMessage,
+        );
+    }
+    /**
+     * Get the replacement var for email
+     * @param boolean : wit or wothout token value
+     * @return string[]
+     */
+    private function _getReplacementVars()
+    {
+        $thissurvey=$aSurvey=getSurveyInfo($this->_iSurveyId,Yii::app()->language);
+        $aReplacementVars=array();
+        $aReplacementVars['RELOADURL']='';
+        $aReplacementVars['ADMINNAME'] = $aSurvey['adminname'];
+        $aReplacementVars['ADMINEMAIL'] = $aSurvey['adminemail'];
+        $aReplacementVars['VIEWRESPONSEURL']=Yii::app()->createAbsoluteUrl("/admin/responses/sa/view/surveyid/{$this->_iSurveyId}/id/{$this->_iResponseId}");
+        $aReplacementVars['EDITRESPONSEURL']=Yii::app()->createAbsoluteUrl("/admin/dataentry/sa/editdata/subaction/edit/surveyid/{$this->_iSurveyId}/id/{$this->_iResponseId}");
+        $aReplacementVars['STATISTICSURL']=Yii::app()->createAbsoluteUrl("/admin/statistics/sa/index/surveyid/{$this->_iSurveyId}");
+        // Always HTML, TODO : fix it
+        if (true)
+        {
+            $aReplacementVars['VIEWRESPONSEURL']="<a href='{$aReplacementVars['VIEWRESPONSEURL']}'>{$aReplacementVars['VIEWRESPONSEURL']}</a>";
+            $aReplacementVars['EDITRESPONSEURL']="<a href='{$aReplacementVars['EDITRESPONSEURL']}'>{$aReplacementVars['EDITRESPONSEURL']}</a>";
+            $aReplacementVars['STATISTICSURL']="<a href='{$aReplacementVars['STATISTICSURL']}'>{$aReplacementVars['STATISTICSURL']}</a>";
+        }
+        $aReplacementVars['ANSWERTABLE']='';
+        $oSessionSurvey=Yii::app()->session["survey_{$this->_iSurveyId}"];
+        if($thissurvey['anonymized'] != 'Y' && !empty($oSessionSurvey['token']) && tableExists('{{tokens_' . $this->_iSurveyId . '}}'))
+        {
+            $oToken=Token::model($this->_iSurveyId)->find("token=:token",array('token' => $oSessionSurvey['token']));
+            if($oToken)
+            {
+                foreach($oToken->attributes as $attribute=>$value)
+                {
+                    $aReplacementVars[strtoupper($attribute)]=$value;
+                }
+            }
+        }
+        return $aReplacementVars;
     }
     /**
      * Translate a plugin string

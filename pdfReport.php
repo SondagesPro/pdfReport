@@ -251,6 +251,9 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
 
         $aSurvey=getSurveyInfo($this->_iSurveyId,Yii::app()->getLanguage());
         $sSurveyName = $aSurvey['surveyls_title'];
+        if (!defined('K_PATH_IMAGES')) {
+            define('K_PATH_IMAGES', '');
+        }
         Yii::setPathOfAlias('sendPdfReport', dirname(__FILE__));
         //define('K_PATH_IMAGES', Yii::app()->getConfig("homedir").DIRECTORY_SEPARATOR);
 
@@ -318,9 +321,9 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
         //~ $this->event->getContent($this)
               //~ ->addContent(htmlentities($sText));
         $aLogo=$this->_getLogoPaths($this->_iSurveyId);
-        if(!empty($aLogo['path']))
+        if(!empty($aLogo['path'])){
            $oPDF->sLogoFile=$aLogo['path'];
-
+        }
         $oPDF->initAnswerPDF($aSurvey, $aPdfLanguageSettings, $sHeader, $sSubHeader);
         // output the HTML content
         $oPDF->writeHTML($sText, true, false, true, false, '');
@@ -337,43 +340,46 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
      * Get the logo file name
      * @return string : URI for pdf file
      */
-    private function _getLogoPaths($iSurveyId)
+    private function _getLogoPaths()
     {
-        $sLogoName='logo.png'; // @todo search for array (png|jpg|gif)
         $aLogoNames=array(
-            'logo.png',
-            'logo.jpg',
-            'logo.gif',
+            'pdflogo.png',
+            'pdflogo.jpg',
+            'pdflogo.gif',
         );
-        $sTemplate=Survey::model()->findByPk($iSurveyId)->template;
-        if(is_file(Yii::app()->getConfig('uploaddir')."/templates/{$sTemplate}/${sLogoName}"))
-        {
-            return array(
-                'path'=>"{$uploadBase}/templates/{$sTemplate}/${sLogoName}",
-                'url'=>Yii::app()->getConfig('uploadurl')."/templates/{$sTemplate}/${sLogoName}",
-            );
+        $surveyUploadDir=Yii::app()->getConfig('uploaddir')."/surveys/".$this->_iSurveyId;
+        $surveyUploadUrl=Yii::app()->getConfig('uploadurl')."/surveys/".$this->_iSurveyId;
+        $oTemplate = \Template::model()->getInstance(null, $this->_iSurveyId);
+        $oSurvey=Survey::model()->findByPk($this->_iSurveyId);
+        $templateUploadDir=$oTemplate->filesPath;
+        $templateUploadUrl = Template::getTemplateURL($oSurvey->template)."/";
+        $templateUploadUrl.= isset($oTemplate->config->engine->filesdirectory)? $oTemplate->config->engine->filesdirectory."/":"";
+        $aDirectories=array(
+            array(
+                'path'=>$surveyUploadDir."/files/",
+                'url'=>$surveyUploadUrl."/files/",
+            ),
+            array(
+                'path'=>$surveyUploadDir."/images/",
+                'url'=>$surveyUploadUrl."/images/",
+            ),
+            array(
+                'path'=>$templateUploadDir,
+                'url'=>$templateUploadUrl,
+            ),
+        );
+        foreach($aDirectories as $aDir) {
+            foreach($aLogoNames as $sLogoName) {
+                if(is_file($aDir['path'].$sLogoName))
+                {
+                    return array(
+                        'path'=>$aDir['path'].$sLogoName,
+                        'url'=>$aDir['url'].$sLogoName,
+                    );
+                }
+            }
         }
-        if(is_file(Yii::app()->getConfig('uploaddir')."/surveys/{$iSurveyId}/images/{$sLogoName}"))
-        {
-            return array(
-                'path'=>"{$uploadBase}/surveys/{$iSurveyId}/images/{$sLogoName}",
-                'url'=>Yii::app()->getConfig('uploadurl')."/surveys/{$iSurveyId}/images/{$sLogoName}",
-            );
-        }
-        if(is_file(Yii::app()->getConfig('uploaddir')."/surveys/{$iSurveyId}/files/{$sLogoName}"))
-        {
-            return array(
-                'path'=>"{$uploadBase}/surveys/{$iSurveyId}/files/{$sLogoName}",
-                'url'=>Yii::app()->getConfig('uploadurl')."/surveys/{$iSurveyId}/files/{$sLogoName}",
-            );
-        }
-        if(is_file(Yii::app()->getConfig('uploaddir')."/surveys/{$iSurveyId}/{$sLogoName}"))
-        {
-            return array(
-                'path'=>"{$uploadBase}/surveys/{$iSurveyId}/{$sLogoName}",
-                'url'=>Yii::app()->getConfig('uploadurl')."/surveys/{$iSurveyId}/{$sLogoName}",
-            );
-        }
+
         return array('error'=>"File not found in your survey.");
     }
 

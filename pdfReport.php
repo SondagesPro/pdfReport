@@ -245,7 +245,7 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
         $sSubHeader=$this->_EMProcessString($sSubHeader);
 
         //~ return;
-        $sCssContent=file_get_contents(dirname(__FILE__).'/base.css');
+        $sCssContent=$this->_getCss();
         $sHeader=strip_tags($sHeader);
         $sSubHeader=strip_tags($sSubHeader);
 
@@ -555,6 +555,19 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
             }
         }
         return $aReplacementVars;
+    }
+
+    /**
+     * get css for this survey
+     * @return string : css
+     */
+    private function _getCss()
+    {
+        $oTemplate = \Template::model()->getInstance(null, $this->_iSurveyId);
+        if(is_file($oTemplate->filesPath.'pdfreport.css')){
+            return file_get_contents($oTemplate->filesPath.'/pdfreport.css');
+        }
+        return file_get_contents(dirname(__FILE__).'/base.css');
     }
     /**
      * Translate a plugin string

@@ -1,0 +1,75 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pdfReport\n"
+"POT-Creation-Date: 2017-03-09 15:18+0100\n"
+"PO-Revision-Date: 2017-03-09 15:09+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.12\n"
+"X-Poedit-Basepath: ..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _translate\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: pdfReport.php:86 pdfReport.php:95 pdfReport.php:106 pdfReport.php:117
+#: pdfReport.php:128 pdfReport.php:139
+msgid "pdf report"
+msgstr ""
+
+#: pdfReport.php:90
+msgid "The pdf are saved inside question answers, it's better if you hide the question, else only answers part are hidden."
+msgstr ""
+
+#: pdfReport.php:91
+msgid "Use this question as pdf report."
+msgstr ""
+
+#: pdfReport.php:102
+msgid "Title for the pdf."
+msgstr ""
+
+#: pdfReport.php:113
+msgid "Sub title for the pdf."
+msgstr ""
+
+#: pdfReport.php:123
+msgid "By default usage of questioncode_{SAVEDID}.pdf"
+msgstr ""
+
+#: pdfReport.php:124
+msgid "Name of saved PDF file."
+msgstr ""
+
+#: pdfReport.php:134
+msgid "Optionnal email to send pdf Report."
+msgstr ""
+
+#: pdfReport.php:135
+msgid "Send it by email to"
+msgstr ""
+
+#: pdfReport.php:143
+msgid "Confirmation email"
+msgstr ""
+
+#: pdfReport.php:144
+msgid "Basic admin notification"
+msgstr ""
+
+#: pdfReport.php:145
+msgid "Detailed admin notification"
+msgstr ""
+
+#: pdfReport.php:150
+msgid "This don't deactivate limesurvey other email system."
+msgstr ""
+
+#: pdfReport.php:151
+msgid "Content and subject of the email"
+msgstr ""

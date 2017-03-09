@@ -118,7 +118,6 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
                 'sortorder'=>20,
                 'inputtype'=>'text',
                 'default'=>'',
-                'i18n'=>true,
                 'expression'=>1,
                 'help'=>$this->_translate('By default usage of questioncode_{SAVEDID}.pdf'),
                 'caption'=>$this->_translate('Name of saved PDF file.'),
@@ -404,12 +403,11 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
         $fileName=$this->_getPdfFileName($oQuestion->title);
         $fileSize=0.001 * filesize($fileName); // Same than controller
         $oQuestionAttribute = QuestionAttribute::model()->find(
-            "attribute=:attribute and qid=:qid and language=:language",
-            array(':attribute'=>'pdfReportSavedFileName',':qid'=>$oQuestion->qid,':language'=>Yii::app()->getLanguage())
+            "attribute=:attribute and qid=:qid",
+            array(':attribute'=>'pdfReportSavedFileName',':qid'=>$oQuestion->qid)
         );
         if($oQuestionAttribute && trim($oQuestionAttribute->value)) {
             $reportSavedFileName=$this->_EMProcessString(trim($oQuestionAttribute->value)).".pdf";
-
         } else {
             $reportSavedFileName="{$oQuestion->title}_{$this->_iResponseId}.pdf";
         }

@@ -1,13 +1,14 @@
 <?php
 /**
  * pdfReport Plugin for LimeSurvey
- * Use question text to create a report and send it by email.
+ * Use question setings to create a report and send it by email.
  *
- * @author Denis Chenu <denis@sondages.pro>
- * @copyright 2015-2017 Denis Chenu <http://sondages.pro>
+ * @author Denis Chenu <https://sondages.pro>
+ * @copyright 2015-2017 Denis Chenu <https://sondages.pro>
+ * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 0.0.0
+ * @version 1.0.0
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by

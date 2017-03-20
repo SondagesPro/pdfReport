@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.0.0
+ * @version 1.1.0
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,7 +48,8 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
         $this->subscribe('beforeQuestionRender', 'removeAnswersPart');
         /* To add own translation message source */
         $this->subscribe('afterPluginLoad');
-
+        /* To replace if needed printanswer */
+        $this->subscribe('beforeControllerAction', 'setPrintAnswer');
     }
 
     /**
@@ -112,14 +113,28 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
                 'help'=>'',
                 'caption'=>$this->_translate('Sub title for the pdf.'),
             ),
-            'pdfReportSavedFileName'=>array(
+            'pdfReportPrintAnswer'=>array(
                 'types'=>'|', /* upload question type */
                 'category'=>$this->_translate('pdf report'),
                 'sortorder'=>20,
+                'inputtype'=>'singleselect',
+                'options'=>array(
+                    0=>gT('No'),
+                    1=>$this->_translate('Allow public print (with good link).'),
+                    2=>$this->_translate('Replace public print answer.'),
+                ),
+                'default'=>0,
+                'help'=>$this->_translate('Allow to print answer at end of the survey, see manual for url.Optionnaly replace the default print answer by a dowload link of the pdf.'),
+                'caption'=>$this->_translate('Replace public print answer.'),
+            ),
+            'pdfReportSavedFileName'=>array(
+                'types'=>'|', /* upload question type */
+                'category'=>$this->_translate('pdf report'),
+                'sortorder'=>30,
                 'inputtype'=>'text',
                 'default'=>'',
                 'expression'=>1,
-                'help'=>$this->_translate('By default usage of questioncode_{SAVEDID}.pdf'),
+                'help'=>$this->_translate('For the name of the uploaded file. By default usage of questioncode.pdf'),
                 'caption'=>$this->_translate('Name of saved PDF file.'),
             ),
             'pdfReportSendByEmailMail'=>array(
@@ -149,6 +164,7 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
                 'help'=>$this->_translate('This don\'t deactivate limesurvey other email system.'),
                 'caption'=>$this->_translate('Content and subject of the email'),
             ),
+
         );
         if(method_exists($this->getEvent(),'append')) {
             $this->getEvent()->append('questionAttributes', $pdfReportAttribute);
@@ -211,13 +227,118 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
                     $oQuestion=Question::model()->findByPk(array('qid'=>$questionAttribute->qid,'language'=>Yii::app()->getLanguage()));
                     if($oQuestion->type=="|"){
                         $this->_saveInFileUpload($oQuestion);
+                        $this->_setSessionPrintAnswer($oQuestion);
                     }
                     $this->_sendByEMail($oQuestion);
-
+                    $this->_saveInDirectory($oQuestion);
                     unlink($pdfFile);
                 }
             }
         }
+    }
+
+    /**
+     * Replace print answer by own donwload
+     * @see beforeControllerAction
+     */
+    public function setPrintAnswer()
+    {
+        if($this->event->get('controller')=='printanswers')
+        {
+            $aPdfReportPrintRight=Yii::app()->session["pdfReportPrintRight"];
+            $surveyid=Yii::app()->getRequest()->getQuery('surveyid');
+            /* find if one question have print settings */
+            if(isset($aPdfReportPrintRight[$surveyid]['replace'])) {
+                $this->publicPdfDownload($surveyid,$aPdfReportPrintRight[$surveyid]['replace']);
+                $this->event->set('run',false);
+            }
+        }
+    }
+
+    /**
+     * Pdf download of a upload question type
+     * @param int $surveyid
+     * @param int $qid
+     * @param int $srid : responseId
+     * @return void
+     */
+    public function publicPdfDownload($surveyid,$qid=null,$srid=null){
+        $oSurvey=Survey::model()->findByPk($surveyid);
+        if(!$oSurvey) {
+            throw new CHttpException(404,gT('Invalid survey ID'));
+        }
+        /* Control if allowed */
+        $aSessionPrintRigth=Yii::app()->session["pdfReportPrintRight"];
+        $aSurveyPrintRigth=$aSessionPrintRigth[$surveyid];
+        if(empty($aSurveyPrintRigth)){
+            throw new CHttpException(401, 'You are not allowed to print answers.');
+        }
+        if(!$srid){
+            $srid=$aSurveyPrintRigth['srid'];
+        }
+        if(!$qid){
+            $qid=$aSurveyPrintRigth['replace'];
+        }
+
+        // Ok we get the survey and the qid
+        $oResponse = Response::model($surveyid)->findByPk($srid);
+        $aQuestionFiles=$oResponse->getFiles($qid);
+        if(!$aQuestionFiles) {
+            throw new CHttpException(404,gT("Sorry, this file was not found."));
+        }
+        $aFile=$aQuestionFiles[0];
+        $sFileRealName = Yii::app()->getConfig('uploaddir') . "/surveys/" . $iSurveyId . "/files/" . $aFile['filename'];
+        if (file_exists($sFileRealName)) {
+            $mimeType=CFileHelper::getMimeType($sFileRealName, null, false);
+            if(is_null($mimeType)){
+                $mimeType="application/octet-stream";
+            }
+            @ob_clean();
+            header('Content-Description: File Transfer');
+            header('Content-Type: '.$mimeType);
+            header('Content-Disposition: attachment; filename="' . rawurldecode($aFile['name']) . '"');
+            header('Content-Transfer-Encoding: binary');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($sFileRealName));
+            readfile($sFileRealName);
+            Yii::app()->end();
+        }
+        throw new CHttpException(404,gT("Sorry, this file was not found."));
+    }
+    /**
+     * set session for print answer to this question if settings
+     * @param Question $oQuestion
+     * @return void
+     */
+    private function _setSessionPrintAnswer($oQuestion)
+    {
+
+        $oQuestionAttribute = QuestionAttribute::model()->find(
+            "attribute=:attribute and qid=:qid and value>0",
+            array(':attribute'=>'pdfReportReplacePrintAnswer',':qid'=>$oQuestion->qid)
+        );
+        if(!$oQuestionAttribute){
+            return;
+        }
+        $aSessionPrintRigth=Yii::app()->session["pdfReportPrintRight"];
+        if(empty($aSessionPrintRigth)) {
+            $aSessionPrintRigth=array();
+        }
+        if(empty($aSessionPrintRigth)) {
+            $aSessionPrintRigth[$oQuestion->sid]=array(
+                'srid'=>$this->_iResponseId,
+                'allowed'=>array(),
+            );
+        }
+        /* Always add it to allowed */
+        $aSessionPrintRigth[$oQuestion->sid]['allowed'][]=$oQuestion->qid;
+        /* Optionnally set it to replace */
+        if($oQuestionAttribute->value==2){
+            $aSessionPrintRigth[$oQuestion->sid]['replace']=$oQuestion->qid;
+        }
+        Yii::app()->session["pdfReportPrintRight"]=$aSessionPrintRigth;
     }
     /**
      * Get a pdf file from a string
@@ -385,11 +506,24 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
 
     /**
      * Save the generated file in file upload
+     * @todo
+     * @param object question object
+     * @return void
+     */
+    private function _saveInDirectory($oQuestion)
+    {
+
+    }
+    /**
+     * Save the generated file in file upload
      * @param object question object
      * @return void
      */
     private function _saveInFileUpload($oQuestion)
     {
+        if($oQuestion->type!='|'){
+            return;
+        }
         $oSurvey=Survey::model()->findByPk($this->_iSurveyId);
         if(!$oSurvey || $oSurvey->active!='Y'){
             return;
@@ -409,7 +543,7 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
         if($oQuestionAttribute && trim($oQuestionAttribute->value)) {
             $reportSavedFileName=$this->_EMProcessString(trim($oQuestionAttribute->value)).".pdf";
         } else {
-            $reportSavedFileName="{$oQuestion->title}_{$this->_iResponseId}.pdf";
+            $reportSavedFileName="{$oQuestion->title}.pdf";
         }
         $sDestinationFileName = 'fu_' . hexdec(crc32($this->_iResponseId.rand ( 1 , 10000 ).$oQuestion->title));
         if (!copy($fileName, $uploadSurveyDir . $sDestinationFileName)) {
@@ -429,7 +563,9 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
         $oResponse=Response::model($this->_iSurveyId)->find('id=:id',array(':id'=>$this->_iResponseId));
         $oResponse->$sAnswerColumn=ls_json_encode($aAnswer);
         $oResponse->$sAnswerCountColumn=1;
-        $oResponse->save();
+        if(!$oResponse->save()){
+            Yii::log($oResponse->getErrors(),'error','application.plugins.pdfReport');
+        }
     }
 
     /**

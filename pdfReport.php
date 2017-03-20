@@ -87,7 +87,7 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
     {
         $dowloadurl=$this->api->createUrl('plugins/direct', array('plugin' => $this->getName(), 'surveyid' => 'SID','qid'=>'QID'));
         $dowloadurl=str_replace(array("SID","QID"),array("{SID}","{QID}"),$dowloadurl);
-        $helpString=sprintf($this->_translate("To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question id (LimeSurvey replace %s by the surveyid)."),"<code>".$dowloadurl."</code>","<code>{QID}</code>","{SID}");
+        $helpString=sprintf($this->_translate("To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."),"<code>".$dowloadurl."</code>","<code>{QID}</code>","{SID}");
         $this->settings['basicDocumentation']['content']="<div class='well'>{$helpString}</div>";
 
         return parent::getPluginSettings($getValues);
@@ -138,11 +138,11 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
                 'inputtype'=>'singleselect',
                 'options'=>array(
                     0=>gT('No'),
-                    1=>$this->_translate('Allow public print (with good link).'),
+                    1=>$this->_translate('Allow public download (with the link).'),
                     2=>$this->_translate('Replace public print answer.'),
                 ),
                 'default'=>0,
-                'help'=>$this->_translate('Allow to print answer at end of the survey, see manual for url.Optionnaly replace the default print answer by a dowload link of the pdf.'),
+                'help'=>$this->_translate('Allow to download pdf after submitted the survey, see plugin settings for url.Optionnaly replace the default print answer by a dowload link of the pdf.'),
                 'caption'=>$this->_translate('Replace public print answer.'),
             ),
             'pdfReportSavedFileName'=>array(

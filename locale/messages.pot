@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: pdfReport\n"
-"POT-Creation-Date: 2017-03-09 15:18+0100\n"
+"POT-Creation-Date: 2017-03-20 18:38+0100\n"
 "PO-Revision-Date: 2017-03-09 15:09+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,59 +17,76 @@ msgstr ""
 "X-Poedit-KeywordsList: _translate\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: pdfReport.php:86 pdfReport.php:95 pdfReport.php:106 pdfReport.php:117
-#: pdfReport.php:128 pdfReport.php:139
+#: pdfReport.php:90
+#, php-format
+msgid "To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."
+msgstr ""
+
+#: pdfReport.php:105 pdfReport.php:114 pdfReport.php:125 pdfReport.php:136
+#: pdfReport.php:150 pdfReport.php:160 pdfReport.php:171
 msgid "pdf report"
 msgstr ""
 
-#: pdfReport.php:90
+#: pdfReport.php:109
 msgid "The pdf are saved inside question answers, it's better if you hide the question, else only answers part are hidden."
 msgstr ""
 
-#: pdfReport.php:91
+#: pdfReport.php:110
 msgid "Use this question as pdf report."
 msgstr ""
 
-#: pdfReport.php:102
+#: pdfReport.php:121
 msgid "Title for the pdf."
 msgstr ""
 
-#: pdfReport.php:113
+#: pdfReport.php:132
 msgid "Sub title for the pdf."
 msgstr ""
 
-#: pdfReport.php:123
-msgid "By default usage of questioncode_{SAVEDID}.pdf"
+#: pdfReport.php:141
+msgid "Allow public print (with the link)."
 msgstr ""
 
-#: pdfReport.php:124
-msgid "Name of saved PDF file."
-msgstr ""
-
-#: pdfReport.php:134
-msgid "Optionnal email to send pdf Report."
-msgstr ""
-
-#: pdfReport.php:135
-msgid "Send it by email to"
-msgstr ""
-
-#: pdfReport.php:143
-msgid "Confirmation email"
-msgstr ""
-
-#: pdfReport.php:144
-msgid "Basic admin notification"
+#: pdfReport.php:142 pdfReport.php:146
+msgid "Replace public print answer."
 msgstr ""
 
 #: pdfReport.php:145
+msgid "Allow to print answer at end of the survey, see plugin settings for url.Optionnaly replace the default print answer by a dowload link of the pdf."
+msgstr ""
+
+#: pdfReport.php:155
+msgid "For the name of the uploaded file. By default usage of questioncode.pdf"
+msgstr ""
+
+#: pdfReport.php:156
+msgid "Name of saved PDF file."
+msgstr ""
+
+#: pdfReport.php:166
+msgid "Optionnal email to send pdf Report."
+msgstr ""
+
+#: pdfReport.php:167
+msgid "Send it by email to"
+msgstr ""
+
+#: pdfReport.php:175
+msgid "Confirmation email"
+msgstr ""
+
+#: pdfReport.php:176
+msgid "Basic admin notification"
+msgstr ""
+
+#: pdfReport.php:177
 msgid "Detailed admin notification"
 msgstr ""
 
-#: pdfReport.php:150
+#: pdfReport.php:182
 msgid "This don't deactivate limesurvey other email system."
 msgstr ""
 
-#: pdfReport.php:151
+#: pdfReport.php:183
 msgid "Content and subject of the email"
 msgstr ""

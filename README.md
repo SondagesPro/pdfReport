@@ -7,15 +7,36 @@ Use question text to create a pdf report : send it by email, save in survey.
 
 ### Via GIT
 - Go to your LimeSurvey Directory
-- Clone in plugins/sendPdfReport directory `git https://git.framasoft.org/SondagePro-LimeSurvey-plugin/pdfReport.git pdfReport`
+- Clone in plugins/sendPdfReport directory `git https://framagit.org/SondagePro-LimeSurvey-plugin/pdfReport.git pdfReport`
 
+### Via ZIP dowload
+- Download <http://extensions.sondages.pro/IMG/auto/pdfReport.zip>
+- Extract : `unzip pdfReport.zip`
+- Move the directory to  plugins/ directory inside LimeSUrvey
 
 ## Documentation
 - Create a upload question type
 - Activate pdfReport : _Use this question as pdf report._ to _Yes_
-- Remind the default system are totally deactivated
+- The pdf generated take the text of this question
+- Remind the default system of this question are totally deactivated
 - Pdf report are saved as files uploaded in survey
+- Pdf is done and saved only when survey is activated, and whe user submit the survey
 - See other setting
+
+### Style and css usage
+
+The plugin use [tcpdf](https://tcpdf.org/) and [WriteHTML function](https://tcpdf.org/docs/source_docs/classTCPDF/#ac3fdf25fcd36f1dce04f92187c621407). The plugin include a basic css file by default. You can replace the css included in the template used by the survey with a `pdfreport.css` in the files directory of the template.
+
+You can use inline style in the content of the question text. For example, you can use `<strong style='color:red;font-size:18pt'>A big and red sentence</strong>`. See more example on tcdpf website : [inline style](https://tcpdf.org/examples/example_006/) or usage of a [css file](https://tcpdf.org/examples/example_061/). Remind PDF is not web, usage of position:abolute or float didn't work exactly as excpected.
+
+### New page
+
+Tcpdf can use `<br pagebreak="true" />` or `<page> content </page>` for page broke, you can use it in the content of the question text. HTML is filtered leaving this part.
+
+### Image inclusion
+
+You can include image with `<img src="/upload/files/picture.png" />` or with [Data URI](https://en.wikipedia.org/wiki/Data_URI_scheme). All image are validated before included in the pdf and replaced by a white 1px size picture if not available. It's better to use local image (or DATA uri) for speedest generation of the pdf.
+
 
 ## Home page & Copyright
 - HomePage <http://extensions.sondages.pro/>

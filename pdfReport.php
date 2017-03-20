@@ -56,24 +56,42 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
      * @see ls\pluginmanager\PluginBase->seetings
      */
     protected $settings = array(
-        'basesavedirectory'=> array(
-            'type'=>'string',
-            'label'=>'Directory on the server to move the file (if question settings is set)',
-            'help'=>'You can use {SID} for survey id. Plugin didn`t create directory.',
-            'default'=>'',
+        'basicDocumentation'=>array(
+            'type'=>'info',
+            'content'=>'<div class="well">To allow user to get the file of the question number X at end : you can use this url:</div>',
         ),
-        'usetokenfilename' => array(
-            'type'=>'select',
-            'label'=>'Usage of token in filemane',
-            'options'=>array(
-                'add'=>'Adding at start',
-                'alone'=>'Using only token',
-                'none'=>'Didn\t use it',
-            ),
-            'help'=>'For filename generation, way of using token value if exist and not empty.',
-            'default'=>'add',
-        ),
+        /* This part is not active currently */
+        //~ 'basesavedirectory'=> array(
+            //~ 'type'=>'string',
+            //~ 'label'=>'Directory on the server to move the file (if question settings is set)',
+            //~ 'help'=>'You can use {SID} for survey id. Plugin didn`t create directory.',
+            //~ 'default'=>'',
+        //~ ),
+        //~ 'usetokenfilename' => array(
+            //~ 'type'=>'select',
+            //~ 'label'=>'Usage of token in filemane',
+            //~ 'options'=>array(
+                //~ 'add'=>'Adding at start',
+                //~ 'alone'=>'Using only token',
+                //~ 'none'=>'Didn\t use it',
+            //~ ),
+            //~ 'help'=>'For filename generation, way of using token value if exist and not empty.',
+            //~ 'default'=>'add',
+        //~ ),
     );
+
+    /**
+     * @see getPluginSettings
+     */
+    public function getPluginSettings($getValues=true)
+    {
+        $dowloadurl=$this->api->createUrl('plugins/direct', array('plugin' => $this->getName(), 'surveyid' => 'SID','qid'=>'QID'));
+        $dowloadurl=str_replace(array("SID","QID"),array("{SID}","{QID}"),$dowloadurl);
+        $helpString=sprintf($this->_translate("To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question id (LimeSurvey replace %s by the surveyid)."),"<code>".$dowloadurl."</code>","<code>{QID}</code>","{SID}");
+        $this->settings['basicDocumentation']['content']="<div class='well'>{$helpString}</div>";
+
+        return parent::getPluginSettings($getValues);
+    }
 
 
     /**

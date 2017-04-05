@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.1.0
+ * @version 1.1.1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -305,7 +305,7 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
             throw new CHttpException(404,gT("Sorry, this file was not found."));
         }
         $aFile=$aQuestionFiles[0];
-        $sFileRealName = Yii::app()->getConfig('uploaddir') . "/surveys/" . $iSurveyId . "/files/" . $aFile['filename'];
+        $sFileRealName = Yii::app()->getConfig('uploaddir') . "/surveys/" . $surveyid . "/files/" . $aFile['filename'];
         if (file_exists($sFileRealName)) {
             $mimeType=CFileHelper::getMimeType($sFileRealName, null, false);
             if(is_null($mimeType)){
@@ -332,10 +332,9 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
      */
     private function _setSessionPrintAnswer($oQuestion)
     {
-
         $oQuestionAttribute = QuestionAttribute::model()->find(
             "attribute=:attribute and qid=:qid and value>0",
-            array(':attribute'=>'pdfReportReplacePrintAnswer',':qid'=>$oQuestion->qid)
+            array(':attribute'=>'pdfReportPrintAnswer',':qid'=>$oQuestion->qid)
         );
         if(!$oQuestionAttribute){
             return;

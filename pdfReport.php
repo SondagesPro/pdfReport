@@ -152,6 +152,15 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
                 'help'=>$this->_translate('This don\'t deactivate limesurvey other email system.'),
                 'caption'=>$this->_translate('Content and subject of the email'),
             ),
+            'pdfReportSendByEmailAttachment'=>array(
+                'types'=>'|', /* upload question type */
+                'category'=>$this->_translate('pdf report'),
+                'sortorder'=>50,
+                'inputtype'=>'switch',
+                'default'=>1,
+                'help'=>$this->_translate('Add attachements on same way than default.'),
+                'caption'=>$this->_translate('Add attachements of email'),
+            ),
         );
         if(method_exists($this->getEvent(),'append')) {
             $this->getEvent()->append('questionAttributes', $pdfReportAttribute);
@@ -459,6 +468,10 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
         $aMessage=$this->_getEmailContent($aQuestionsAttributes['pdfReportSendByEmailContent']);
         $sFile=$this->_getPdfFileName($oQuestion->title);
         $aAttachments = array($this->_getPdfFileName($oQuestion->title));
+        /* Add LS attachments */
+        if($aQuestionsAttributes['pdfReportSendByEmailAttachment']) {
+            $aAttachments = array_merge($this->_getEmailAttachements($aQuestionsAttributes['pdfReportSendByEmailContent']),$aAttachments);
+        }
         foreach ($aValidRecipient as $sRecipient)
         {
             if (!SendEmailMessage($aMessage['message'], $aMessage['subject'],$sRecipient,"{$oSurvey->admin} <{$oSurvey->adminemail}>" , Yii::app()->getConfig("sitename"), true, getBounceEmail($this->_iSurveyId), $aAttachments))
@@ -523,6 +536,33 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
             'subject'=>$sSubject,
             'message'=>$sMessage,
         );
+    }
+    /**
+     * Get attachement content by email
+     */
+    private function _getEmailAttachements($sType)
+    {
+        /* @todo : search the for needed other replace (invite and remind) */
+        switch ($sType) {
+            case 'confirm':
+                $sType = 'confirmation';
+            default :
+        }
+        $aRelevantAttachments = array();
+        $aSurvey=getSurveyInfo($this->_iSurveyId,Yii::app()->language);
+        $aAttachments = unserialize($aSurvey['attachments']);
+        /*
+         * Iterate through attachments and check them for relevance.
+         */
+        if (!empty($aAttachments[$sType])) {
+            foreach ($aAttachments[$sType] as $aAttachment) {
+                // If the attachment is relevant it will be added to the mail.
+                if (LimeExpressionManager::ProcessRelevance($aAttachment['relevance']) && @file_exists($aAttachment['url'])) {
+                    $aRelevantAttachments[] = $aAttachment['url'];
+                }
+            }
+        }
+        return $aRelevantAttachments;
     }
     /**
      * Get the replacement var for email

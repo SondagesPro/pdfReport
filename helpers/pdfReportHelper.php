@@ -73,9 +73,9 @@ class pdfReportHelper extends pdf
       if (@file_exists($docRoot."/".$file)) {
         return parent::Image($docRoot."/".$file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
       }
-      if (@file_exists($this->sAbsolutePath."/".$file)) {
-        return parent::Image($this->sAbsolutePath."/".$file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
-      }
+    }
+    if (@file_exists($this->sAbsolutePath."/".$file)) {
+      return parent::Image($this->sAbsolutePath."/".$file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
     }
     /* Same server but didn't find with previous (acan be deleted or DOCUMENT_ROOT is broken, or using aliad etc … */
     if($file[0] === '/') {

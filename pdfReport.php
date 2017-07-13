@@ -1,7 +1,7 @@
 <?php
 /**
  * pdfReport Plugin for LimeSurvey
- * Use question setings to create a report and send it by email.
+ * Use question settings to create a report and send it by email.
  *
  * @author Denis Chenu <https://sondages.pro>
  * @copyright 2015-2017 Denis Chenu <https://sondages.pro>
@@ -73,6 +73,10 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
             'help'=>'For filename generation, way of using token value if exist and not empty.',
             'default'=>'add',
         ),
+        'basicDocumentation'=>array(
+            'type'=>'info',
+            'content'=>'<div class="well">To allow user to get the file of the question number X at end : you can use this url:</div>',
+        ),
         /* This part is not active currently */
         //~ 'basesavedirectory'=> array(
             //~ 'type'=>'string',
@@ -100,7 +104,7 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
     {
         $dowloadurl=$this->api->createUrl('plugins/direct', array('plugin' => $this->getName(), 'surveyid' => 'SID','qid'=>'QID'));
         $dowloadurl=str_replace(array("SID","QID"),array("{SID}","{QID}"),$dowloadurl);
-        $helpString=sprintf($this->_translate("To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."),"<code>".$dowloadurl."</code>","<code>{QID}</code>","{SID}");
+        $helpString=sprintf($this->_translate("[WIP] To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."),"<code>".$dowloadurl."</code>","<code>{QID}</code>","{SID}");
         $this->settings['basicDocumentation']['content']="<div class='well'>{$helpString}</div>";
 
         return parent::getPluginSettings($getValues);
@@ -316,10 +320,10 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
         if(empty($aSurveyPrintRigth)){
             throw new CHttpException(401, 'You are not allowed to print answers.');
         }
-        if(!$srid){
+        if(!$srid) {
             $srid=$aSurveyPrintRigth['srid'];
         }
-        if(!$qid){
+        if(!$qid) {
             $qid=$aSurveyPrintRigth['replace'];
         }
 
@@ -554,8 +558,7 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
      * @param object question object
      * @return void
      */
-    private function _saveInDirectory($oQuestion)
-    {
+    private function _saveInDirectory($oQuestion) {
 
     }
     /**
@@ -825,6 +828,7 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
             'SAVEDID'=>$this->_iResponseId,
             'SITENAME'=>App()->getConfig('sitename'),
             'SURVEYNAME'=>$oSurvey->getLocalizedTitle(),
+            'SURVEYRESOURCESURL'=> Yii::app()->getConfig("uploadurl").'/surveys/'.$this->_iSurveyId.'/'
         );
         return \LimeExpressionManager::ProcessString($string, null, $replacementFields, false, 3, 0, false, false, true);
     }

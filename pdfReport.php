@@ -265,7 +265,9 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
 
         $oPDF = new pdfReportHelper();
         $oPDF->sImageBlank = realpath(dirname(__FILE__))."/blank.png";
-        $oPDF->sAbsoluteUrl= App()->request->getHostInfo();
+        $oPDF->sAbsoluteUrl = App()->request->getHostInfo();
+        $oPDF->sAbsolutePath = dirname(Yii::app()->request->scriptFile);
+
         $pdfSpecific=array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<page>','</page>');
         $pdfReplaced=array('<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>page</span>','<span>/page</span>');
         $sText=str_replace($pdfSpecific, $pdfReplaced, $sText);

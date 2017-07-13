@@ -56,7 +56,7 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
     protected $settings = array(
         'basesavedirectory'=> array(
             'type'=>'string',
-            'label'=>'Directory on the server to move the file (if question settings is set)',
+            'label'=>'[WIP] Directory on the server to move the file (if question settings is set)',
             'help'=>'You can use {SID} for survey id. Plugin didn`t create directory.',
             'default'=>'',
         ),
@@ -118,8 +118,11 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
                 'inputtype'=>'text',
                 'default'=>'',
                 'i18n'=>true,
+                'htmlOptions'=>array(
+                    'placeholder'=>'questioncode_{SAVEDID}',
+                ),
                 'expression'=>1,
-                'help'=>$this->_translate('By default usage of questioncode_{SAVEDID}.pdf'),
+                'help'=>$this->_translate('By default usage of questioncode_{SAVEDID}. You don\'t have to put the .pdf part.'),
                 'caption'=>$this->_translate('Name of saved PDF file.'),
             ),
             'pdfReportSendByEmailMail'=>array(
@@ -212,7 +215,7 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
                     if($oQuestion->type=="|"){
                         $this->_saveInFileUpload($oQuestion);
                     }
-                    $this->_sendByEMail($oQuestion);
+                    $this->_sendByEmail($oQuestion);
 
                     unlink($pdfFile);
                 }

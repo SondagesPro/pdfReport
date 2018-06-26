@@ -20,7 +20,7 @@ Use question text to create a pdf report : send it by email, save in survey.
 - The pdf generated take the text of this question
 - Remind the default system of this question are totally deactivated
 - Pdf report are saved as files uploaded in survey
-- Pdf is done and saved only when survey is activated, and whe user submit the survey
+- Pdf is done and saved only when survey is activated, and when user submit the survey
 - See other setting
 
 ### Style and css usage

@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.2.1
+ * @version 1.3.1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,7 +21,7 @@
  * GNU General Public License for more details.
  */
 
-class pdfReport extends \ls\pluginmanager\PluginBase {
+class pdfReport extends PluginBase {
     protected $storage = 'DbStorage';
     static protected $description = 'Do a PDF report for question.';
     static protected $name = 'pdfReport';
@@ -56,19 +56,19 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
      * @see ls\pluginmanager\PluginBase->seetings
      */
     protected $settings = array(
-        'basesavedirectory'=> array(
-            'type'=>'string',
-            'label'=>'[WIP] Directory on the server to move the file (if question settings is set)',
-            'help'=>'You can use {SID} for survey id. Plugin didn`t create directory.',
-            'default'=>'',
-        ),
+        //~ 'basesavedirectory'=> array(
+            //~ 'type'=>'string',
+            //~ 'label'=>'[WIP] Directory on the server to move the file (if question settings is set)',
+            //~ 'help'=>'You can use {SID} for survey id. Plugin didn`t create directory.',
+            //~ 'default'=>'',
+        //~ ),
         'usetokenfilename' => array(
             'type'=>'select',
             'label'=>'Usage of token in filemane',
             'options'=>array(
                 'add'=>'Adding at start',
                 'alone'=>'Using only token',
-                'none'=>'Didn\t use it',
+                'none'=>'Didn‘t use it',
             ),
             'help'=>'For filename generation, way of using token value if exist and not empty.',
             'default'=>'add',
@@ -112,7 +112,7 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
 
 
     /**
-     * @see ls\helpers\questionHelper->getAttributesDefinitions()
+     * @see questionHelper->getAttributesDefinitions()
      */
     public function addPdfReportAttribute()
     {
@@ -246,7 +246,7 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
             if($oQuestionPdfReport) {
                 $inputName="{$oEvent->get('surveyId')}X{$oEvent->get('gid')}X{$oEvent->get('qid')}";
                 $answers = \CHtml::hiddenField($inputName , '', array('id' => $inputName)) // LS bug : must fix (id starting by number)
-                         . \CHtml::hiddenField("{$inputName}_filecount" , '', array('id' => "{$inputName}_filecount"));
+                         . \CHtml::hiddenField("{$inputName}_filecount" , 0, array('id' => "{$inputName}_filecount"));
                 $oEvent->set('answers',$answers);
                 $oEvent->set('file_valid_message','');
                 $oEvent->set('valid_message','');
@@ -372,7 +372,11 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
         if(empty($aSessionPrintRigth)) {
             $aSessionPrintRigth=array();
         }
-        if(empty($aSessionPrintRigth)) {
+        /* reset for new srid */
+        if(!empty($aSessionPrintRigth[$oQuestion->sid]) && $aSessionPrintRigth[$oQuestion->sid]['srid'] != $this->_iResponseId) {
+            $aSessionPrintRigth=array();
+        } 
+        if(empty($aSessionPrintRigth[$oQuestion->sid])) {
             $aSessionPrintRigth[$oQuestion->sid]=array(
                 'srid'=>$this->_iResponseId,
                 'allowed'=>array(),
@@ -609,7 +613,7 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
         );
         $oResponse=Response::model($this->_iSurveyId)->find('id=:id',array(':id'=>$this->_iResponseId));
         $oResponse->$sAnswerColumn=ls_json_encode($aAnswer);
-        $oResponse->$sAnswerCountColumn=1;
+        //~ $oResponse->$sAnswerCountColumn=1;
         if(!$oResponse->save()){
             Yii::log($oResponse->getErrors(),'error','application.plugins.pdfReport');
         }
@@ -830,6 +834,10 @@ class pdfReport extends \ls\pluginmanager\PluginBase {
             'SURVEYNAME'=>$oSurvey->getLocalizedTitle(),
             'SURVEYRESOURCESURL'=> Yii::app()->getConfig("uploadurl").'/surveys/'.$this->_iSurveyId.'/'
         );
-        return \LimeExpressionManager::ProcessString($string, null, $replacementFields, false, 3, 0, false, false, true);
+        $lsversion = intval(Yii::app()->getConfig('versionnumber'));
+        if($lsversion<3) {
+            return \LimeExpressionManager::ProcessString($string, null, $replacementFields, false, 3, 0, false, false, true);
+        }
+        return \LimeExpressionManager::ProcessString($string, null, $replacementFields, 3, 0, false, false, true);
     }
 }

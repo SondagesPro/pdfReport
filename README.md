@@ -10,7 +10,7 @@ Use question text to create a pdf report : send it by email, save in survey.
 - Clone in plugins/sendPdfReport directory `git https://gitlab.com/SondagesPro/ExportAndStats/pdfReport.git pdfReport`
 
 ### Via ZIP dowload
-- Download <http://extensions.sondages.pro/IMG/auto/pdfReport.zip>
+- Download <https://extensions.sondages.pro/IMG/auto/pdfReport.zip>
 - Extract : `unzip pdfReport.zip`
 - Move the directory to  plugins/ directory inside LimeSurvey
 

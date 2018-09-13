@@ -2,84 +2,121 @@
 # This file is distributed under the same license as the pdfReport package.
 msgid ""
 msgstr ""
-"PO-Revision-Date: 2018-09-13 10:24:08+0000\n"
+"Project-Id-Version: pdfReport\n"
+"POT-Creation-Date: 2018-09-13 12:25+0200\n"
+"PO-Revision-Date: 2018-09-13 12:28+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: GlotPress/2.3.1\n"
-"Language: fr\n"
-"Project-Id-Version: pdfReport\n"
+"X-Generator: Poedit 2.1.1\n"
 
-#: pdfReport.php:155
-msgid "For the name of the uploaded file. By default usage of questioncode.pdf"
-msgstr "Pour le nom du fichier émis. Par défaut codedelaquestion.pdf"
+#: pdfReport.php:107
+#, php-format
+msgid ""
+"[WIP] To allow user to get the file of the question number X at end : you "
+"can use this url: %s. Replacing %s by the question number (LimeSurvey "
+"replace %s by the survey number)."
+msgstr ""
+"[WIP] Pour permettre à l'utilisateur de télécharger le pdf associé à une "
+"question à la fin du questionnaire : vous pouvez utiliser ce lien : %s. En "
+"remplaçant %s par le numéro de question (LimeSurvey remplace %s par le "
+"numéro de questionnaire)."
 
-#: pdfReport.php:145
-msgid "Allow to print answer at end of the survey, see plugin settings for url.Optionnaly replace the default print answer by a dowload link of the pdf."
-msgstr "Permettre au répondant d‘imprimer le rapport à la fin du questionnaire, vérifier l‘adresse dans les paramètre de l‘extension. En option remplace le système d‘impression des réponses."
+#: pdfReport.php:122 pdfReport.php:131 pdfReport.php:142 pdfReport.php:153
+#: pdfReport.php:167 pdfReport.php:181 pdfReport.php:192 pdfReport.php:208
+msgid "pdf report"
+msgstr "rapport pdf"
 
-#: pdfReport.php:142 pdfReport.php:146
+#: pdfReport.php:126
+msgid ""
+"The pdf are saved inside question answers, it's better if you hide the "
+"question, else only answers part are hidden."
+msgstr ""
+"Le fichier pdf sera sauvé en tant que réponse à la question, il est "
+"préférable de masquer la question, sinon seule la partie réponse sera "
+"masquée."
+
+#: pdfReport.php:127
+msgid "Use this question as pdf report."
+msgstr "Utiliser cette question pour le rapport pdf."
+
+#: pdfReport.php:138
+msgid "Title for the pdf."
+msgstr "Titre du pdf."
+
+#: pdfReport.php:149
+msgid "Sub title for the pdf."
+msgstr "Sous-titre du pdf."
+
+#: pdfReport.php:158
+msgid "Allow public download (with the link)."
+msgstr "Permettre l'impression publique (avec le lien)."
+
+#: pdfReport.php:159 pdfReport.php:163
 msgid "Replace public print answer."
-msgstr "Remplacer le lien d'impression des réponses"
+msgstr "Remplacer le lien d'impression des réponses."
 
-#: pdfReport.php:141
-msgid "Allow public print (with the link)."
-msgstr "Permettre l'impression publique (avec le lien)"
-
-#: pdfReport.php:90
-msgid "To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."
-msgstr "Pour permettre à l'utilisateur de télécharger le pdf associé à une question à la fin du questionnaire : vous pouvez utiliser ce lien : %s. En remplaçant %s par le numéro de question (LimeSurvey remplace %s par le numéro de questionnaire)."
-
-#: pdfReport.php:183
-msgid "Content and subject of the email"
-msgstr "Contenu et sujet du courriel"
-
-#: pdfReport.php:182
-msgid "This don't deactivate limesurvey other email system."
-msgstr "Ceci ne désactive pas l'envoi par les autres système de LimeSurvey"
-
-#: pdfReport.php:177
-msgid "Detailed admin notification"
-msgstr "Notification détaillée à l’administrateur "
+#: pdfReport.php:162
+msgid ""
+"Allow to download pdf after submitted the survey, see plugin settings for "
+"url.Optionnaly replace the default print answer by a dowload link of the pdf."
+msgstr ""
+"Permettre au répondant d‘imprimer le rapport à la fin du questionnaire, "
+"vérifier l‘adresse dans les paramètre de l‘extension. En option remplace le "
+"système d‘impression des réponses."
 
 #: pdfReport.php:176
-msgid "Basic admin notification"
-msgstr "Notification simple à l’administrateur"
+msgid ""
+"By default usage of questioncode_{SAVEDID}. You don't have to put the .pdf "
+"part."
+msgstr ""
+"Par défaut utilisation de codequestion_{SAVEDID}. Vous n‘avez pas à ajouter "
+"l'extension .pdf."
 
-#: pdfReport.php:175
-msgid "Confirmation email"
-msgstr "Courriel de confimation"
+#: pdfReport.php:177
+msgid "Name of saved PDF file."
+msgstr "Nom du fichier PDF sauvegardé."
 
-#: pdfReport.php:167
+#: pdfReport.php:187
+msgid "Optionnal email to send pdf Report."
+msgstr "Adresse de messagerie optionnelle pour l'envoi du rapport."
+
+#: pdfReport.php:188
 msgid "Send it by email to"
 msgstr "L'envoyer à l'adresse"
 
-#: pdfReport.php:166
-msgid "Optionnal email to send pdf Report."
-msgstr "Adresse de messagerie optionnelle pour l'envoi du rapport"
+#: pdfReport.php:196
+msgid "Confirmation email"
+msgstr "Courriel de confimation"
 
-#: pdfReport.php:156
-msgid "Name of saved PDF file."
-msgstr "Nom du fichier pdf sauvegardé"
+#: pdfReport.php:197
+msgid "Basic admin notification"
+msgstr "Notification simple à l’administrateur"
 
-#: pdfReport.php:132
-msgid "Sub title for the pdf."
-msgstr "Sous-titre du pdf"
+#: pdfReport.php:198
+msgid "Detailed admin notification"
+msgstr "Notification détaillée à l’administrateur"
 
-#: pdfReport.php:121
-msgid "Title for the pdf."
-msgstr "Titre du pdf"
+#: pdfReport.php:203
+msgid "This don't deactivate limesurvey other email system."
+msgstr "Ceci ne désactive pas l'envoi par les autres système de LimeSurvey."
 
-#: pdfReport.php:110
-msgid "Use this question as pdf report."
-msgstr "Utiliser cette question pour le rapport pdf"
+#: pdfReport.php:204
+msgid "Content and subject of the email"
+msgstr "Contenu et sujet du courriel"
 
-#: pdfReport.php:109
-msgid "The pdf are saved inside question answers, it's better if you hide the question, else only answers part are hidden."
-msgstr "Le fichier pdf sera sauvé en tant que réponse à la question, il est préférable de masquer la question, sinon seule la partie réponse sera masquée."
+#: pdfReport.php:212
+msgid "Add attachements on same way than default."
+msgstr ""
 
-#: pdfReport.php:105 pdfReport.php:114 pdfReport.php:125 pdfReport.php:136
-#: pdfReport.php:150 pdfReport.php:160 pdfReport.php:171
-msgid "pdf report"
-msgstr "rapport pdf"
+#: pdfReport.php:213
+msgid "Add attachements of email"
+msgstr ""
+
+#~ msgid ""
+#~ "For the name of the uploaded file. By default usage of questioncode.pdf"
+#~ msgstr "Pour le nom du fichier émis. Par défaut codedelaquestion.pdf"

@@ -47,23 +47,8 @@ ol ol, ol ul { margin: 4px 0 5px 30px; font-size: 95%;}
 img,video,svg,iframe{max-width: 100%;height: auto;}
 h1{text-align:center;width:100%;}
 ul{margin-top:0}
-dl
-{
-margin: 0;
-padding: 0;
-}
-dt
-{
-margin: 0;
-padding: 0;
-font-weight: bold;
-color:#222
-}
-dd
-{
-margin: 0 0 1em 0;
-padding: 0;
-color:#444;
-}
+dl{margin: 0;padding: 0;}
+dt{margin: 0;padding: 0;font-weight: bold;color:#222}
+dd{margin: 0 0 1em 0;padding: 0;color:#444;}
 h2{}
 h1{width:200mm}

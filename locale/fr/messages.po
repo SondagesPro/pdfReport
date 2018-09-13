@@ -1,137 +1,85 @@
+# Translation of pdfReport in French (France)
+# This file is distributed under the same license as the pdfReport package.
 msgid ""
 msgstr ""
-"Project-Id-Version: pdfReport\n"
-"POT-Creation-Date: 2017-03-20 18:38+0100\n"
-"PO-Revision-Date: 2017-03-20 18:40+0100\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: fr\n"
+"PO-Revision-Date: 2018-09-13 10:24:08+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.12\n"
-"X-Poedit-Basepath: ../..\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: _translate\n"
-"X-Poedit-SearchPath-0: .\n"
-
-#: pdfReport.php:90
-#, php-format
-msgid ""
-"To allow user to get the file of the question number X at end : you can use "
-"this url: %s. Replacing %s by the question number (LimeSurvey replace %s by "
-"the survey number)."
-msgstr ""
-"Pour permettre à l'utilisateur de télécharger le pdf associé à une question "
-"à la fin du questionnaire : vous pouvez utiliser ce lien : %s. En remplaçant "
-"%s par le numéro de question (LimeSurvey remplace %s par le numéro de "
-"questionnaire)."
-
-#: pdfReport.php:105 pdfReport.php:114 pdfReport.php:125 pdfReport.php:136
-#: pdfReport.php:150 pdfReport.php:160 pdfReport.php:171
-msgid "pdf report"
-msgstr "rapport pdf"
-
-#: pdfReport.php:109
-msgid ""
-"The pdf are saved inside question answers, it's better if you hide the "
-"question, else only answers part are hidden."
-msgstr ""
-"Le fichier pdf sera sauvé en tant que réponse à la question, il est "
-"préférable de masquer la question, sinon seule la partie réponse sera "
-"masquée."
-
-#: pdfReport.php:110
-msgid "Use this question as pdf report."
-msgstr "Utiliser cette question pour le rapport pdf"
-
-#: pdfReport.php:121
-msgid "Title for the pdf."
-msgstr "Titre du pdf"
-
-#: pdfReport.php:132
-msgid "Sub title for the pdf."
-msgstr "Sous-titre du pdf"
-
-#: pdfReport.php:141
-msgid "Allow public download (with the link)."
-msgstr "Permettre le téléchargement public (avec le lien)"
-
-#: pdfReport.php:142 pdfReport.php:146
-msgid "Replace public print answer."
-msgstr "Remplacer le lien d'impression des réponses"
-
-#: pdfReport.php:145
-msgid ""
-"Allow to download pdf after submitted the survey, see plugin settings for "
-"url.Optionnaly replace the default print answer by a dowload link of the pdf."
-msgstr ""
-"Permet le téléchargement du fichier pdf après la soumission du "
-"questionnaire, voir les paramètres de l'extension pour le lien. Peut "
-"remplacer le système d'impression des réponses par le téléchargement du pdf."
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: GlotPress/2.3.1\n"
+"Language: fr\n"
+"Project-Id-Version: pdfReport\n"
 
 #: pdfReport.php:155
 msgid "For the name of the uploaded file. By default usage of questioncode.pdf"
 msgstr "Pour le nom du fichier émis. Par défaut codedelaquestion.pdf"
 
-#: pdfReport.php:156
-msgid "Name of saved PDF file."
-msgstr "Nom du fichier pdf sauvegardé"
+#: pdfReport.php:145
+msgid "Allow to print answer at end of the survey, see plugin settings for url.Optionnaly replace the default print answer by a dowload link of the pdf."
+msgstr "Permettre au répondant d‘imprimer le rapport à la fin du questionnaire, vérifier l‘adresse dans les paramètre de l‘extension. En option remplace le système d‘impression des réponses."
 
-#: pdfReport.php:166
-msgid "Optionnal email to send pdf Report."
-msgstr "Adresse de courriel optionnelle pour l'envoi du rapport"
+#: pdfReport.php:142 pdfReport.php:146
+msgid "Replace public print answer."
+msgstr "Remplacer le lien d'impression des réponses"
 
-#: pdfReport.php:167
-msgid "Send it by email to"
-msgstr "L'envoyer à l'adresse"
+#: pdfReport.php:141
+msgid "Allow public print (with the link)."
+msgstr "Permettre l'impression publique (avec le lien)"
 
-#: pdfReport.php:175
-msgid "Confirmation email"
-msgstr "Courriel de confimation"
-
-#: pdfReport.php:176
-msgid "Basic admin notification"
-msgstr "Notification simple à l’administrateur"
-
-#: pdfReport.php:177
-msgid "Detailed admin notification"
-msgstr "Notification détaillée à l’administrateur "
-
-#: pdfReport.php:182
-msgid "This don't deactivate limesurvey other email system."
-msgstr "Ceci ne désactive pas l'envoie par les autres système de LimeSurvey"
+#: pdfReport.php:90
+msgid "To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."
+msgstr "Pour permettre à l'utilisateur de télécharger le pdf associé à une question à la fin du questionnaire : vous pouvez utiliser ce lien : %s. En remplaçant %s par le numéro de question (LimeSurvey remplace %s par le numéro de questionnaire)."
 
 #: pdfReport.php:183
 msgid "Content and subject of the email"
 msgstr "Contenu et sujet du courriel"
 
-#~ msgid "Allow public print (with the link)."
-#~ msgstr "Permettre le téléchargement public (avec le lien)"
+#: pdfReport.php:182
+msgid "This don't deactivate limesurvey other email system."
+msgstr "Ceci ne désactive pas l'envoi par les autres système de LimeSurvey"
 
-#~ msgid ""
-#~ "Allow to print answer at end of the survey, see plugin settings for url."
-#~ "Optionnaly replace the default print answer by a dowload link of the pdf."
-#~ msgstr "Permet d'imprimer les réponses"
+#: pdfReport.php:177
+msgid "Detailed admin notification"
+msgstr "Notification détaillée à l’administrateur "
 
-#~ msgid ""
-#~ "To allow user to get the file of the question number X at end : you can "
-#~ "use this url: %s. Replacing %s by the question id (LimeSurvey replace %s "
-#~ "by the surveyid)."
-#~ msgstr ""
-#~ "Pour permettre à l'utilisateur de télécharger le pdf associé à une "
-#~ "question à la fin du questionnaire : vous pouvez utiliser ce lien : %s. "
-#~ "En remplaçant %s par le numéro de question (LimeSurvey remplace %s par le "
-#~ "numéro de questionnaire)."
+#: pdfReport.php:176
+msgid "Basic admin notification"
+msgstr "Notification simple à l’administrateur"
 
-#~ msgid "Allow public print (with good link)."
-#~ msgstr "Permettre le téléchargement public (avec le lien)"
+#: pdfReport.php:175
+msgid "Confirmation email"
+msgstr "Courriel de confimation"
 
-#~ msgid ""
-#~ "Allow to print answer at end of the survey, see manual for url.Optionnaly "
-#~ "replace the default print answer by a dowload link of the pdf."
-#~ msgstr "Permet d'imprimer les réponses"
+#: pdfReport.php:167
+msgid "Send it by email to"
+msgstr "L'envoyer à l'adresse"
 
-#~ msgid "By default usage of questioncode_{SAVEDID}.pdf"
-#~ msgstr "Par défaut utilisation de codequestion_{SAVEDID}.pdf"
+#: pdfReport.php:166
+msgid "Optionnal email to send pdf Report."
+msgstr "Adresse de messagerie optionnelle pour l'envoi du rapport"
+
+#: pdfReport.php:156
+msgid "Name of saved PDF file."
+msgstr "Nom du fichier pdf sauvegardé"
+
+#: pdfReport.php:132
+msgid "Sub title for the pdf."
+msgstr "Sous-titre du pdf"
+
+#: pdfReport.php:121
+msgid "Title for the pdf."
+msgstr "Titre du pdf"
+
+#: pdfReport.php:110
+msgid "Use this question as pdf report."
+msgstr "Utiliser cette question pour le rapport pdf"
+
+#: pdfReport.php:109
+msgid "The pdf are saved inside question answers, it's better if you hide the question, else only answers part are hidden."
+msgstr "Le fichier pdf sera sauvé en tant que réponse à la question, il est préférable de masquer la question, sinon seule la partie réponse sera masquée."
+
+#: pdfReport.php:105 pdfReport.php:114 pdfReport.php:125 pdfReport.php:136
+#: pdfReport.php:150 pdfReport.php:160 pdfReport.php:171
+msgid "pdf report"
+msgstr "rapport pdf"

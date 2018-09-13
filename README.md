@@ -7,12 +7,12 @@ Use question text to create a pdf report : send it by email, save in survey.
 
 ### Via GIT
 - Go to your LimeSurvey Directory
-- Clone in plugins/sendPdfReport directory `git https://framagit.org/SondagePro-LimeSurvey-plugin/pdfReport.git pdfReport`
+- Clone in plugins/pdfReport directory `git https://gitlab.com/SondagesPro/ExportAndStats/pdfReport.git pdfReport`
 
 ### Via ZIP dowload
-- Download <http://extensions.sondages.pro/IMG/auto/pdfReport.zip>
+- Download <https://extensions.sondages.pro/IMG/auto/pdfReport.zip>
 - Extract : `unzip pdfReport.zip`
-- Move the directory to  plugins/ directory inside LimeSUrvey
+- Move the directory to  plugins/ directory inside LimeSurvey
 
 ## Documentation
 - Create a upload question type
@@ -25,7 +25,7 @@ Use question text to create a pdf report : send it by email, save in survey.
 
 ### Style and css usage
 
-The plugin use [tcpdf](https://tcpdf.org/) and [WriteHTML function](https://tcpdf.org/docs/source_docs/classTCPDF/#ac3fdf25fcd36f1dce04f92187c621407). The plugin include a basic css file by default. You can replace the css included in the template used by the survey with a `pdfreport.css` in the files directory of the template.
+The plugin use [tcpdf](https://tcpdf.org/) and [WriteHTML function](https://tcpdf.org/docs/srcdoc/TCPDF/source-class-TCPDF/#17080). The plugin include a basic css file by default. You can replace the css included in the template used by the survey with a `pdfreport.css` in the files directory of the template.
 
 You can use inline style in the content of the question text. For example, you can use `<strong style='color:red;font-size:18pt'>A big and red sentence</strong>`. See more example on tcdpf website : [inline style](https://tcpdf.org/examples/example_006/) or usage of a [css file](https://tcpdf.org/examples/example_061/). Remind PDF is not web, usage of position:abolute or float didn't work exactly as excpected.
 
@@ -40,7 +40,7 @@ You can include image with `<img src="/upload/files/picture.png" />` or with [Da
 
 ## Home page & Copyright
 - HomePage <http://extensions.sondages.pro/>
-- Copyright © 2015-2017 Denis Chenu <https://sondages.pro>
+- Copyright © 2015-2018 Denis Chenu <https://sondages.pro>
 - Copyright © 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
 - Copyright © 2015 Ingeus <http://www.ingeus.fr/>
 

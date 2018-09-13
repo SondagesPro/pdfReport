@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.3.1
+ * @version 1.4.1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -239,11 +239,11 @@ class pdfReport extends PluginBase {
     {
         if($this->getEvent()->get('type')=='|') {
             $oEvent=$this->getEvent();
-            $oQuestionPdfReport = intval(QuestionAttribute::model()->count(
-                "attribute=:attribute and qid=:qid and value=:value",
-                array(':attribute'=>'pdfReport',':qid'=>$oEvent->get('qid'),':value'=>1)
-            ));
-            if($oQuestionPdfReport) {
+            $oQuestionPdfReport = QuestionAttribute::model()->find(
+                "attribute=:attribute and qid=:qid",
+                array(':attribute'=>'pdfReport',':qid'=>$oEvent->get('qid'))
+            );
+            if($oQuestionPdfReport && intval($oQuestionPdfReport->value)) {
                 $inputName="{$oEvent->get('surveyId')}X{$oEvent->get('gid')}X{$oEvent->get('qid')}";
                 $answers = \CHtml::hiddenField($inputName , '', array('id' => $inputName)) // LS bug : must fix (id starting by number)
                          . \CHtml::hiddenField("{$inputName}_filecount" , 0, array('id' => "{$inputName}_filecount"));
@@ -265,7 +265,7 @@ class pdfReport extends PluginBase {
         $criteria = new CDbCriteria;
         $criteria->join='LEFT JOIN {{questions}} as question ON question.qid=t.qid';
         $criteria->condition='question.sid = :sid and question.language=:language and attribute=:attribute and value=:value';
-        $criteria->params=array(':sid'=>$this->_iSurveyId,':language'=>Yii::app()->getLanguage(),':attribute'=>'pdfReport',':value'=>1);
+        $criteria->params=array(':sid'=>$this->_iSurveyId,':language'=>Yii::app()->getLanguage(),':attribute'=>'pdfReport',':value'=>'1');
         $oQuestionAttribute = QuestionAttribute::model()->findAll($criteria);
         if($oQuestionAttribute){
             foreach($oQuestionAttribute as $questionAttribute){
@@ -362,10 +362,13 @@ class pdfReport extends PluginBase {
     private function _setSessionPrintAnswer($oQuestion)
     {
         $oQuestionAttribute = QuestionAttribute::model()->find(
-            "attribute=:attribute and qid=:qid and value>0",
+            "attribute=:attribute and qid=:qid",
             array(':attribute'=>'pdfReportPrintAnswer',':qid'=>$oQuestion->qid)
         );
         if(!$oQuestionAttribute){
+            return;
+        }
+        if(!intval($oQuestionAttribute->value)){
             return;
         }
         $aSessionPrintRigth=Yii::app()->session["pdfReportPrintRight"];
@@ -442,7 +445,7 @@ class pdfReport extends PluginBase {
         $pdfSpecific=array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<page>','</page>');
         $pdfReplaced=array('<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>page</span>','<span>/page</span>');
         $sText=str_replace($pdfSpecific, $pdfReplaced, $sText);
-        if(function_exists ("tidy_parse_string")) // Call to undefined function tidy_parse_string() in ./application/third_party/tcpdf/include/tcpdf_static.php on line 2099
+        if(false && function_exists ("tidy_parse_string")) // Call to undefined function tidy_parse_string() in ./application/third_party/tcpdf/include/tcpdf_static.php on line 2099
         {
             $tidy_options = array (
                 'clean' => 1,
@@ -499,12 +502,16 @@ class pdfReport extends PluginBase {
         }
         $oPDF->initAnswerPDF($aSurvey, $aPdfLanguageSettings, $sHeader, $sSubHeader);
         // output the HTML content
+        $errorReporting = error_reporting();
+        error_reporting(0);
         $oPDF->writeHTML($sText, true, false, true, false, '');
+        error_reporting($errorReporting);
 
         $oPDF->lastPage();
+        
         $sFilePdfName=$this->_getPdfFileName($oQuestion->title);
-
         $oPDF->Output($sFilePdfName, 'F');
+        
         Yii::log("getPdfFile done for {$iQid} in {$this->_iSurveyId}",'trace','application.plugins.sendPdfReport');
         return $sFilePdfName;
     }

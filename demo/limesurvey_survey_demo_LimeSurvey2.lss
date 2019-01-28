@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
  <LimeSurveyDocType>Survey</LimeSurveyDocType>
- <DBVersion>356</DBVersion>
+ <DBVersion>263</DBVersion>
  <languages>
   <language>en</language>
  </languages>
@@ -17,45 +17,45 @@
   </fields>
   <rows>
    <row>
-    <qid><![CDATA[4764]]></qid>
+    <qid><![CDATA[1135]]></qid>
     <code><![CDATA[ARCH]]></code>
-    <answer><![CDATA[<img src="/master/upload/surveys/476956/images/archlinux-logo.png" alt="ArcLinux" />]]></answer>
+    <answer><![CDATA[<img src="{SURVEYRESOURCESURL}files/archlinux-logo.png" alt="ArcLinux" />]]></answer>
     <sortorder><![CDATA[5]]></sortorder>
     <assessment_value><![CDATA[0]]></assessment_value>
     <language><![CDATA[en]]></language>
     <scale_id><![CDATA[0]]></scale_id>
    </row>
    <row>
-    <qid><![CDATA[4764]]></qid>
+    <qid><![CDATA[1135]]></qid>
     <code><![CDATA[DEB]]></code>
-    <answer><![CDATA[<img src="/master/upload/surveys/476956/images/debian-logo.png" alt="Debian" />]]></answer>
+    <answer><![CDATA[<img src="{SURVEYRESOURCESURL}files/debian-logo.png" alt="Debian" />]]></answer>
     <sortorder><![CDATA[1]]></sortorder>
     <assessment_value><![CDATA[0]]></assessment_value>
     <language><![CDATA[en]]></language>
     <scale_id><![CDATA[0]]></scale_id>
    </row>
    <row>
-    <qid><![CDATA[4764]]></qid>
+    <qid><![CDATA[1135]]></qid>
     <code><![CDATA[FEDO]]></code>
-    <answer><![CDATA[<img src="/master/upload/surveys/476956/images/fedora-logo.png" alt="Fedora" />]]></answer>
+    <answer><![CDATA[<img src="{SURVEYRESOURCESURL}files/fedora-logo.png" alt="Fedora" />]]></answer>
     <sortorder><![CDATA[2]]></sortorder>
     <assessment_value><![CDATA[0]]></assessment_value>
     <language><![CDATA[en]]></language>
     <scale_id><![CDATA[0]]></scale_id>
    </row>
    <row>
-    <qid><![CDATA[4764]]></qid>
+    <qid><![CDATA[1135]]></qid>
     <code><![CDATA[SLACK]]></code>
-    <answer><![CDATA[<img src="/master/upload/surveys/476956/images/slackware-logo.png" alt="Slack" />]]></answer>
+    <answer><![CDATA[<img src="{SURVEYRESOURCESURL}files/slackware-logo.png" alt="Slack" />]]></answer>
     <sortorder><![CDATA[3]]></sortorder>
     <assessment_value><![CDATA[0]]></assessment_value>
     <language><![CDATA[en]]></language>
     <scale_id><![CDATA[0]]></scale_id>
    </row>
    <row>
-    <qid><![CDATA[4764]]></qid>
+    <qid><![CDATA[1135]]></qid>
     <code><![CDATA[SUSE]]></code>
-    <answer><![CDATA[<img src="/master/upload/surveys/476956/images/suse-logo.png" alt="Suse" />]]></answer>
+    <answer><![CDATA[<img src="{SURVEYRESOURCESURL}files/suse-logo.png" alt="Suse" />]]></answer>
     <sortorder><![CDATA[4]]></sortorder>
     <assessment_value><![CDATA[0]]></assessment_value>
     <language><![CDATA[en]]></language>
@@ -76,7 +76,7 @@
   </fields>
   <rows>
    <row>
-    <gid><![CDATA[309]]></gid>
+    <gid><![CDATA[30]]></gid>
     <sid><![CDATA[476956]]></sid>
     <group_name><![CDATA[Prefilling]]></group_name>
     <group_order><![CDATA[0]]></group_order>
@@ -86,7 +86,7 @@
     <grelevance/>
    </row>
    <row>
-    <gid><![CDATA[310]]></gid>
+    <gid><![CDATA[31]]></gid>
     <sid><![CDATA[476956]]></sid>
     <group_name><![CDATA[The Linux distributions logos]]></group_name>
     <group_order><![CDATA[1]]></group_order>
@@ -96,7 +96,7 @@
     <grelevance/>
    </row>
    <row>
-    <gid><![CDATA[311]]></gid>
+    <gid><![CDATA[32]]></gid>
     <sid><![CDATA[476956]]></sid>
     <group_name><![CDATA[Report]]></group_name>
     <group_order><![CDATA[2]]></group_order>
@@ -129,10 +129,10 @@
   </fields>
   <rows>
    <row>
-    <qid><![CDATA[4762]]></qid>
+    <qid><![CDATA[1133]]></qid>
     <parent_qid><![CDATA[0]]></parent_qid>
     <sid><![CDATA[476956]]></sid>
-    <gid><![CDATA[309]]></gid>
+    <gid><![CDATA[30]]></gid>
     <type><![CDATA[Q]]></type>
     <title><![CDATA[USER]]></title>
     <question><![CDATA[Tell me who you are. If you put a valid email : you receive a PDF with the report.]]></question>
@@ -149,15 +149,15 @@
     <relevance><![CDATA[1]]></relevance>
    </row>
    <row>
-    <qid><![CDATA[4763]]></qid>
+    <qid><![CDATA[1134]]></qid>
     <parent_qid><![CDATA[0]]></parent_qid>
     <sid><![CDATA[476956]]></sid>
-    <gid><![CDATA[310]]></gid>
+    <gid><![CDATA[31]]></gid>
     <type><![CDATA[M]]></type>
     <title><![CDATA[KnowUse]]></title>
     <question><![CDATA[Did you use or know this ditributions]]></question>
     <preg/>
-    <help><![CDATA[count(that.KnowUse.NAOK) > 1 : {count(that.KnowUse.NAOK) > 1}]]></help>
+    <help/>
     <other><![CDATA[N]]></other>
     <mandatory><![CDATA[N]]></mandatory>
     <question_order><![CDATA[1]]></question_order>
@@ -165,13 +165,12 @@
     <scale_id><![CDATA[0]]></scale_id>
     <same_default><![CDATA[0]]></same_default>
     <relevance><![CDATA[1]]></relevance>
-    <modulename/>
    </row>
    <row>
-    <qid><![CDATA[4764]]></qid>
+    <qid><![CDATA[1135]]></qid>
     <parent_qid><![CDATA[0]]></parent_qid>
     <sid><![CDATA[476956]]></sid>
-    <gid><![CDATA[310]]></gid>
+    <gid><![CDATA[31]]></gid>
     <type><![CDATA[R]]></type>
     <title><![CDATA[Best]]></title>
     <question><![CDATA[What distribution you using most]]></question>
@@ -186,10 +185,10 @@
     <relevance><![CDATA[count(that.KnowUse.NAOK) > 1]]></relevance>
    </row>
    <row>
-    <qid><![CDATA[4765]]></qid>
+    <qid><![CDATA[1136]]></qid>
     <parent_qid><![CDATA[0]]></parent_qid>
     <sid><![CDATA[476956]]></sid>
-    <gid><![CDATA[311]]></gid>
+    <gid><![CDATA[32]]></gid>
     <type><![CDATA[X]]></type>
     <title><![CDATA[Information]]></title>
     <question><![CDATA[Here : we construct the report. This question can be hidden, you can use html, expression manager. The report file use the question text.]]></question>
@@ -204,10 +203,10 @@
     <relevance><![CDATA[1]]></relevance>
    </row>
    <row>
-    <qid><![CDATA[4766]]></qid>
+    <qid><![CDATA[1137]]></qid>
     <parent_qid><![CDATA[0]]></parent_qid>
     <sid><![CDATA[476956]]></sid>
-    <gid><![CDATA[311]]></gid>
+    <gid><![CDATA[32]]></gid>
     <type><![CDATA[|]]></type>
     <title><![CDATA[Report]]></title>
     <question><![CDATA[<h1>
@@ -242,7 +241,7 @@
 <h2>
 	image width is set in cm</h2>
 <p>
-	<img alt="gnu and penguin" src="/master/upload/surveys/476956/images/gnu-and-penguin-color-1024x946.jpg"  style="width: 18cm; height: auto;"/></p>
+	<img alt="gnu and penguin" src="{SURVEYRESOURCESURL}/images/gnu-and-penguin-color-1024x946.jpg"  style="width: 18cm; height: auto;"/></p>
 <p>
 	<em>Better to use internal files than external, else server must download image file for each report.</em></p>
 <h2>
@@ -287,10 +286,10 @@
   </fields>
   <rows>
    <row>
-    <qid><![CDATA[4767]]></qid>
-    <parent_qid><![CDATA[4762]]></parent_qid>
+    <qid><![CDATA[1138]]></qid>
+    <parent_qid><![CDATA[1133]]></parent_qid>
     <sid><![CDATA[476956]]></sid>
-    <gid><![CDATA[309]]></gid>
+    <gid><![CDATA[30]]></gid>
     <type><![CDATA[Q]]></type>
     <title><![CDATA[NAME]]></title>
     <question><![CDATA[Your name]]></question>
@@ -303,10 +302,10 @@
     <relevance><![CDATA[1]]></relevance>
    </row>
    <row>
-    <qid><![CDATA[4768]]></qid>
-    <parent_qid><![CDATA[4762]]></parent_qid>
+    <qid><![CDATA[1139]]></qid>
+    <parent_qid><![CDATA[1133]]></parent_qid>
     <sid><![CDATA[476956]]></sid>
-    <gid><![CDATA[309]]></gid>
+    <gid><![CDATA[30]]></gid>
     <type><![CDATA[Q]]></type>
     <title><![CDATA[EMAIL]]></title>
     <question><![CDATA[Your email]]></question>
@@ -319,13 +318,13 @@
     <relevance/>
    </row>
    <row>
-    <qid><![CDATA[4769]]></qid>
-    <parent_qid><![CDATA[4763]]></parent_qid>
+    <qid><![CDATA[1140]]></qid>
+    <parent_qid><![CDATA[1134]]></parent_qid>
     <sid><![CDATA[476956]]></sid>
-    <gid><![CDATA[310]]></gid>
+    <gid><![CDATA[31]]></gid>
     <type><![CDATA[M]]></type>
     <title><![CDATA[DEB]]></title>
-    <question><![CDATA[<img alt="Debian" src="/master/upload/surveys/476956/images/debian-logo.png" />]]></question>
+    <question><![CDATA[<img src="{SURVEYRESOURCESURL}files/debian-logo.png" alt="Debian" />]]></question>
     <help/>
     <other><![CDATA[N]]></other>
     <mandatory><![CDATA[N]]></mandatory>
@@ -334,16 +333,15 @@
     <scale_id><![CDATA[0]]></scale_id>
     <same_default><![CDATA[0]]></same_default>
     <relevance><![CDATA[1]]></relevance>
-    <modulename/>
    </row>
    <row>
-    <qid><![CDATA[4770]]></qid>
-    <parent_qid><![CDATA[4763]]></parent_qid>
+    <qid><![CDATA[1141]]></qid>
+    <parent_qid><![CDATA[1134]]></parent_qid>
     <sid><![CDATA[476956]]></sid>
-    <gid><![CDATA[310]]></gid>
+    <gid><![CDATA[31]]></gid>
     <type><![CDATA[M]]></type>
     <title><![CDATA[FEDO]]></title>
-    <question><![CDATA[<img src="/master/upload/surveys/476956/images/fedora-logo.png" alt="Fedora" />]]></question>
+    <question><![CDATA[<img src="{SURVEYRESOURCESURL}files/fedora-logo.png" alt="Fedora" />]]></question>
     <help/>
     <other><![CDATA[N]]></other>
     <mandatory><![CDATA[N]]></mandatory>
@@ -352,16 +350,15 @@
     <scale_id><![CDATA[0]]></scale_id>
     <same_default><![CDATA[0]]></same_default>
     <relevance><![CDATA[1]]></relevance>
-    <modulename/>
    </row>
    <row>
-    <qid><![CDATA[4771]]></qid>
-    <parent_qid><![CDATA[4763]]></parent_qid>
+    <qid><![CDATA[1142]]></qid>
+    <parent_qid><![CDATA[1134]]></parent_qid>
     <sid><![CDATA[476956]]></sid>
-    <gid><![CDATA[310]]></gid>
+    <gid><![CDATA[31]]></gid>
     <type><![CDATA[M]]></type>
     <title><![CDATA[SLACK]]></title>
-    <question><![CDATA[<img src="/master/upload/surveys/476956/images/slackware-logo.png" alt="Slack" />]]></question>
+    <question><![CDATA[<img src="{SURVEYRESOURCESURL}files/slackware-logo.png" alt="Slack" />]]></question>
     <help/>
     <other><![CDATA[N]]></other>
     <mandatory><![CDATA[N]]></mandatory>
@@ -370,16 +367,15 @@
     <scale_id><![CDATA[0]]></scale_id>
     <same_default><![CDATA[0]]></same_default>
     <relevance><![CDATA[1]]></relevance>
-    <modulename/>
    </row>
    <row>
-    <qid><![CDATA[4772]]></qid>
-    <parent_qid><![CDATA[4763]]></parent_qid>
+    <qid><![CDATA[1143]]></qid>
+    <parent_qid><![CDATA[1134]]></parent_qid>
     <sid><![CDATA[476956]]></sid>
-    <gid><![CDATA[310]]></gid>
+    <gid><![CDATA[31]]></gid>
     <type><![CDATA[M]]></type>
     <title><![CDATA[SUSE]]></title>
-    <question><![CDATA[<img src="/master/upload/surveys/476956/images/suse-logo.png" alt="Suse" />]]></question>
+    <question><![CDATA[<img src="{SURVEYRESOURCESURL}files/suse-logo.png" alt="Suse" />]]></question>
     <help/>
     <other><![CDATA[N]]></other>
     <mandatory><![CDATA[N]]></mandatory>
@@ -388,16 +384,15 @@
     <scale_id><![CDATA[0]]></scale_id>
     <same_default><![CDATA[0]]></same_default>
     <relevance><![CDATA[1]]></relevance>
-    <modulename/>
    </row>
    <row>
-    <qid><![CDATA[4773]]></qid>
-    <parent_qid><![CDATA[4763]]></parent_qid>
+    <qid><![CDATA[1144]]></qid>
+    <parent_qid><![CDATA[1134]]></parent_qid>
     <sid><![CDATA[476956]]></sid>
-    <gid><![CDATA[310]]></gid>
+    <gid><![CDATA[31]]></gid>
     <type><![CDATA[M]]></type>
     <title><![CDATA[ARCH]]></title>
-    <question><![CDATA[<img src="/master/upload/surveys/476956/images/archlinux-logo.png" alt="ArcLinux" />]]></question>
+    <question><![CDATA[<img src="{SURVEYRESOURCESURL}files/archlinux-logo.png" alt="ArcLinux" />]]></question>
     <help/>
     <other><![CDATA[N]]></other>
     <mandatory><![CDATA[N]]></mandatory>
@@ -406,7 +401,6 @@
     <scale_id><![CDATA[0]]></scale_id>
     <same_default><![CDATA[0]]></same_default>
     <relevance><![CDATA[1]]></relevance>
-    <modulename/>
    </row>
   </rows>
  </subquestions>
@@ -419,54 +413,53 @@
   </fields>
   <rows>
    <row>
-    <qid><![CDATA[4763]]></qid>
+    <qid><![CDATA[1134]]></qid>
     <attribute><![CDATA[random_order]]></attribute>
     <value><![CDATA[1]]></value>
    </row>
    <row>
-    <qid><![CDATA[4764]]></qid>
+    <qid><![CDATA[1135]]></qid>
     <attribute><![CDATA[array_filter]]></attribute>
     <value><![CDATA[KnowUse]]></value>
    </row>
    <row>
-    <qid><![CDATA[4764]]></qid>
+    <qid><![CDATA[1135]]></qid>
     <attribute><![CDATA[max_subquestions]]></attribute>
     <value><![CDATA[5]]></value>
    </row>
    <row>
-    <qid><![CDATA[4766]]></qid>
+    <qid><![CDATA[1137]]></qid>
     <attribute><![CDATA[pdfReport]]></attribute>
     <value><![CDATA[1]]></value>
    </row>
    <row>
-    <qid><![CDATA[4766]]></qid>
+    <qid><![CDATA[1137]]></qid>
     <attribute><![CDATA[pdfReportPrintAnswer]]></attribute>
     <value><![CDATA[2]]></value>
    </row>
    <row>
-    <qid><![CDATA[4766]]></qid>
+    <qid><![CDATA[1137]]></qid>
     <attribute><![CDATA[pdfReportSavedFileName]]></attribute>
     <value><![CDATA[Rapport-PDF]]></value>
-    <language><![CDATA[en]]></language>
    </row>
    <row>
-    <qid><![CDATA[4766]]></qid>
+    <qid><![CDATA[1137]]></qid>
     <attribute><![CDATA[pdfReportSendByEmailContent]]></attribute>
     <value><![CDATA[confirm]]></value>
    </row>
    <row>
-    <qid><![CDATA[4766]]></qid>
+    <qid><![CDATA[1137]]></qid>
     <attribute><![CDATA[pdfReportSendByEmailMail]]></attribute>
     <value><![CDATA[{USER_EMAIL}]]></value>
    </row>
    <row>
-    <qid><![CDATA[4766]]></qid>
+    <qid><![CDATA[1137]]></qid>
     <attribute><![CDATA[pdfReportSubTitle]]></attribute>
     <value><![CDATA[{SURVEYNAME}]]></value>
     <language><![CDATA[en]]></language>
    </row>
    <row>
-    <qid><![CDATA[4766]]></qid>
+    <qid><![CDATA[1137]]></qid>
     <attribute><![CDATA[pdfReportTitle]]></attribute>
     <value><![CDATA[{SITENAME}]]></value>
     <language><![CDATA[en]]></language>
@@ -476,7 +469,6 @@
  <surveys>
   <fields>
    <fieldname>sid</fieldname>
-   <fieldname>gsid</fieldname>
    <fieldname>admin</fieldname>
    <fieldname>expires</fieldname>
    <fieldname>startdate</fieldname>
@@ -498,7 +490,6 @@
    <fieldname>printanswers</fieldname>
    <fieldname>ipaddr</fieldname>
    <fieldname>refurl</fieldname>
-   <fieldname>showsurveypolicynotice</fieldname>
    <fieldname>publicstatistics</fieldname>
    <fieldname>publicgraphs</fieldname>
    <fieldname>listpublic</fieldname>
@@ -536,14 +527,13 @@
   <rows>
    <row>
     <sid><![CDATA[476956]]></sid>
-    <gsid><![CDATA[1]]></gsid>
     <admin><![CDATA[Administrator]]></admin>
     <adminemail><![CDATA[you@example.org]]></adminemail>
     <anonymized><![CDATA[Y]]></anonymized>
     <faxto/>
     <format><![CDATA[G]]></format>
     <savetimings><![CDATA[N]]></savetimings>
-    <template><![CDATA[vanilla]]></template>
+    <template><![CDATA[default]]></template>
     <language><![CDATA[en]]></language>
     <additional_languages/>
     <datestamp><![CDATA[N]]></datestamp>
@@ -556,7 +546,6 @@
     <printanswers><![CDATA[Y]]></printanswers>
     <ipaddr><![CDATA[N]]></ipaddr>
     <refurl><![CDATA[N]]></refurl>
-    <showsurveypolicynotice><![CDATA[0]]></showsurveypolicynotice>
     <publicstatistics><![CDATA[N]]></publicstatistics>
     <publicgraphs><![CDATA[N]]></publicgraphs>
     <listpublic><![CDATA[Y]]></listpublic>
@@ -594,9 +583,6 @@
    <fieldname>surveyls_description</fieldname>
    <fieldname>surveyls_welcometext</fieldname>
    <fieldname>surveyls_endtext</fieldname>
-   <fieldname>surveyls_policy_notice</fieldname>
-   <fieldname>surveyls_policy_error</fieldname>
-   <fieldname>surveyls_policy_notice_label</fieldname>
    <fieldname>surveyls_url</fieldname>
    <fieldname>surveyls_urldescription</fieldname>
    <fieldname>surveyls_email_invite_subj</fieldname>
@@ -736,32 +722,20 @@ The following answers were given by the participant:<br />
    </row>
   </rows>
  </surveys_languagesettings>
- <themes>
-  <theme>
-   <sid>476956</sid>
-   <template_name>vanilla</template_name>
-   <config>
-    <options>inherit</options>
-   </config>
-  </theme>
- </themes>
- <themes_inherited>
-  <theme>
-   <sid>476956</sid>
-   <template_name>vanilla</template_name>
-   <config>
-    <options>
-     <ajaxmode>on</ajaxmode>
-     <animatebody>off</animatebody>
-     <hideprivacyinfo>off</hideprivacyinfo>
-     <container>on</container>
-     <bodyanimation>fadeInRight</bodyanimation>
-     <brandlogo>on</brandlogo>
-     <brandlogofile>./files/logo.png</brandlogofile>
-     <font>noto</font>
-     <showpopups>1</showpopups>
-    </options>
-   </config>
-  </theme>
- </themes_inherited>
+ <plugin_settings>
+  <fields>
+   <fieldname>id</fieldname>
+   <fieldname>name</fieldname>
+   <fieldname>key</fieldname>
+   <fieldname>value</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <id><![CDATA[80]]></id>
+    <name><![CDATA[findUserAgentInfo]]></name>
+    <key><![CDATA[active]]></key>
+    <value><![CDATA[""]]></value>
+   </row>
+  </rows>
+ </plugin_settings>
 </document>

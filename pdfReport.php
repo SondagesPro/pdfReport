@@ -643,6 +643,7 @@ class pdfReport extends PluginBase {
         if(!empty($oQuestionAttribute->value) && trim($oQuestionAttribute->value) !="") {
             $reportSavedFileName = $this->_EMProcessString(trim($oQuestionAttribute->value)).".pdf";
         }
+        $reportSavedFileName = sanitize_filename($reportSavedFileName,false,false,false);
         $sDestinationFileName = 'fu_' . hexdec(crc32($this->_iResponseId.rand ( 1 , 10000 ).$oQuestion->title));
         if (!copy($fileName, $uploadSurveyDir . $sDestinationFileName)) {
             Yii::log("Error moving file $fileName to $uploadSurveyDir",'error','application.plugins.pdfReport');
@@ -735,7 +736,6 @@ class pdfReport extends PluginBase {
              $aFilePdfName[]=$this->_iResponseId;
         }
         $sPdfFileName=implode("_",$aFilePdfName);
-        $sPdfFileName.=".pdf";
         if($onlyFile) {
             return $sPdfFileName;
         } else {

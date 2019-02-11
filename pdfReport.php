@@ -4,11 +4,11 @@
  * Use question settings to create a report and send it by email.
  *
  * @author Denis Chenu <https://sondages.pro>
- * @copyright 2015-2017 Denis Chenu <https://sondages.pro>
+ * @copyright 2015-2019 Denis Chenu <https://sondages.pro>
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.4.2
+ * @version 1.5.0
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -170,10 +170,10 @@ class pdfReport extends PluginBase {
                 'default'=>'',
                 'i18n'=>true,
                 'htmlOptions'=>array(
-                    'placeholder'=>'questioncode_{SAVEDID}',
+                    'placeholder'=>'questioncode',
                 ),
                 'expression'=>1,
-                'help'=>$this->_translate('By default usage of questioncode_{SAVEDID}. You don\'t have to put the .pdf part.'),
+                'help'=>$this->_translate('By default usage of the question code. You don\'t have to put the .pdf part.'),
                 'caption'=>$this->_translate('Name of saved PDF file.'),
             ),
             'pdfReportSendByEmailMail'=>array(
@@ -213,6 +213,26 @@ class pdfReport extends PluginBase {
                 'caption'=>$this->_translate('Add attachements of email'),
             ),
         );
+        if(Yii::getPathOfAlias("limeMpdf")) {
+            $pdfReportAttribute['pdfReportPdfGenerator'] = array(
+                'types'=>'|', /* upload question type */
+                'category'=>$this->_translate('pdf report'),
+                'sortorder'=>100,
+                'inputtype'=>'switch',
+                'default'=>1,
+                'help'=>$this->_translate('You have limeMpdf plugin allowing more class, but don\'t use pdfreport.css. Then if you need usage of pdfreport.css: you can choose to use old tcpdf system.'),
+                'caption'=>$this->_translate('Use limeMpdf'),
+            );
+            $pdfReportAttribute['pdfReportCreateToc'] = array(
+                'types'=>'|', /* upload question type */
+                'category'=>$this->_translate('pdf report'),
+                'sortorder'=>110,
+                'inputtype'=>'switch',
+                'default'=>1,
+                'help'=>$this->_translate('limeMpdf allow table of content using h1, h2 etc … then adding tiotle in your pdf set a table of contents.'),
+                'caption'=>$this->_translate('Create a PDF table of content'),
+            );
+        }
         if(method_exists($this->getEvent(),'append')) {
             $this->getEvent()->append('questionAttributes', $pdfReportAttribute);
         } else {
@@ -227,8 +247,8 @@ class pdfReport extends PluginBase {
      */
     public function afterSurveyComplete()
     {
-        $this->_iSurveyId=$this->getEvent()->get('surveyId');
-        $this->_iResponseId=$this->getEvent()->get('responseId');
+        $this->_iSurveyId = $this->getEvent()->get('surveyId');
+        $this->_iResponseId = $this->getEvent()->get('responseId');
         $this->doPdfReports();
     }
 
@@ -378,7 +398,7 @@ class pdfReport extends PluginBase {
         /* reset for new srid */
         if(!empty($aSessionPrintRigth[$oQuestion->sid]) && $aSessionPrintRigth[$oQuestion->sid]['srid'] != $this->_iResponseId) {
             $aSessionPrintRigth=array();
-        } 
+        }
         if(empty($aSessionPrintRigth[$oQuestion->sid])) {
             $aSessionPrintRigth[$oQuestion->sid]=array(
                 'srid'=>$this->_iResponseId,
@@ -405,24 +425,57 @@ class pdfReport extends PluginBase {
             Yii::log("Question number {$iQid} invalid",'error','application.plugins.sendPdfReport');
             return null;
         }
-        $iSurveyId=$this->_iSurveyId;
-        $iResponseId=$this->_iResponseId;
 
-
-        $sText=$oQuestion->question;
         $aQuestionsAttributes=QuestionAttribute::model()->getQuestionAttributes($iQid,Yii::app()->getLanguage());
-        $sHeader=trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
-        $sSubHeader=trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);
+        if(empty($aQuestionsAttributes['pdfReportPdfGenerator'])) {
+            return $this->_tcpdfGenerator($oQuestion,$aQuestionsAttributes);
+        } return
+        $this->_mpdfGenerator($oQuestion,$aQuestionsAttributes);
+    }
+    private function _mpdfGenerator($oQuestion,$aQuestionsAttributes)
+    {
+        $sText = $oQuestion->question;
+        $sHeader = trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
+        $sSubHeader = trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);
+        $sText = $this->_EMProcessString($sText);
+        $sHeader = $this->_EMProcessString($sHeader);
+        $sSubHeader = $this->_EMProcessString($sSubHeader);
+        /* tcpd use br, mpdf use pagebreak */
+        $sText=str_replace(
+            array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<page>','</page>'),
+            array('<pagebreak>','<pagebreak>','<pagebreak>','<pagebreak>',''),
+            $sText
+        );
 
-        $sText=$this->_EMProcessString($sText);
-        $sHeader=$this->_EMProcessString($sHeader);
-        $sSubHeader=$this->_EMProcessString($sSubHeader);
+        /* OK, we go */
+        $pdfHelper = new \limeMpdf\helper\limeMpdfHelper();
+        $extraOtions = array();
+        if($aQuestionsAttributes['pdfReportCreateToc']) {
+            $extraOtions['h2bookmarks'] = Yii::app()->getConfig('pdfReportToc',array('H1'=>0, 'H2'=>1, 'H3'=>2));
+            $extraOtions['h2toc'] = Yii::app()->getConfig('pdfReportToc',array('H1'=>0, 'H2'=>1, 'H3'=>2));
+        }
+        if(!empty($extraOtions)) {
+            $pdfHelper->setOptions($extraOtions);
+        }
+        $pdfHelper->setTitle($sHeader,$sSubHeader);
+        $sFilePdfName=$this->_getPdfFileName($oQuestion->title);
+        $pdfHelper->filename = $sFilePdfName;
+        $pdfHelper->doPdfContent($sText,\Mpdf\Output\Destination::FILE);
+        return $sFilePdfName;
+    }
+    private function _tcpdfGenerator($oQuestion,$aQuestionsAttributes)
+    {
+        $sText = $oQuestion->question;
+        $sHeader = trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
+        $sSubHeader = trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);
 
-        //~ return;
+        $sText = $this->_EMProcessString($sText);
+        $sHeader = $this->_EMProcessString($sHeader);
+        $sSubHeader = $this->_EMProcessString($sSubHeader);
+
         $sCssContent=$this->_getCss();
         $sHeader=strip_tags($sHeader);
         $sSubHeader=strip_tags($sSubHeader);
-
         $aSurvey=getSurveyInfo($this->_iSurveyId,Yii::app()->getLanguage());
         $sSurveyName = $aSurvey['surveyls_title'];
         if (!defined('K_PATH_IMAGES')) {
@@ -441,61 +494,50 @@ class pdfReport extends PluginBase {
         $oPDF->sImageBlank = realpath(dirname(__FILE__))."/blank.png";
         $oPDF->sAbsoluteUrl = App()->request->getHostInfo();
         $oPDF->sAbsolutePath = dirname(Yii::app()->request->scriptFile);
-
+        //~ $oPDF->SetCellPadding(0);
+        $tagvs = array(
+            'p' => array(0 => array('h' => 0, 'n' => 0), 1 => array('h' => 0, 'n' => 0)),
+            'div' => array(0 => array('h' => 0, 'n' => 0), 1 => array('h' => 0, 'n' => 0)),
+            'ul' => array(0 => array('h' => 0, 'n' => 0), 1 => array('h' => 0, 'n' => 0)),
+            'li' => array(0 => array('h' => 0, 'n' => 0), 1 => array('h' => 0, 'n' => 0)),
+            'pre' => array(0 => array('h' => 0, 'n' => 0), 1 => array('h' => 0, 'n' => 0)),
+            //~ 'h1' => array(0 => array('h' => 0, 'n' => 0), 1 => array('h' => 0, 'n' => 0)),
+            //~ 'h2' => array(0 => array('h' => 0, 'n' => 0), 1 => array('h' => 0, 'n' => 0)),
+            //~ 'h3' => array(0 => array('h' => 0, 'n' => 0), 1 => array('h' => 0, 'n' => 0)),
+            //~ 'h4' => array(0 => array('h' => 0, 'n' => 0), 1 => array('h' => 0, 'n' => 0)),
+            //~ 'h5' => array(0 => array('h' => 0, 'n' => 0), 1 => array('h' => 0, 'n' => 0)),
+            //~ 'h6' => array(0 => array('h' => 0, 'n' => 0), 1 => array('h' => 0, 'n' => 0)),
+        );
+        if(!empty(App()->getConfig("pdfreport_tagsv"))) {
+            $tagvs = array_merge($tagvs,App()->getConfig("pdfreport_tagsv"));
+        }
+        $oPDF->setHtmlVSpace($tagvs);
         $pdfSpecific=array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<page>','</page>');
         $pdfReplaced=array('<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>page</span>','<span>/page</span>');
         $sText=str_replace($pdfSpecific, $pdfReplaced, $sText);
-        if(false && function_exists ("tidy_parse_string")) // Call to undefined function tidy_parse_string() in ./application/third_party/tcpdf/include/tcpdf_static.php on line 2099
-        {
-            $tidy_options = array (
-                'clean' => 1,
-                'drop-empty-paras' => 0,
-                'drop-proprietary-attributes' => 0,
-                'fix-backslash' => 1,
-                'hide-comments' => 1,
-                'join-styles' => 1,
-                'lower-literals' => 1,
-                'merge-divs' => 1,
-                'merge-spans' => 1,
-                'output-xhtml' => 1,
-                'word-2000' => 0,
-                'wrap' => 0,
-                'output-bom' => 0,
-                'char-encoding' => 'utf8',
-                'input-encoding' => 'utf8',
-                'output-encoding' => 'utf8'
-            );// Fix UTF8 and <br preakpage="true" />
-            $sText=$oPDF->fixHTMLCode($sText,$sCssContent,'',$tidy_options);
-        }
-        else
-        {
-            // TODO : Find the good way to use pagebreak="true", verify if page is used in tcpdf
-            // ALT : explode/implode
-            $oPurifier = new CHtmlPurifier();
-            $oPurifier->options = array(
-                'AutoFormat.RemoveEmpty'=>false,
-                'Core.NormalizeNewlines'=>false,
-                'CSS.AllowTricky'=>true, // Allow display:none; (and other)
-                'CSS.Trusted' => true,
-                'Attr.EnableID'=>true, // Allow to set id
-                'Attr.AllowedFrameTargets'=>array('_blank','_self'),
-                'URI.AllowedSchemes'=>array(
-                    'http' => true,
-                    'https' => true,
-                    'mailto' => true,
-                    'ftp' => true,
-                    'nntp' => true,
-                    'news' => true,
-                    'data' => true,
-                    )
-            );
-            $sText=$oPurifier->purify($sText);
+        $oPurifier = new CHtmlPurifier();
+        $oPurifier->options = array(
+            'AutoFormat.RemoveEmpty'=>false,
+            'Core.NormalizeNewlines'=>false,
+            'CSS.AllowTricky'=>true, // Allow display:none; (and other)
+            'CSS.Trusted' => true,
+            'Attr.EnableID'=>true, // Allow to set id
+            'Attr.AllowedFrameTargets'=>array('_blank','_self'),
+            'URI.AllowedSchemes'=>array(
+                'http' => true,
+                'https' => true,
+                'mailto' => true,
+                'ftp' => true,
+                'nntp' => true,
+                'news' => true,
+                'data' => true,
+                )
+        );
+        $sText=$oPurifier->purify($sText);
 
-        }
         $sText=str_replace($pdfReplaced, $pdfSpecific, $sText);
         $sText="<style>\n{$sCssContent}\n</style>\n$sText\n";
-        //~ $this->event->getContent($this)
-              //~ ->addContent(htmlentities($sText));
+
         $aLogo=$this->_getLogoPaths($this->_iSurveyId);
         if(!empty($aLogo['path'])){
            $oPDF->sLogoFile=$aLogo['path'];
@@ -508,14 +550,13 @@ class pdfReport extends PluginBase {
         error_reporting($errorReporting);
 
         $oPDF->lastPage();
-        
+
         $sFilePdfName=$this->_getPdfFileName($oQuestion->title);
         $oPDF->Output($sFilePdfName, 'F');
-        
-        Yii::log("getPdfFile done for {$iQid} in {$this->_iSurveyId}",'trace','application.plugins.sendPdfReport');
+
+        Yii::log("getPdfFile done for {$oQuestion->qid} in {$this->_iSurveyId} with tcpdf.",'trace','application.plugins.sendPdfReport');
         return $sFilePdfName;
     }
-
     /**
      * Get the logo file name
      * @return string : URI for pdf file
@@ -598,10 +639,9 @@ class pdfReport extends PluginBase {
             "attribute=:attribute and qid=:qid",
             array(':attribute'=>'pdfReportSavedFileName',':qid'=>$oQuestion->qid)
         );
-        if($oQuestionAttribute && trim($oQuestionAttribute->value)) {
-            $reportSavedFileName=$this->_EMProcessString(trim($oQuestionAttribute->value)).".pdf";
-        } else {
-            $reportSavedFileName="{$oQuestion->title}.pdf";
+        $reportSavedFileName = "{$oQuestion->title}.pdf";
+        if(!empty($oQuestionAttribute->value) && trim($oQuestionAttribute->value) !="") {
+            $reportSavedFileName = $this->_EMProcessString(trim($oQuestionAttribute->value)).".pdf";
         }
         $sDestinationFileName = 'fu_' . hexdec(crc32($this->_iResponseId.rand ( 1 , 10000 ).$oQuestion->title));
         if (!copy($fileName, $uploadSurveyDir . $sDestinationFileName)) {
@@ -795,9 +835,10 @@ class pdfReport extends PluginBase {
     {
         $oTemplate = \Template::model()->getInstance(null, $this->_iSurveyId);
         if(is_file($oTemplate->filesPath.'pdfreport.css')){
+            /* @todo : get parent */
             return file_get_contents($oTemplate->filesPath.'/pdfreport.css');
         }
-        return file_get_contents(dirname(__FILE__).'/base.css');
+        return file_get_contents(dirname(__FILE__).'/pdfreport.css');
     }
     /**
      * Translate a plugin string
@@ -841,10 +882,12 @@ class pdfReport extends PluginBase {
             'SURVEYNAME'=>$oSurvey->getLocalizedTitle(),
             'SURVEYRESOURCESURL'=> Yii::app()->getConfig("uploadurl").'/surveys/'.$this->_iSurveyId.'/'
         );
-        $lsversion = intval(Yii::app()->getConfig('versionnumber'));
-        if($lsversion<3) {
+        if(intval(Yii::app()->getConfig('versionnumber'))<3) {
             return \LimeExpressionManager::ProcessString($string, null, $replacementFields, false, 3, 0, false, false, true);
         }
-        return \LimeExpressionManager::ProcessString($string, null, $replacementFields, 3, 0, false, false, true);
+        if(version_compare(Yii::app()->getConfig('versionnumber'),"3.6.2","<")) {
+            return \LimeExpressionManager::ProcessString($string, null, $replacementFields, 3, 0, false, false, true);
+        }
+        return \LimeExpressionManager::ProcessStepString($string, true, 3, $replacementFields);
     }
 }

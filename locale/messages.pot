@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: pdfReport\n"
-"POT-Creation-Date: 2018-09-13 12:25+0200\n"
+"POT-Creation-Date: 2019-02-11 16:45+0100\n"
 "PO-Revision-Date: 2017-03-09 15:09+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -10,7 +10,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2.1\n"
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -19,16 +19,17 @@ msgstr ""
 
 #: pdfReport.php:107
 #, php-format
-msgid "[WIP] To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."
+msgid "To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."
 msgstr ""
 
 #: pdfReport.php:122 pdfReport.php:131 pdfReport.php:142 pdfReport.php:153
 #: pdfReport.php:167 pdfReport.php:181 pdfReport.php:192 pdfReport.php:208
-msgid "pdf report"
+#: pdfReport.php:219 pdfReport.php:228
+msgid "PDF report"
 msgstr ""
 
 #: pdfReport.php:126
-msgid "The pdf are saved inside question answers, it's better if you hide the question, else only answers part are hidden."
+msgid "The pdf are saved inside question answers, it‘s better if you hide the question, else only answers part are hidden."
 msgstr ""
 
 #: pdfReport.php:127
@@ -56,7 +57,7 @@ msgid "Allow to download pdf after submitted the survey, see plugin settings for
 msgstr ""
 
 #: pdfReport.php:176
-msgid "By default usage of questioncode_{SAVEDID}. You don't have to put the .pdf part."
+msgid "By default usage of the question code. You don‘t have to put the .pdf part."
 msgstr ""
 
 #: pdfReport.php:177
@@ -84,7 +85,7 @@ msgid "Detailed admin notification"
 msgstr ""
 
 #: pdfReport.php:203
-msgid "This don't deactivate limesurvey other email system."
+msgid "This don‘t deactivate limesurvey other email system."
 msgstr ""
 
 #: pdfReport.php:204
@@ -92,9 +93,25 @@ msgid "Content and subject of the email"
 msgstr ""
 
 #: pdfReport.php:212
-msgid "Add attachements on same way than default."
+msgid "Add existing attachements of LimeSurvey."
 msgstr ""
 
 #: pdfReport.php:213
 msgid "Add attachements of email"
+msgstr ""
+
+#: pdfReport.php:223
+msgid "You have limeMpdf plugin allowing more class, but don‘t use pdfreport.css. Then if you need usage of pdfreport.css: you can choose to use old tcpdf system."
+msgstr ""
+
+#: pdfReport.php:224
+msgid "Use limeMpdf"
+msgstr ""
+
+#: pdfReport.php:232
+msgid "Plugin limeMpdf allow table of content using h1, h2 etc … then adding title in your pdf set a table of contents."
+msgstr ""
+
+#: pdfReport.php:233
+msgid "Create a PDF table of content"
 msgstr ""

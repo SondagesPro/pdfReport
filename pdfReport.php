@@ -104,7 +104,7 @@ class pdfReport extends PluginBase {
     {
         $dowloadurl=$this->api->createUrl('plugins/direct', array('plugin' => $this->getName(), 'surveyid' => 'SID','qid'=>'QID'));
         $dowloadurl=str_replace(array("SID","QID"),array("{SID}","{QID}"),$dowloadurl);
-        $helpString=sprintf($this->_translate("[WIP] To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."),"<code>".$dowloadurl."</code>","<code>{QID}</code>","{SID}");
+        $helpString=sprintf($this->_translate("To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."),"<code>".$dowloadurl."</code>","<code>{QID}</code>","{SID}");
         $this->settings['basicDocumentation']['content']="<div class='well'>{$helpString}</div>";
 
         return parent::getPluginSettings($getValues);
@@ -119,16 +119,16 @@ class pdfReport extends PluginBase {
         $pdfReportAttribute = array(
             'pdfReport'=>array(
                 'types'=>'|', /* upload question type */
-                'category'=>$this->_translate('pdf report'),
+                'category'=>$this->_translate('PDF report'),
                 'sortorder'=>1,
                 'inputtype'=>'switch',
                 'default'=>0,
-                'help'=>$this->_translate('The pdf are saved inside question answers, it\'s better if you hide the question, else only answers part are hidden.'),
+                'help'=>$this->_translate('The pdf are saved inside question answers, it‘s better if you hide the question, else only answers part are hidden.'),
                 'caption'=>$this->_translate('Use this question as pdf report.'),
             ),
             'pdfReportTitle'=>array(
                 'types'=>'|', /* upload question type */
-                'category'=>$this->_translate('pdf report'),
+                'category'=>$this->_translate('PDF report'),
                 'sortorder'=>10,
                 'inputtype'=>'text',
                 'default'=>'{SITENAME}',
@@ -139,7 +139,7 @@ class pdfReport extends PluginBase {
             ),
             'pdfReportSubTitle'=>array(
                 'types'=>'|', /* upload question type */
-                'category'=>$this->_translate('pdf report'),
+                'category'=>$this->_translate('PDF report'),
                 'sortorder'=>11,
                 'inputtype'=>'text',
                 'default'=>'{SURVEYNAME}',
@@ -150,7 +150,7 @@ class pdfReport extends PluginBase {
             ),
             'pdfReportPrintAnswer'=>array(
                 'types'=>'|', /* upload question type */
-                'category'=>$this->_translate('pdf report'),
+                'category'=>$this->_translate('PDF report'),
                 'sortorder'=>20,
                 'inputtype'=>'singleselect',
                 'options'=>array(
@@ -164,7 +164,7 @@ class pdfReport extends PluginBase {
             ),
             'pdfReportSavedFileName'=>array(
                 'types'=>'|', /* upload question type */
-                'category'=>$this->_translate('pdf report'),
+                'category'=>$this->_translate('PDF report'),
                 'sortorder'=>30,
                 'inputtype'=>'text',
                 'default'=>'',
@@ -173,12 +173,12 @@ class pdfReport extends PluginBase {
                     'placeholder'=>'questioncode',
                 ),
                 'expression'=>1,
-                'help'=>$this->_translate('By default usage of the question code. You don\'t have to put the .pdf part.'),
+                'help'=>$this->_translate('By default usage of the question code. You don‘t have to put the .pdf part.'),
                 'caption'=>$this->_translate('Name of saved PDF file.'),
             ),
             'pdfReportSendByEmailMail'=>array(
                 'types'=>'|', /* upload question type */
-                'category'=>$this->_translate('pdf report'),
+                'category'=>$this->_translate('PDF report'),
                 'sortorder'=>40,
                 'inputtype'=>'text',
                 'default'=>'',
@@ -189,7 +189,7 @@ class pdfReport extends PluginBase {
             ),
             'pdfReportSendByEmailContent'=>array(
                 'types'=>'|', /* upload question type */
-                'category'=>$this->_translate('pdf report'),
+                'category'=>$this->_translate('PDF report'),
                 'sortorder'=>45,
                 'inputtype'=>'singleselect',//'buttongroup',
                 'options'=>array(
@@ -200,36 +200,36 @@ class pdfReport extends PluginBase {
                 'default'=>'admin_notification',
                 'i18n'=>false,
                 'expression'=>1,
-                'help'=>$this->_translate('This don\'t deactivate limesurvey other email system.'),
+                'help'=>$this->_translate('This don‘t deactivate limesurvey other email system.'),
                 'caption'=>$this->_translate('Content and subject of the email'),
             ),
             'pdfReportSendByEmailAttachment'=>array(
                 'types'=>'|', /* upload question type */
-                'category'=>$this->_translate('pdf report'),
+                'category'=>$this->_translate('PDF report'),
                 'sortorder'=>50,
                 'inputtype'=>'switch',
                 'default'=>1,
-                'help'=>$this->_translate('Add attachements on same way than default.'),
+                'help'=>$this->_translate('Add existing attachements of LimeSurvey.'),
                 'caption'=>$this->_translate('Add attachements of email'),
             ),
         );
         if(Yii::getPathOfAlias("limeMpdf")) {
             $pdfReportAttribute['pdfReportPdfGenerator'] = array(
                 'types'=>'|', /* upload question type */
-                'category'=>$this->_translate('pdf report'),
+                'category'=>$this->_translate('PDF report'),
                 'sortorder'=>100,
                 'inputtype'=>'switch',
                 'default'=>1,
-                'help'=>$this->_translate('You have limeMpdf plugin allowing more class, but don\'t use pdfreport.css. Then if you need usage of pdfreport.css: you can choose to use old tcpdf system.'),
+                'help'=>$this->_translate('You have limeMpdf plugin allowing more class, but don‘t use pdfreport.css. Then if you need usage of pdfreport.css: you can choose to use old tcpdf system.'),
                 'caption'=>$this->_translate('Use limeMpdf'),
             );
             $pdfReportAttribute['pdfReportCreateToc'] = array(
                 'types'=>'|', /* upload question type */
-                'category'=>$this->_translate('pdf report'),
+                'category'=>$this->_translate('PDF report'),
                 'sortorder'=>110,
                 'inputtype'=>'switch',
                 'default'=>1,
-                'help'=>$this->_translate('limeMpdf allow table of content using h1, h2 etc … then adding tiotle in your pdf set a table of contents.'),
+                'help'=>$this->_translate('Plugin limeMpdf allow table of content using h1, h2 etc … then adding title in your pdf set a table of contents.'),
                 'caption'=>$this->_translate('Create a PDF table of content'),
             );
         }

@@ -448,7 +448,7 @@ class pdfReport extends PluginBase {
         );
 
         /* OK, we go */
-        $pdfHelper = new \limeMpdf\helper\limeMpdfHelper();
+        $pdfHelper = new \limeMpdf\helper\limeMpdfHelper($this->_iSurveyId);
         $extraOtions = array();
         if($aQuestionsAttributes['pdfReportCreateToc']) {
             $extraOtions['h2bookmarks'] = Yii::app()->getConfig('pdfReportToc',array('H1'=>0, 'H2'=>1, 'H3'=>2));

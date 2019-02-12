@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.5.0
+ * @version 1.5.1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -429,8 +429,8 @@ class pdfReport extends PluginBase {
         $aQuestionsAttributes=QuestionAttribute::model()->getQuestionAttributes($iQid,Yii::app()->getLanguage());
         if(empty($aQuestionsAttributes['pdfReportPdfGenerator'])) {
             return $this->_tcpdfGenerator($oQuestion,$aQuestionsAttributes);
-        } return
-        $this->_mpdfGenerator($oQuestion,$aQuestionsAttributes);
+        }
+        return $this->_mpdfGenerator($oQuestion,$aQuestionsAttributes);
     }
     private function _mpdfGenerator($oQuestion,$aQuestionsAttributes)
     {
@@ -443,7 +443,7 @@ class pdfReport extends PluginBase {
         /* tcpd use br, mpdf use pagebreak */
         $sText=str_replace(
             array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<page>','</page>'),
-            array('<pagebreak>','<pagebreak>','<pagebreak>','<pagebreak>',''),
+            array('<pagebreak>','<pagebreak>','<pagebreak>','','<pagebreak>'),
             $sText
         );
 
@@ -641,9 +641,12 @@ class pdfReport extends PluginBase {
         );
         $reportSavedFileName = "{$oQuestion->title}.pdf";
         if(!empty($oQuestionAttribute->value) && trim($oQuestionAttribute->value) !="") {
-            $reportSavedFileName = $this->_EMProcessString(trim($oQuestionAttribute->value)).".pdf";
+            $reportSavedFileName = $this->_EMProcessString(trim($oQuestionAttribute->value));
+            $reportSavedFileName = sanitize_filename($reportSavedFileName,false,false,false));
+            $reportSavedFileName = substr($reportSavedFileName,0,254);
+            $reportSavedFileName = $reportSavedFileName.'.pdf';
         }
-        $reportSavedFileName = sanitize_filename($reportSavedFileName,false,false,false);
+        
         $sDestinationFileName = 'fu_' . hexdec(crc32($this->_iResponseId.rand ( 1 , 10000 ).$oQuestion->title));
         if (!copy($fileName, $uploadSurveyDir . $sDestinationFileName)) {
             Yii::log("Error moving file $fileName to $uploadSurveyDir",'error','application.plugins.pdfReport');

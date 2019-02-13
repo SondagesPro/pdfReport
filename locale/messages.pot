@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: pdfReport\n"
-"POT-Creation-Date: 2019-02-11 16:45+0100\n"
+"POT-Creation-Date: 2019-02-13 10:55+0100\n"
 "PO-Revision-Date: 2017-03-09 15:09+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -23,8 +23,8 @@ msgid "To allow user to get the file of the question number X at end : you can u
 msgstr ""
 
 #: pdfReport.php:122 pdfReport.php:131 pdfReport.php:142 pdfReport.php:153
-#: pdfReport.php:167 pdfReport.php:181 pdfReport.php:192 pdfReport.php:208
-#: pdfReport.php:219 pdfReport.php:228
+#: pdfReport.php:167 pdfReport.php:181 pdfReport.php:196 pdfReport.php:207
+#: pdfReport.php:223 pdfReport.php:234 pdfReport.php:243
 msgid "PDF report"
 msgstr ""
 
@@ -64,54 +64,78 @@ msgstr ""
 msgid "Name of saved PDF file."
 msgstr ""
 
+#: pdfReport.php:185
+msgid "No filter"
+msgstr ""
+
+#: pdfReport.php:186
+msgid "Basic filter"
+msgstr ""
+
 #: pdfReport.php:187
-msgid "Optionnal email to send pdf Report."
+msgid "Alphanumeric only"
 msgstr ""
 
 #: pdfReport.php:188
-msgid "Send it by email to"
+msgid "Alphanumeric and lower case"
 msgstr ""
 
-#: pdfReport.php:196
-msgid "Confirmation email"
+#: pdfReport.php:191
+msgid "Basic filter try to remove invalid an dangerous character, use “no filter” with caution. If there are a filter, filename is limited to 254 character. With alphanumeric space was replaced by -."
 msgstr ""
 
-#: pdfReport.php:197
-msgid "Basic admin notification"
+#: pdfReport.php:192
+msgid "Sanitization of the file name."
 msgstr ""
 
-#: pdfReport.php:198
-msgid "Detailed admin notification"
+#: pdfReport.php:202
+msgid "Optionnal email to send pdf Report."
 msgstr ""
 
 #: pdfReport.php:203
-msgid "This don‘t deactivate limesurvey other email system."
+msgid "Send it by email to"
 msgstr ""
 
-#: pdfReport.php:204
-msgid "Content and subject of the email"
+#: pdfReport.php:211
+msgid "Confirmation email"
 msgstr ""
 
 #: pdfReport.php:212
-msgid "Add existing attachements of LimeSurvey."
+msgid "Basic admin notification"
 msgstr ""
 
 #: pdfReport.php:213
+msgid "Detailed admin notification"
+msgstr ""
+
+#: pdfReport.php:218
+msgid "This don‘t deactivate limesurvey other email system."
+msgstr ""
+
+#: pdfReport.php:219
+msgid "Content and subject of the email"
+msgstr ""
+
+#: pdfReport.php:227
+msgid "Add existing attachements of the email templates from LimeSurvey."
+msgstr ""
+
+#: pdfReport.php:228
 msgid "Add attachements of email"
 msgstr ""
 
-#: pdfReport.php:223
+#: pdfReport.php:238
 msgid "You have limeMpdf plugin allowing more class, but don‘t use pdfreport.css. Then if you need usage of pdfreport.css: you can choose to use old tcpdf system."
 msgstr ""
 
-#: pdfReport.php:224
+#: pdfReport.php:239
 msgid "Use limeMpdf"
 msgstr ""
 
-#: pdfReport.php:232
+#: pdfReport.php:247
 msgid "Plugin limeMpdf allow table of content using h1, h2 etc … then adding title in your pdf set a table of contents."
 msgstr ""
 
-#: pdfReport.php:233
+#: pdfReport.php:248
 msgid "Create a PDF table of content"
 msgstr ""

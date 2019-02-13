@@ -188,7 +188,7 @@ class pdfReport extends PluginBase {
                     'alphanumericlower'=>$this->_translate('Alphanumeric and lower case'),
                 ),
                 'default'=>'base',
-                'help'=>$this->_translate('Basic filter try to remove dangerous character, use “no filter” with caution. If there are a filter, filename is limited to 254 character. With alphanumeric space was replaced by -.'),
+                'help'=>$this->_translate('Basic filter try to remove invalid an dangerous character, use “no filter” with caution. If there are a filter, filename is limited to 254 character. With alphanumeric space was replaced by -.'),
                 'caption'=>$this->_translate('Sanitization of the file name.'),
             ),
             'pdfReportSendByEmailMail'=>array(
@@ -650,39 +650,9 @@ class pdfReport extends PluginBase {
         }
         $fileName=$this->_getPdfFileName($oQuestion->title);
         $fileSize=0.001 * filesize($fileName); // Same than controller
-        $oQuestionAttribute = QuestionAttribute::model()->find(
-            "attribute=:attribute and qid=:qid",
-            array(':attribute'=>'pdfReportSavedFileName',':qid'=>$oQuestion->qid)
-        );
-        $reportSavedFileName = "{$oQuestion->title}.pdf";
-        if(!empty($oQuestionAttribute->value) && trim($oQuestionAttribute->value) !="") {
-            $reportSavedFileName = $this->_EMProcessString(trim($oQuestionAttribute->value));
-            $oQuestionAttributeFilter = QuestionAttribute::model()->find(
-                "attribute=:attribute and qid=:qid",
-                array(':attribute'=>'pdfReportSanitizeSavedFileName',':qid'=>$oQuestion->qid)
-            );
-            $sanitize = empty($oQuestionAttributeFilter) ? 'base' : $oQuestionAttributeFilter->value;
-            $alphanumeric = false;
-            $lowercase = false;
-            switch($sanitize) {
-                case "none":
-                    break;
-                case "alphanumericlower":
-                    $lowercase = true;
-                case "alphanumeric":
-                    $reportSavedFileName = preg_replace('/\s+/', App()->getConfig("pdfReportSpaceFilename","-"), $reportSavedFileName);
-                    /* replace accent see https://stackoverflow.com/a/16022459/2239406 */
-                    $myTrans = Transliterator::create('Any-Latin; Latin-ASCII; [\u0080-\u7fff] remove');
-                    $reportSavedFileName = $myTrans->transliterate($reportSavedFileName);
-                case "base":
-                default:
-                    $reportSavedFileName = sanitize_filename($reportSavedFileName,$lowercase,false);
-                    $reportSavedFileName = substr($reportSavedFileName,0,254);
-                    break;
-            }
-            $reportSavedFileName = $reportSavedFileName.'.pdf';
-        }
-        
+
+        $reportSavedFileName = $this->_getPdfSavedFileName($oQuestion);
+
         $sDestinationFileName = 'fu_' . hexdec(crc32($this->_iResponseId.rand ( 1 , 10000 ).$oQuestion->title));
         if (!copy($fileName, $uploadSurveyDir . $sDestinationFileName)) {
             Yii::log("Error moving file $fileName to $uploadSurveyDir",'error','application.plugins.pdfReport');
@@ -782,6 +752,46 @@ class pdfReport extends PluginBase {
         }
     }
 
+    private function _getPdfSavedFileName($oQuestion)
+    {
+        $oQuestionAttribute = QuestionAttribute::model()->find(
+            "attribute=:attribute and qid=:qid",
+            array(':attribute'=>'pdfReportSavedFileName',':qid'=>$oQuestion->qid)
+        );
+        $reportSavedFileName = "{$oQuestion->title}.pdf";
+        if(!empty($oQuestionAttribute->value) && trim($oQuestionAttribute->value) !="") {
+            $reportSavedFileName = $this->_EMProcessString(trim($oQuestionAttribute->value));
+            $oQuestionAttributeFilter = QuestionAttribute::model()->find(
+                "attribute=:attribute and qid=:qid",
+                array(':attribute'=>'pdfReportSanitizeSavedFileName',':qid'=>$oQuestion->qid)
+            );
+            $sanitize = empty($oQuestionAttributeFilter) ? 'base' : $oQuestionAttributeFilter->value;
+            $alphanumeric = false;
+            $beautify = false;
+            switch($sanitize) {
+                case "none":
+                    break;
+                case "alphanumericlower":
+                    $lowercase = true;
+                case "alphanumeric":
+                    $reportSavedFileName = preg_replace('/\s+/', App()->getConfig("pdfReportSpaceFilename","-"), $reportSavedFileName);
+                    /* replace accent see https://stackoverflow.com/a/16022459/2239406 */
+                    $myTrans = Transliterator::create('Any-Latin; Latin-ASCII; [\u0080-\u7fff] remove');
+                    $reportSavedFileName = $myTrans->transliterate($reportSavedFileName);
+                    /* beautify_filename from santitize set lowercase : we don't want this … */
+                    $reportSavedFileName = preg_replace(array('/ +/','/_+/','/-+/'), '-', $reportSavedFileName);
+                    $reportSavedFileName = preg_replace(array('/-*\.-*/','/\.{2,}/'), '.', $reportSavedFileName);
+                    $reportSavedFileName = trim($reportSavedFileName, '.-');
+                case "base":
+                default:
+                    $reportSavedFileName = sanitize_filename($reportSavedFileName,$lowercase,false,false);
+                    $reportSavedFileName = mb_substr($reportSavedFileName,0,254,'UTF-8');
+                    break;
+            }
+            $reportSavedFileName = $reportSavedFileName.'.pdf';
+        }
+        return $reportSavedFileName;
+    }
     /**
      * Get fixed content by email
      */

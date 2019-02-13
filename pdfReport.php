@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.5.1
+ * @version 1.6.0
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -176,6 +176,21 @@ class pdfReport extends PluginBase {
                 'help'=>$this->_translate('By default usage of the question code. You don‘t have to put the .pdf part.'),
                 'caption'=>$this->_translate('Name of saved PDF file.'),
             ),
+            'pdfReportSanitizeSavedFileName'=>array(
+                'types'=>'|', /* upload question type */
+                'category'=>$this->_translate('PDF report'),
+                'sortorder'=>30,
+                'inputtype'=>'singleselect',//'buttongroup',
+                'options'=>array(
+                    'none'=>$this->_translate('No filter'),
+                    'base'=>$this->_translate('Basic filter'),
+                    'alphanumeric'=>$this->_translate('Alphanumeric only'),
+                    'alphanumericlower'=>$this->_translate('Alphanumeric and lower case'),
+                ),
+                'default'=>'base',
+                'help'=>$this->_translate('Basic filter try to remove dangerous character, use “no filter” with caution. If there are a filter, filename is limited to 254 character. With alphanumeric space was replaced by -.'),
+                'caption'=>$this->_translate('Sanitization of the file name.'),
+            ),
             'pdfReportSendByEmailMail'=>array(
                 'types'=>'|', /* upload question type */
                 'category'=>$this->_translate('PDF report'),
@@ -209,7 +224,7 @@ class pdfReport extends PluginBase {
                 'sortorder'=>50,
                 'inputtype'=>'switch',
                 'default'=>1,
-                'help'=>$this->_translate('Add existing attachements of LimeSurvey.'),
+                'help'=>$this->_translate('Add existing attachements of the email templates from LimeSurvey.'),
                 'caption'=>$this->_translate('Add attachements of email'),
             ),
         );
@@ -642,8 +657,29 @@ class pdfReport extends PluginBase {
         $reportSavedFileName = "{$oQuestion->title}.pdf";
         if(!empty($oQuestionAttribute->value) && trim($oQuestionAttribute->value) !="") {
             $reportSavedFileName = $this->_EMProcessString(trim($oQuestionAttribute->value));
-            $reportSavedFileName = sanitize_filename($reportSavedFileName,false,false,false));
-            $reportSavedFileName = substr($reportSavedFileName,0,254);
+            $oQuestionAttributeFilter = QuestionAttribute::model()->find(
+                "attribute=:attribute and qid=:qid",
+                array(':attribute'=>'pdfReportSanitizeSavedFileName',':qid'=>$oQuestion->qid)
+            );
+            $sanitize = empty($oQuestionAttributeFilter) ? 'base' : $oQuestionAttributeFilter->value;
+            $alphanumeric = false;
+            $lowercase = false;
+            switch($sanitize) {
+                case "none":
+                    break;
+                case "alphanumericlower":
+                    $lowercase = true;
+                case "alphanumeric":
+                    $reportSavedFileName = preg_replace('/\s+/', App()->getConfig("pdfReportSpaceFilename","-"), $reportSavedFileName);
+                    /* replace accent see https://stackoverflow.com/a/16022459/2239406 */
+                    $myTrans = Transliterator::create('Any-Latin; Latin-ASCII; [\u0080-\u7fff] remove');
+                    $reportSavedFileName = $myTrans->transliterate($reportSavedFileName);
+                case "base":
+                default:
+                    $reportSavedFileName = sanitize_filename($reportSavedFileName,$lowercase,false);
+                    $reportSavedFileName = substr($reportSavedFileName,0,254);
+                    break;
+            }
             $reportSavedFileName = $reportSavedFileName.'.pdf';
         }
         

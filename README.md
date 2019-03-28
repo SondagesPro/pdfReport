@@ -17,7 +17,7 @@ Use question text to create a pdf report : send it by email, save in survey.
 ## Documentation
 - Create a upload question type
 - Activate pdfReport : _Use this question as pdf report._ to _Yes_
-- The pdf generated take the text of this question
+- **The pdf generated use the text of this question** . You can use expression manager, and class and style to make a beautifull report.
 - Remind the default system of this question are totally deactivated
 - Pdf report are saved as files uploaded in survey
 - Pdf is done and saved only when survey is activated, and when user submit the survey

@@ -1,7 +1,8 @@
 <?php
 /**
- * This file is part of sendPdfReport plugin
+ * This file is part of pdfReport plugin
  * @see sendPdfReport <http://extensions.sondages.pro/sendpdfreport>
+ * @version 1.0.1
  **/
 class pdfReportHelper extends pdf
 {
@@ -55,14 +56,14 @@ class pdfReportHelper extends pdf
 
   public function Image($file, $x='', $y='', $w=0, $h=0, $type='', $link='', $align='', $resize=false, $dpi=300, $palign='', $ismask=false, $imgmask=false, $border=0, $fitbox=false, $hidden=false, $fitonpage=false, $alt=false, $altimgs=array())
   {
-    Yii::log("Image ".$file." tested",'info','application.plugins.sendPdfReport');
+    Yii::log("Image ".$file." tested",'info','application.plugins.sendPdfReport.pdfReportHelper.Image');
     /* Specific system of pdf : didn't touch */
     if ($file[0] === '@' || $file[0] === '*') {
       return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
     }
     /* data:image : didn't touch */
     if(strpos($file,"data:image")===0){
-      return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
+      return parent::Image("@".$file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
     }
     /* File in server : 3 part : direct, in DOCUMENT_ROOT (if set) absolutePath from Yii */
     if (@file_exists($file)) {
@@ -77,7 +78,7 @@ class pdfReportHelper extends pdf
     if (@file_exists($this->sAbsolutePath."/".$file)) {
       return parent::Image($this->sAbsolutePath."/".$file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
     }
-    /* Same server but didn't find with previous (acan be deleted or DOCUMENT_ROOT is broken, or using aliad etc … */
+    /* Same server but didn't find with previous (can be deleted or DOCUMENT_ROOT is broken, or using alias etc … */
     if($file[0] === '/') {
       $file=$this->sAbsoluteUrl.$file;
     }
@@ -86,7 +87,7 @@ class pdfReportHelper extends pdf
     if($imageInfo['size'][0] && $imageInfo['size'][1]) {
       return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $alt, $altimgs);
     }
-    Yii::log("Image ".$file." not found, header return {$imageInfo['code']} , with size {$imageInfo['size'][0]}/{$imageInfo['size'][1]}: , replaced by a white image",'warning','application.plugins.sendPdfReport');
+    Yii::log("Image ".$file." not found, header return {$imageInfo['code']} , with size {$imageInfo['size'][0]}/{$imageInfo['size'][1]}: , replaced by a white image",'warning','application.plugins.sendPdfReport.pdfReportHelper.Image');
     return parent::Image($this->sImageBlank, $x, $y, 1, 1, '', $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, true, true);
   }
 
@@ -112,9 +113,9 @@ class pdfReportHelper extends pdf
         )
       );
       curl_exec($curl);
-      $aImageInfo['code'] = curl_getinfo($curl, CURLINFO_HTTP_CODE );
+      $aImageInfo['code'] = @curl_getinfo($curl, CURLINFO_HTTP_CODE );
       if(curl_errno($curl)) {
-          Yii::log("Image ".$url." curl error ".curl_error($curl),'warning','application.plugins.sendPdfReport');
+          Yii::log("Image ".$url." curl error ".curl_error($curl),'warning','application.plugins.sendPdfReport.pdfReportHelper.getImageInfo');
       }
       curl_close($curl);
     }else{

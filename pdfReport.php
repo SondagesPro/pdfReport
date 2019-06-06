@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.6.2
+ * @version 1.6.3
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -497,7 +497,6 @@ class pdfReport extends PluginBase {
             define('K_PATH_IMAGES', '');
         }
         Yii::setPathOfAlias('sendPdfReport', dirname(__FILE__));
-        //define('K_PATH_IMAGES', Yii::app()->getConfig("homedir").DIRECTORY_SEPARATOR);
 
         Yii::import('application.libraries.admin.pdf', true);
         Yii::import('application.helpers.pdfHelper');

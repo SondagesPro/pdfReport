@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.6.3
+ * @version 1.6.4
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -102,7 +102,7 @@ class pdfReport extends PluginBase {
      */
     public function getPluginSettings($getValues=true)
     {
-        $dowloadurl=$this->api->createUrl('plugins/direct', array('plugin' => $this->getName(), 'surveyid' => 'SID','qid'=>'QID'));
+        $dowloadurl=Yii::app()->getController()->createUrl('plugins/direct', array('plugin' => $this->getName(), 'surveyid' => 'SID','qid'=>'QID'));
         $dowloadurl=str_replace(array("SID","QID"),array("{SID}","{QID}"),$dowloadurl);
         $helpString=sprintf($this->_translate("To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."),"<code>".$dowloadurl."</code>","<code>{QID}</code>","{SID}");
         $this->settings['basicDocumentation']['content']="<div class='well'>{$helpString}</div>";

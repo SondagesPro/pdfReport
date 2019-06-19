@@ -63,19 +63,25 @@ class pdfReportHelper extends pdf
     }
     /* data:image : didn't touch */
     if(strpos($file,"data:image")===0){
+      if(!$this->_isValidDataImageInfo($file)) {
+        return parent::Image($this->sImageBlank, $x, $y, 1, 1, '', $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, true, true);
+      }
       return parent::Image("@".$file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
     }
     /* File in server : 3 part : direct, in DOCUMENT_ROOT (if set) absolutePath from Yii */
     if (@file_exists($file)) {
+      // @todo : check if it's a valid image
       return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
     }
     if($file[0] === '/') {
       $docRoot=isset($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : "";
       if (@file_exists($docRoot."/".$file)) {
+        // @todo : check if it's a valid image
         return parent::Image($docRoot."/".$file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
       }
     }
     if (@file_exists($this->sAbsolutePath."/".$file)) {
+      // @todo : check if it's a valid image
       return parent::Image($this->sAbsolutePath."/".$file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
     }
     /* Same server but didn't find with previous (can be deleted or DOCUMENT_ROOT is broken, or using alias etc … */
@@ -83,24 +89,20 @@ class pdfReportHelper extends pdf
       $file=$this->sAbsoluteUrl.$file;
     }
     /* Test loading image and image have width and height (else broke pdf) */
-    $imageInfo=$this->getImageInfo($file);
-    if($imageInfo['size'][0] && $imageInfo['size'][1]) {
+    if($this->_isValidUrlImageInfo($file)) {
       return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $alt, $altimgs);
     }
-    Yii::log("Image ".$file." not found, header return {$imageInfo['code']} , with size {$imageInfo['size'][0]}/{$imageInfo['size'][1]}: , replaced by a white image",'warning','application.plugins.sendPdfReport.pdfReportHelper.Image');
+    Yii::log("Image ".$file." not found or invalid: replaced by a white image",'warning','application.plugins.sendPdfReport.pdfReportHelper.Image');
     return parent::Image($this->sImageBlank, $x, $y, 1, 1, '', $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, true, true);
   }
 
   /**
    * Get the header code
    * @param $url to be tested
+   * @return boolean
    */
-  private function getImageInfo($url)
+  private function _isValidUrlImageInfo($url)
   {
-    $aImageInfo=array(
-      'code'=>null,
-      'size'=>array(null,null), /* no size by default */
-    );
     /* preferred method : curl */
     if (( extension_loaded ("curl") )){
       $curl = curl_init();
@@ -115,7 +117,8 @@ class pdfReportHelper extends pdf
       curl_exec($curl);
       $aImageInfo['code'] = @curl_getinfo($curl, CURLINFO_HTTP_CODE );
       if(curl_errno($curl)) {
-          Yii::log("Image ".$url." curl error ".curl_error($curl),'warning','application.plugins.sendPdfReport.pdfReportHelper.getImageInfo');
+          Yii::log("Image ".$url." curl error ".curl_error($curl),'warning','application.plugins.sendPdfReport.pdfReportHelper.isValidUrlImageInfo');
+          return false;
       }
       curl_close($curl);
     }else{
@@ -124,13 +127,44 @@ class pdfReportHelper extends pdf
         $aImageInfo['code'] = substr($headers[0], 9, 3);
       }
     }
+    if($aImageInfo['code'] != 200){
+        Yii::log("Image ".$url." invalid header ".$aImageInfo['code'],'warning','application.plugins.sendPdfReport.pdfReportHelper.isValidUrlImageInfo');
+        return false;
+    }
     if($aImageInfo['code'] == 200){/* curl can return error with 200 valid code (ipv6 vs ipv4 ?) */
       $aImageInfo['size']=@getimagesize($url);
       if(!$aImageInfo['size']){
-        $aImageInfo['size']=array(null,null);
+        Yii::log("Image ".$url." invalid size",'warning','application.plugins.sendPdfReport.pdfReportHelper.isValidUrlImageInfo');
+        return false;
       }
     }
-    return $aImageInfo;
+    return true;
   }
 
+  /**
+   * Get the header code
+   * @param $url to be tested
+   * @return boolean
+   */
+  private function _isValidDataImageInfo($string)
+  {
+    /* Start by remove the data:image part to get only base64 string */
+    $imageData = @file_get_contents($string);
+    if(empty($imageData)) {
+      Yii::log("Image ".$string." is empty",'warning','application.plugins.sendPdfReport.pdfReportHelper.isValidDataImageInfo');
+      return false;
+    }
+    /* Check is an image */
+    if(!@imagecreatefromstring($imageData)) {
+      Yii::log("Image ".$string." is invalid",'warning','application.plugins.sendPdfReport.pdfReportHelper.isValidDataImageInfo');
+      return false;
+    }
+    /* Check is a valid image */
+    $size = @getimagesizefromstring($data);
+    if (!$size || $size[0] == 0 || $size[1] == 0 || !$size['mime']) {
+      Yii::log("Image ".$string." is invalid by size",'warning','application.plugins.sendPdfReport.pdfReportHelper.isValidDataImageInfo');
+      return false;
+    }
+    return true;
+  }
 }

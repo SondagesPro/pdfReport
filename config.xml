@@ -4,10 +4,10 @@
         <name>pdfReport</name>
         <type>plugin</type>
         <creationDate>2015-10-06</creationDate>
-        <lastUpdate>2019-01-28</lastUpdate>
+        <lastUpdate>2019-12-01</lastUpdate>
         <author>Denis Chenu</author>
         <authorUrl>https://www.sondages.pro</authorUrl>
-        <version>1.4.2</version>
+        <version>1.7.0</version>
         <license>GNU Affero General Public License v3.0</license>
         <description><![CDATA[Use upload question type to create a pdf report, replace print pdf, save it as report in survey file and send it by email.]]></description>
     </metadata>

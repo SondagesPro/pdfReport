@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.6.4
+ * @version 1.7.0
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -48,6 +48,8 @@ class pdfReport extends PluginBase {
         $this->subscribe('beforeQuestionRender', 'removeAnswersPart');
         /* To add own translation message source */
         $this->subscribe('afterPluginLoad');
+        /* Allow printing on current */
+        $this->subscribe('newDirectRequest');
         /* To replace if needed printanswer */
         $this->subscribe('beforeControllerAction', 'setPrintAnswer');
     }
@@ -335,6 +337,50 @@ class pdfReport extends PluginBase {
                 $this->event->set('run',false);
             }
         }
+    }
+
+    public function newDirectRequest()
+    {
+        $surveyid = Yii::app()->getRequest()->getParam("surveyid",Yii::app()->getRequest()->getParam("sid"));
+        $oSurvey=Survey::model()->findByPk($surveyid);
+        if(!$oSurvey) {
+            throw new CHttpException(404,gT('Invalid survey ID'));
+        }
+        $qid = Yii::app()->getRequest()->getParam("qid");
+        if(empty($qid)) {
+            throw new CHttpException(400);
+        }
+        $aAllowAttribute = \QuestionAttribute::model()->find("qid = :qid AND attribute = :attribute",array(":qid"=>$qid,":attribute"=>'pdfReportPrintAnswer'));
+        if(empty($aAllowAttribute) || empty($aAllowAttribute->value)) {
+            throw new CHttpException(403);
+        }
+        /* Multi srid allowed */
+        $srid = Yii::app()->getRequest()->getParam("srid");
+        $currentSrid = isset($_SESSION['survey_'.$surveyid]['srid']) ? $_SESSION['survey_'.$surveyid]['srid'] : null;
+        $allowedSrid = null;
+        $aSessionPrintRigth=Yii::app()->session["pdfReportPrintRight"];
+        if(!empty($aSessionPrintRigth[$surveyid])) {
+            $allowedSrid = $aSessionPrintRigth[$surveyid]['srid'];
+        }
+        if(!empty($srid)) {
+            if($srid != $currentSrid && $srid != $allowedSrid && !Permission::hasSurveyPermission($surveyid,'reponse','read')) {
+                throw new CHttpException(401);
+            }
+        }
+        if(empty($srid)) {
+            $srid = empty($currentSrid) ? $allowedSrid : $currentSrid;
+        }
+        if(empty($srid)) {
+            throw new CHttpException(400);
+        }
+        $oResponse = Response::model($surveyid)->findByPk($srid);
+        $aQuestionFiles = $oResponse->getFiles($qid);
+        if(!$aQuestionFiles) {
+            $this->_iSurveyId = $surveyid;
+            $this->_iResponseId = $srid;
+            $this->doPdfReports();
+        }
+        $this->publicPdfDownload($surveyid,$qid,$srid);
     }
 
     /**

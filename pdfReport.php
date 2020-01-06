@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.7.1
+ * @version 1.9.0
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -58,12 +58,6 @@ class pdfReport extends PluginBase {
      * @see ls\pluginmanager\PluginBase->seetings
      */
     protected $settings = array(
-        //~ 'basesavedirectory'=> array(
-            //~ 'type'=>'string',
-            //~ 'label'=>'[WIP] Directory on the server to move the file (if question settings is set)',
-            //~ 'help'=>'You can use {SID} for survey id. Plugin didn`t create directory.',
-            //~ 'default'=>'',
-        //~ ),
         'usetokenfilename' => array(
             'type'=>'select',
             'label'=>'Usage of token in filemane',
@@ -298,7 +292,6 @@ class pdfReport extends PluginBase {
     public function doPdfReports()
     {
         // Only in next release $oQuestionAttribute = QuestionAttribute::model()->with('qid')->together()->findAll('sid=:sid and attribute=:attribute and value=:value',array(':sid'=>$iSid,':attribute'=>'pdfReport',':value'=>1));
-
         $criteria = new CDbCriteria;
         $criteria->join='LEFT JOIN {{questions}} as question ON question.qid=t.qid';
         $criteria->condition='question.sid = :sid and question.language=:language and attribute=:attribute and value=:value';
@@ -367,7 +360,7 @@ class pdfReport extends PluginBase {
             $allowedSrid = $aSessionPrintRigth[$surveyid]['srid'];
         }
         if(!empty($srid)) {
-            if($srid != $currentSrid && $srid != $allowedSrid && !Permission::hasSurveyPermission($surveyid,'reponse','read')) {
+            if($srid != $currentSrid && $srid != $allowedSrid && !Permission::model()->hasSurveyPermission($surveyid,'reponse','read')) {
                 throw new CHttpException(401);
             }
         }
@@ -375,11 +368,11 @@ class pdfReport extends PluginBase {
             $srid = empty($currentSrid) ? $allowedSrid : $currentSrid;
         }
         if(empty($srid)) {
-            throw new CHttpException(400);
+            throw new CHttpException(400,'Survey must be activated');
         }
         $oResponse = Response::model($surveyid)->findByPk($srid);
         $aQuestionFiles = $oResponse->getFiles($qid);
-        if(!$aQuestionFiles) {
+        if(Yii::app()->getRequest()->getParam("reset") || !$aQuestionFiles) {
             $this->_iSurveyId = $surveyid;
             $this->_iResponseId = $srid;
             $this->doPdfReports();
@@ -400,15 +393,20 @@ class pdfReport extends PluginBase {
             throw new CHttpException(404,gT('Invalid survey ID'));
         }
         /* Control if allowed */
+        $currentSrid = isset($_SESSION['survey_'.$surveyid]['srid']) ? $_SESSION['survey_'.$surveyid]['srid'] : null;
         $aSessionPrintRigth=Yii::app()->session["pdfReportPrintRight"];
-        $aSurveyPrintRigth=$aSessionPrintRigth[$surveyid];
-        if(empty($aSurveyPrintRigth)){
-            throw new CHttpException(401, 'You are not allowed to print answers.');
+        $allowedSrid = isset($aSessionPrintRigth[$surveyid]['srid']) ? $aSessionPrintRigth[$surveyid]['srid'] : null;
+        if(!empty($srid)) {
+            if($srid != $currentSrid && $srid != $allowedSrid && !Permission::model()->hasSurveyPermission($surveyid,'reponse','read')) {
+                throw new CHttpException(401);
+            }
+        } else {
+            $srid = $allowedSrid ? $allowedSrid : $currentSrid;
         }
-        if(!$srid) {
-            $srid=$aSurveyPrintRigth['srid'];
+        if (empty($srid)) {
+            throw new CHttpException(400);
         }
-        if(!$qid) {
+        if (!$qid) {
             $qid=$aSurveyPrintRigth['replace'];
         }
 
@@ -502,9 +500,9 @@ class pdfReport extends PluginBase {
         $sText = $oQuestion->question;
         $sHeader = trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
         $sSubHeader = trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);
-        $sText = $this->_EMProcessString($sText);
-        $sHeader = $this->_EMProcessString($sHeader);
-        $sSubHeader = $this->_EMProcessString($sSubHeader);
+        $sText = $this->_EMProcessString($sText,$oQuestion->qid);
+        $sHeader = $this->_EMProcessString($sHeader,$oQuestion->qid);
+        $sSubHeader = $this->_EMProcessString($sSubHeader,$oQuestion->qid);
         /* tcpd use br, mpdf use pagebreak */
         $sText=str_replace(
             array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<page>','</page>'),
@@ -534,9 +532,9 @@ class pdfReport extends PluginBase {
         $sHeader = trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
         $sSubHeader = trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);
 
-        $sText = $this->_EMProcessString($sText);
-        $sHeader = $this->_EMProcessString($sHeader);
-        $sSubHeader = $this->_EMProcessString($sSubHeader);
+        $sText = $this->_EMProcessString($sText,$oQuestion->qid);
+        $sHeader = $this->_EMProcessString($sHeader,$oQuestion->qid);
+        $sSubHeader = $this->_EMProcessString($sSubHeader,$oQuestion->qid);
 
         $sCssContent=$this->_getCss();
         $sHeader=strip_tags($sHeader);
@@ -737,7 +735,7 @@ class pdfReport extends PluginBase {
         if($questionAttributeEmails==""){
             return;
         }
-        $questionAttributeEmails=$this->_EMProcessString($questionAttributeEmails);
+        $questionAttributeEmails=$this->_EMProcessString($questionAttributeEmails,$oQuestion->qid);
         $aRecipient=explode(";", $questionAttributeEmails);
         $aValidRecipient=array();
         foreach($aRecipient as $sRecipient)
@@ -812,7 +810,7 @@ class pdfReport extends PluginBase {
         );
         $reportSavedFileName = "{$oQuestion->title}.pdf";
         if(!empty($oQuestionAttribute->value) && trim($oQuestionAttribute->value) !="") {
-            $reportSavedFileName = $this->_EMProcessString(trim($oQuestionAttribute->value));
+            $reportSavedFileName = $this->_EMProcessString(trim($oQuestionAttribute->value),$oQuestion->qid);
             $oQuestionAttributeFilter = QuestionAttribute::model()->find(
                 "attribute=:attribute and qid=:qid",
                 array(':attribute'=>'pdfReportSanitizeSavedFileName',':qid'=>$oQuestion->qid)
@@ -971,9 +969,10 @@ class pdfReport extends PluginBase {
     /**
      * Process a string via expression manager (static way)
      * @param string $string
+     * @param null|integer $questionNum the $qid of question being replaced - needed for properly alignment of question-level relevance and tailoring
      * @return string
      */
-    private function _EMProcessString($string)
+    private function _EMProcessString($string, $questionNum = null)
     {
         Yii::app()->setConfig('surveyID',$this->_iSurveyId);
         $oSurvey=Survey::model()->findByPk($this->_iSurveyId);

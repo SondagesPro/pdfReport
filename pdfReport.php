@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.9.1
+ * @version 1.9.2
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -21,10 +21,11 @@
  * GNU General Public License for more details.
  */
 
-class pdfReport extends PluginBase {
+class pdfReport extends PluginBase
+{
     protected $storage = 'DbStorage';
-    static protected $description = 'Do a PDF report for question.';
-    static protected $name = 'pdfReport';
+    protected static $description = 'Do a PDF report for question.';
+    protected static $name = 'pdfReport';
 
     /**
      * @var integer $_iSurveyId
@@ -41,7 +42,7 @@ class pdfReport extends PluginBase {
     public function init()
     {
         /* Add the attribute */
-        $this->subscribe('newQuestionAttributes','addPdfReportAttribute');
+        $this->subscribe('newQuestionAttributes', 'addPdfReportAttribute');
         /* Generate and save pdfReport when submit */
         $this->subscribe('afterSurveyComplete', 'afterSurveyComplete');
         /* Remove answers (and help) part */
@@ -99,8 +100,8 @@ class pdfReport extends PluginBase {
     public function getPluginSettings($getValues=true)
     {
         $dowloadurl=Yii::app()->getController()->createUrl('plugins/direct', array('plugin' => $this->getName(), 'surveyid' => 'SID','qid'=>'QID'));
-        $dowloadurl=str_replace(array("SID","QID"),array("{SID}","{QID}"),$dowloadurl);
-        $helpString=sprintf($this->_translate("To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."),"<code>".$dowloadurl."</code>","<code>{QID}</code>","{SID}");
+        $dowloadurl=str_replace(array("SID","QID"), array("{SID}","{QID}"), $dowloadurl);
+        $helpString=sprintf($this->_translate("To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."), "<code>".$dowloadurl."</code>", "<code>{QID}</code>", "{SID}");
         $this->settings['basicDocumentation']['content']="<div class='well'>{$helpString}</div>";
 
         return parent::getPluginSettings($getValues);
@@ -112,7 +113,7 @@ class pdfReport extends PluginBase {
      */
     public function addPdfReportAttribute()
     {
-        $pdfSettingsLink = Yii::app()->createUrl("admin/globalsettings",array("#"=>'presentation'));
+        $pdfSettingsLink = Yii::app()->createUrl("admin/globalsettings", array("#"=>'presentation'));
         $pdfReportAttribute = array(
             'pdfReport'=>array(
                 'types'=>'|', /* upload question type */
@@ -131,7 +132,7 @@ class pdfReport extends PluginBase {
                 'default'=>'{SITENAME}',
                 'i18n'=>true,
                 'expression'=>1,
-                'help'=> sprintf($this->_translate('Set it as header in the final pdf, same behaviour than PDF header title at %s LimeSurvey global settings  %s.'),"<a href='$pdfSettingsLink'>","</a>"),
+                'help'=> sprintf($this->_translate('Set it as header in the final pdf, same behaviour than PDF header title at %s LimeSurvey global settings  %s.'), "<a href='$pdfSettingsLink'>", "</a>"),
                 'caption'=> $this->_translate('Title for the pdf.'),
             ),
             'pdfReportSubTitle'=>array(
@@ -142,7 +143,7 @@ class pdfReport extends PluginBase {
                 'default'=>'{SURVEYNAME}',
                 'i18n'=>true,
                 'expression'=>1,
-                'help'=> sprintf($this->_translate('Set it as sub header in the final pdf, same behaviour than PDF header string at %s LimeSurvey global settinggs  %s.'),"<a href='$pdfSettingsLink'>","</a>"),
+                'help'=> sprintf($this->_translate('Set it as sub header in the final pdf, same behaviour than PDF header string at %s LimeSurvey global settinggs  %s.'), "<a href='$pdfSettingsLink'>", "</a>"),
                 'caption'=>$this->_translate('Sub title for the pdf.'),
             ),
             'pdfReportPrintAnswer'=>array(
@@ -225,7 +226,7 @@ class pdfReport extends PluginBase {
                 'caption'=>$this->_translate('Add attachements of email'),
             ),
         );
-        if(Yii::getPathOfAlias("limeMpdf")) {
+        if (Yii::getPathOfAlias("limeMpdf")) {
             $pdfReportAttribute['pdfReportPdfGenerator'] = array(
                 'types'=>'|', /* upload question type */
                 'category'=>$this->_translate('PDF report'),
@@ -246,19 +247,21 @@ class pdfReport extends PluginBase {
             );
             $pdfReportAttribute['pdfReportTitle']['help'] = sprintf(
                 $this->_translate('Set it as header in the final pdf with <strong>tcpdf</strong>, same behaviour than PDF header title at %s LimeSurvey global settinggs  %s. Used as <code>{{ title }}</code> in header.twig of <strong>limeMpdf</strong> theme twig files.'),
-                "<a href='$pdfSettingsLink'>","</a>"
+                "<a href='$pdfSettingsLink'>",
+                "</a>"
             );
             $pdfReportAttribute['pdfReportSubTitle']['help'] = sprintf(
                 $this->_translate('Set it as sub header in the final pdfwith <strong>tcpdf</strong>, same behaviour than PDF header string at %s LimeSurvey global settinggs  %s. Used as <code>{{ subtitle }}</code> in header.twig of <strong>limeMpdf</strong> theme twig files.'),
-                "<a href='$pdfSettingsLink'>","</a>"
+                "<a href='$pdfSettingsLink'>",
+                "</a>"
             );
         }
-        if(method_exists($this->getEvent(),'append')) {
+        if (method_exists($this->getEvent(), 'append')) {
             $this->getEvent()->append('questionAttributes', $pdfReportAttribute);
         } else {
             $questionAttributes=(array)$this->event->get('questionAttributes');
-            $questionAttributes=array_merge($questionAttributes,$pdfReportAttribute);
-            $this->event->set('questionAttributes',$questionAttributes);
+            $questionAttributes=array_merge($questionAttributes, $pdfReportAttribute);
+            $this->event->set('questionAttributes', $questionAttributes);
         }
     }
 
@@ -277,19 +280,19 @@ class pdfReport extends PluginBase {
      */
     public function removeAnswersPart()
     {
-        if($this->getEvent()->get('type')=='|') {
+        if ($this->getEvent()->get('type')=='|') {
             $oEvent=$this->getEvent();
             $oQuestionPdfReport = QuestionAttribute::model()->find(
                 "attribute=:attribute and qid=:qid",
                 array(':attribute'=>'pdfReport',':qid'=>$oEvent->get('qid'))
             );
-            if($oQuestionPdfReport && intval($oQuestionPdfReport->value)) {
+            if ($oQuestionPdfReport && intval($oQuestionPdfReport->value)) {
                 $inputName="{$oEvent->get('surveyId')}X{$oEvent->get('gid')}X{$oEvent->get('qid')}";
-                $answers = \CHtml::hiddenField($inputName , '', array('id' => $inputName)) // LS bug : must fix (id starting by number)
-                         . \CHtml::hiddenField("{$inputName}_filecount" , 0, array('id' => "{$inputName}_filecount"));
-                $oEvent->set('answers',$answers);
-                $oEvent->set('file_valid_message','');
-                $oEvent->set('valid_message','');
+                $answers = \CHtml::hiddenField($inputName, '', array('id' => $inputName)) // LS bug : must fix (id starting by number)
+                         . \CHtml::hiddenField("{$inputName}_filecount", 0, array('id' => "{$inputName}_filecount"));
+                $oEvent->set('answers', $answers);
+                $oEvent->set('file_valid_message', '');
+                $oEvent->set('valid_message', '');
                 $oEvent->set('class', $oEvent->get('class')." pdfreport-question");
             }
         }
@@ -306,12 +309,12 @@ class pdfReport extends PluginBase {
         $criteria->condition='question.sid = :sid and question.language=:language and attribute=:attribute and value=:value';
         $criteria->params=array(':sid'=>$this->_iSurveyId,':language'=>Yii::app()->getLanguage(),':attribute'=>'pdfReport',':value'=>'1');
         $oQuestionAttribute = QuestionAttribute::model()->findAll($criteria);
-        if($oQuestionAttribute){
-            foreach($oQuestionAttribute as $questionAttribute){
+        if ($oQuestionAttribute) {
+            foreach ($oQuestionAttribute as $questionAttribute) {
                 $pdfFile=$this->_getPdfFile($questionAttribute->qid);
-                if($pdfFile){
+                if ($pdfFile) {
                     $oQuestion=Question::model()->findByPk(array('qid'=>$questionAttribute->qid,'language'=>Yii::app()->getLanguage()));
-                    if($oQuestion->type=="|"){
+                    if ($oQuestion->type=="|") {
                         $this->_saveInFileUpload($oQuestion);
                         $this->_setSessionPrintAnswer($oQuestion);
                     }
@@ -329,14 +332,13 @@ class pdfReport extends PluginBase {
      */
     public function setPrintAnswer()
     {
-        if($this->event->get('controller')=='printanswers')
-        {
+        if ($this->event->get('controller')=='printanswers') {
             $aPdfReportPrintRight=Yii::app()->session["pdfReportPrintRight"];
             $surveyid=Yii::app()->getRequest()->getQuery('surveyid');
             /* find if one question have print settings */
-            if(isset($aPdfReportPrintRight[$surveyid]['replace'])) {
-                $this->publicPdfDownload($surveyid,$aPdfReportPrintRight[$surveyid]['replace']);
-                $this->event->set('run',false);
+            if (isset($aPdfReportPrintRight[$surveyid]['replace'])) {
+                $this->publicPdfDownload($surveyid, $aPdfReportPrintRight[$surveyid]['replace']);
+                $this->event->set('run', false);
             }
         }
     }
@@ -345,19 +347,19 @@ class pdfReport extends PluginBase {
     {
         $oEvent = $this->event;
         if ($oEvent->get('target') != get_class()) {
-          return;
+            return;
         }
-        $surveyid = Yii::app()->getRequest()->getParam("surveyid",Yii::app()->getRequest()->getParam("sid"));
+        $surveyid = Yii::app()->getRequest()->getParam("surveyid", Yii::app()->getRequest()->getParam("sid"));
         $oSurvey=Survey::model()->findByPk($surveyid);
-        if(!$oSurvey) {
-            throw new CHttpException(404,gT('Invalid survey ID'));
+        if (!$oSurvey) {
+            throw new CHttpException(404, gT('Invalid survey ID'));
         }
         $qid = Yii::app()->getRequest()->getParam("qid");
-        if(empty($qid)) {
+        if (empty($qid)) {
             throw new CHttpException(400);
         }
-        $aAllowAttribute = \QuestionAttribute::model()->find("qid = :qid AND attribute = :attribute",array(":qid"=>$qid,":attribute"=>'pdfReportPrintAnswer'));
-        if(empty($aAllowAttribute) || empty($aAllowAttribute->value)) {
+        $aAllowAttribute = \QuestionAttribute::model()->find("qid = :qid AND attribute = :attribute", array(":qid"=>$qid,":attribute"=>'pdfReportPrintAnswer'));
+        if (empty($aAllowAttribute) || empty($aAllowAttribute->value)) {
             throw new CHttpException(403);
         }
         /* Multi srid allowed */
@@ -365,28 +367,28 @@ class pdfReport extends PluginBase {
         $currentSrid = isset($_SESSION['survey_'.$surveyid]['srid']) ? $_SESSION['survey_'.$surveyid]['srid'] : null;
         $allowedSrid = null;
         $aSessionPrintRigth=Yii::app()->session["pdfReportPrintRight"];
-        if(!empty($aSessionPrintRigth[$surveyid])) {
+        if (!empty($aSessionPrintRigth[$surveyid])) {
             $allowedSrid = $aSessionPrintRigth[$surveyid]['srid'];
         }
-        if(!empty($srid)) {
-            if($srid != $currentSrid && $srid != $allowedSrid && !Permission::model()->hasSurveyPermission($surveyid,'reponse','read')) {
+        if (!empty($srid)) {
+            if ($srid != $currentSrid && $srid != $allowedSrid && !Permission::model()->hasSurveyPermission($surveyid, 'reponse', 'read')) {
                 throw new CHttpException(401);
             }
         }
-        if(empty($srid)) {
+        if (empty($srid)) {
             $srid = empty($currentSrid) ? $allowedSrid : $currentSrid;
         }
-        if(empty($srid)) {
-            throw new CHttpException(400,'Survey must be activated');
+        if (empty($srid)) {
+            throw new CHttpException(400, 'Survey must be activated');
         }
         $oResponse = Response::model($surveyid)->findByPk($srid);
         $aQuestionFiles = $oResponse->getFiles($qid);
-        if(Yii::app()->getRequest()->getParam("reset") || !$aQuestionFiles) {
+        if (Yii::app()->getRequest()->getParam("reset") || !$aQuestionFiles) {
             $this->_iSurveyId = $surveyid;
             $this->_iResponseId = $srid;
             $this->doPdfReports();
         }
-        $this->publicPdfDownload($surveyid,$qid,$srid);
+        $this->publicPdfDownload($surveyid, $qid, $srid);
     }
 
     /**
@@ -396,17 +398,18 @@ class pdfReport extends PluginBase {
      * @param int $srid : responseId
      * @return void
      */
-    public function publicPdfDownload($surveyid,$qid=null,$srid=null){
+    public function publicPdfDownload($surveyid, $qid=null, $srid=null)
+    {
         $oSurvey=Survey::model()->findByPk($surveyid);
-        if(!$oSurvey) {
-            throw new CHttpException(404,gT('Invalid survey ID'));
+        if (!$oSurvey) {
+            throw new CHttpException(404, gT('Invalid survey ID'));
         }
         /* Control if allowed */
         $currentSrid = isset($_SESSION['survey_'.$surveyid]['srid']) ? $_SESSION['survey_'.$surveyid]['srid'] : null;
         $aSessionPrintRigth=Yii::app()->session["pdfReportPrintRight"];
         $allowedSrid = isset($aSessionPrintRigth[$surveyid]['srid']) ? $aSessionPrintRigth[$surveyid]['srid'] : null;
-        if(!empty($srid)) {
-            if($srid != $currentSrid && $srid != $allowedSrid && !Permission::model()->hasSurveyPermission($surveyid,'reponse','read')) {
+        if (!empty($srid)) {
+            if ($srid != $currentSrid && $srid != $allowedSrid && !Permission::model()->hasSurveyPermission($surveyid, 'reponse', 'read')) {
                 throw new CHttpException(401);
             }
         } else {
@@ -422,14 +425,14 @@ class pdfReport extends PluginBase {
         // Ok we get the survey and the qid
         $oResponse = Response::model($surveyid)->findByPk($srid);
         $aQuestionFiles=$oResponse->getFiles($qid);
-        if(!$aQuestionFiles) {
-            throw new CHttpException(404,gT("Sorry, this file was not found."));
+        if (!$aQuestionFiles) {
+            throw new CHttpException(404, gT("Sorry, this file was not found."));
         }
         $aFile=$aQuestionFiles[0];
         $sFileRealName = Yii::app()->getConfig('uploaddir') . "/surveys/" . $surveyid . "/files/" . $aFile['filename'];
         if (file_exists($sFileRealName)) {
             $mimeType=CFileHelper::getMimeType($sFileRealName, null, false);
-            if(is_null($mimeType)){
+            if (is_null($mimeType)) {
                 $mimeType="application/octet-stream";
             }
             @ob_clean();
@@ -444,7 +447,7 @@ class pdfReport extends PluginBase {
             readfile($sFileRealName);
             Yii::app()->end();
         }
-        throw new CHttpException(404,gT("Sorry, this file was not found."));
+        throw new CHttpException(404, gT("Sorry, this file was not found."));
     }
     /**
      * set session for print answer to this question if settings
@@ -457,21 +460,21 @@ class pdfReport extends PluginBase {
             "attribute=:attribute and qid=:qid",
             array(':attribute'=>'pdfReportPrintAnswer',':qid'=>$oQuestion->qid)
         );
-        if(!$oQuestionAttribute){
+        if (!$oQuestionAttribute) {
             return;
         }
-        if(!intval($oQuestionAttribute->value)){
+        if (!intval($oQuestionAttribute->value)) {
             return;
         }
         $aSessionPrintRigth=Yii::app()->session["pdfReportPrintRight"];
-        if(empty($aSessionPrintRigth)) {
+        if (empty($aSessionPrintRigth)) {
             $aSessionPrintRigth=array();
         }
         /* reset for new srid */
-        if(!empty($aSessionPrintRigth[$oQuestion->sid]) && $aSessionPrintRigth[$oQuestion->sid]['srid'] != $this->_iResponseId) {
+        if (!empty($aSessionPrintRigth[$oQuestion->sid]) && $aSessionPrintRigth[$oQuestion->sid]['srid'] != $this->_iResponseId) {
             $aSessionPrintRigth=array();
         }
-        if(empty($aSessionPrintRigth[$oQuestion->sid])) {
+        if (empty($aSessionPrintRigth[$oQuestion->sid])) {
             $aSessionPrintRigth[$oQuestion->sid]=array(
                 'srid'=>$this->_iResponseId,
                 'allowed'=>array(),
@@ -480,7 +483,7 @@ class pdfReport extends PluginBase {
         /* Always add it to allowed */
         $aSessionPrintRigth[$oQuestion->sid]['allowed'][]=$oQuestion->qid;
         /* Optionnally set it to replace */
-        if($oQuestionAttribute->value==2){
+        if ($oQuestionAttribute->value==2) {
             $aSessionPrintRigth[$oQuestion->sid]['replace']=$oQuestion->qid;
         }
         Yii::app()->session["pdfReportPrintRight"]=$aSessionPrintRigth;
@@ -493,25 +496,25 @@ class pdfReport extends PluginBase {
     private function _getPdfFile($iQid)
     {
         $oQuestion=Question::model()->findByPk(array('qid'=>$iQid,'language'=>Yii::app()->getLanguage()));
-        if(!$oQuestion){
-            Yii::log("Question number {$iQid} invalid",'error','application.plugins.sendPdfReport');
+        if (!$oQuestion) {
+            Yii::log("Question number {$iQid} invalid", 'error', 'application.plugins.sendPdfReport');
             return null;
         }
 
-        $aQuestionsAttributes=QuestionAttribute::model()->getQuestionAttributes($iQid,Yii::app()->getLanguage());
-        if(empty($aQuestionsAttributes['pdfReportPdfGenerator'])) {
-            return $this->_tcpdfGenerator($oQuestion,$aQuestionsAttributes);
+        $aQuestionsAttributes=QuestionAttribute::model()->getQuestionAttributes($iQid, Yii::app()->getLanguage());
+        if (empty($aQuestionsAttributes['pdfReportPdfGenerator'])) {
+            return $this->_tcpdfGenerator($oQuestion, $aQuestionsAttributes);
         }
-        return $this->_mpdfGenerator($oQuestion,$aQuestionsAttributes);
+        return $this->_mpdfGenerator($oQuestion, $aQuestionsAttributes);
     }
-    private function _mpdfGenerator($oQuestion,$aQuestionsAttributes)
+    private function _mpdfGenerator($oQuestion, $aQuestionsAttributes)
     {
         $sText = $oQuestion->question;
         $sHeader = trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
         $sSubHeader = trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);
-        $sText = $this->_EMProcessString($sText,$oQuestion->qid);
-        $sHeader = $this->_EMProcessString($sHeader,$oQuestion->qid);
-        $sSubHeader = $this->_EMProcessString($sSubHeader,$oQuestion->qid);
+        $sText = $this->_EMProcessString($sText, $oQuestion->qid);
+        $sHeader = $this->_EMProcessString($sHeader, $oQuestion->qid);
+        $sSubHeader = $this->_EMProcessString($sSubHeader, $oQuestion->qid);
         /* tcpd use br, mpdf use pagebreak */
         $sText=str_replace(
             array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<page>','</page>'),
@@ -522,33 +525,33 @@ class pdfReport extends PluginBase {
         /* OK, we go */
         $pdfHelper = new \limeMpdf\helper\limeMpdfHelper($this->_iSurveyId);
         $extraOtions = array();
-        if($aQuestionsAttributes['pdfReportCreateToc']) {
-            $extraOtions['h2bookmarks'] = Yii::app()->getConfig('pdfReportToc',array('H1'=>0, 'H2'=>1, 'H3'=>2));
-            $extraOtions['h2toc'] = Yii::app()->getConfig('pdfReportToc',array('H1'=>0, 'H2'=>1, 'H3'=>2));
+        if ($aQuestionsAttributes['pdfReportCreateToc']) {
+            $extraOtions['h2bookmarks'] = Yii::app()->getConfig('pdfReportToc', array('H1'=>0, 'H2'=>1, 'H3'=>2));
+            $extraOtions['h2toc'] = Yii::app()->getConfig('pdfReportToc', array('H1'=>0, 'H2'=>1, 'H3'=>2));
         }
-        if(!empty($extraOtions)) {
+        if (!empty($extraOtions)) {
             $pdfHelper->setOptions($extraOtions);
         }
-        $pdfHelper->setTitle($sHeader,$sSubHeader);
+        $pdfHelper->setTitle($sHeader, $sSubHeader);
         $sFilePdfName=$this->_getPdfFileName($oQuestion->title);
         $pdfHelper->filename = $sFilePdfName;
-        $pdfHelper->doPdfContent($sText,\Mpdf\Output\Destination::FILE);
+        $pdfHelper->doPdfContent($sText, \Mpdf\Output\Destination::FILE);
         return $sFilePdfName;
     }
-    private function _tcpdfGenerator($oQuestion,$aQuestionsAttributes)
+    private function _tcpdfGenerator($oQuestion, $aQuestionsAttributes)
     {
         $sText = $oQuestion->question;
         $sHeader = trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
         $sSubHeader = trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);
 
-        $sText = $this->_EMProcessString($sText,$oQuestion->qid);
-        $sHeader = $this->_EMProcessString($sHeader,$oQuestion->qid);
-        $sSubHeader = $this->_EMProcessString($sSubHeader,$oQuestion->qid);
+        $sText = $this->_EMProcessString($sText, $oQuestion->qid);
+        $sHeader = $this->_EMProcessString($sHeader, $oQuestion->qid);
+        $sSubHeader = $this->_EMProcessString($sSubHeader, $oQuestion->qid);
 
         $sCssContent=$this->_getCss();
         $sHeader=strip_tags($sHeader);
         $sSubHeader=strip_tags($sSubHeader);
-        $aSurvey=getSurveyInfo($this->_iSurveyId,Yii::app()->getLanguage());
+        $aSurvey=getSurveyInfo($this->_iSurveyId, Yii::app()->getLanguage());
         $sSurveyName = $aSurvey['surveyls_title'];
         if (!defined('K_PATH_IMAGES')) {
             define('K_PATH_IMAGES', '');
@@ -579,8 +582,8 @@ class pdfReport extends PluginBase {
             //~ 'h5' => array(0 => array('h' => 0, 'n' => 0), 1 => array('h' => 0, 'n' => 0)),
             //~ 'h6' => array(0 => array('h' => 0, 'n' => 0), 1 => array('h' => 0, 'n' => 0)),
         );
-        if(!empty(App()->getConfig("pdfreport_tagsv"))) {
-            $tagvs = array_merge($tagvs,App()->getConfig("pdfreport_tagsv"));
+        if (!empty(App()->getConfig("pdfreport_tagsv"))) {
+            $tagvs = array_merge($tagvs, App()->getConfig("pdfreport_tagsv"));
         }
         $oPDF->setHtmlVSpace($tagvs);
         $pdfSpecific=array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<page>','</page>');
@@ -610,8 +613,8 @@ class pdfReport extends PluginBase {
         $sText="<style>\n{$sCssContent}\n</style>\n$sText\n";
 
         $aLogo=$this->_getLogoPaths($this->_iSurveyId);
-        if(!empty($aLogo['path'])){
-           $oPDF->sLogoFile=$aLogo['path'];
+        if (!empty($aLogo['path'])) {
+            $oPDF->sLogoFile=$aLogo['path'];
         }
         $oPDF->initAnswerPDF($aSurvey, $aPdfLanguageSettings, $sHeader, $sSubHeader);
         // output the HTML content
@@ -625,7 +628,7 @@ class pdfReport extends PluginBase {
         $sFilePdfName=$this->_getPdfFileName($oQuestion->title);
         $oPDF->Output($sFilePdfName, 'F');
 
-        Yii::log("getPdfFile done for {$oQuestion->qid} in {$this->_iSurveyId} with tcpdf.",'trace','application.plugins.sendPdfReport');
+        Yii::log("getPdfFile done for {$oQuestion->qid} in {$this->_iSurveyId} with tcpdf.", 'trace', 'application.plugins.sendPdfReport');
         return $sFilePdfName;
     }
     /**
@@ -660,10 +663,9 @@ class pdfReport extends PluginBase {
                 'url'=>$templateUploadUrl,
             ),
         );
-        foreach($aDirectories as $aDir) {
-            foreach($aLogoNames as $sLogoName) {
-                if(is_file($aDir['path'].$sLogoName))
-                {
+        foreach ($aDirectories as $aDir) {
+            foreach ($aLogoNames as $sLogoName) {
+                if (is_file($aDir['path'].$sLogoName)) {
                     return array(
                         'path'=>$aDir['path'].$sLogoName,
                         'url'=>$aDir['url'].$sLogoName,
@@ -681,8 +683,8 @@ class pdfReport extends PluginBase {
      * @param object question object
      * @return void
      */
-    private function _saveInDirectory($oQuestion) {
-
+    private function _saveInDirectory($oQuestion)
+    {
     }
     /**
      * Save the generated file in file upload
@@ -691,17 +693,17 @@ class pdfReport extends PluginBase {
      */
     private function _saveInFileUpload($oQuestion)
     {
-        if($oQuestion->type!='|'){
+        if ($oQuestion->type!='|') {
             return;
         }
         $oSurvey=Survey::model()->findByPk($this->_iSurveyId);
-        if(!$oSurvey || $oSurvey->active!='Y'){
+        if (!$oSurvey || $oSurvey->active!='Y') {
             return;
         }
         $sAnswerColumn="{$this->_iSurveyId}X{$oQuestion->gid}X{$oQuestion->qid}";
         $sAnswerCountColumn= "{$sAnswerColumn}_filecount";
         $uploadSurveyDir=App()->getConfig("uploaddir").DIRECTORY_SEPARATOR."surveys".DIRECTORY_SEPARATOR.$this->_iSurveyId.DIRECTORY_SEPARATOR."files".DIRECTORY_SEPARATOR;
-        if(!is_dir($uploadSurveyDir)) {
+        if (!is_dir($uploadSurveyDir)) {
             mkdir($uploadSurveyDir, 0777, true);
         }
         $fileName=$this->_getPdfFileName($oQuestion->title);
@@ -709,9 +711,9 @@ class pdfReport extends PluginBase {
 
         $reportSavedFileName = $this->_getPdfSavedFileName($oQuestion);
 
-        $sDestinationFileName = 'fu_' . hexdec(crc32($this->_iResponseId.rand ( 1 , 10000 ).$oQuestion->title));
+        $sDestinationFileName = 'fu_' . hexdec(crc32($this->_iResponseId.rand(1, 10000).$oQuestion->title));
         if (!copy($fileName, $uploadSurveyDir . $sDestinationFileName)) {
-            Yii::log("Error moving file $fileName to $uploadSurveyDir",'error','application.plugins.pdfReport');
+            Yii::log("Error moving file $fileName to $uploadSurveyDir", 'error', 'application.plugins.pdfReport');
             return;
         }
         $aAnswer=array(
@@ -724,11 +726,11 @@ class pdfReport extends PluginBase {
                 'ext'=>'pdf'
             )
         );
-        $oResponse=Response::model($this->_iSurveyId)->find('id=:id',array(':id'=>$this->_iResponseId));
+        $oResponse=Response::model($this->_iSurveyId)->find('id=:id', array(':id'=>$this->_iResponseId));
         $oResponse->$sAnswerColumn=ls_json_encode($aAnswer);
         $oResponse->$sAnswerCountColumn=1;
-        if(!$oResponse->save()){
-            Yii::log($oResponse->getErrors(),'error','application.plugins.pdfReport');
+        if (!$oResponse->save()) {
+            Yii::log($oResponse->getErrors(), 'error', 'application.plugins.pdfReport');
         }
     }
 
@@ -739,19 +741,17 @@ class pdfReport extends PluginBase {
      */
     private function _sendByEmail($oQuestion)
     {
-        $aQuestionsAttributes=QuestionAttribute::model()->getQuestionAttributes($oQuestion->qid,Yii::app()->getLanguage());
+        $aQuestionsAttributes=QuestionAttribute::model()->getQuestionAttributes($oQuestion->qid, Yii::app()->getLanguage());
         $questionAttributeEmails=trim($aQuestionsAttributes['pdfReportSendByEmailMail']);
-        if($questionAttributeEmails==""){
+        if ($questionAttributeEmails=="") {
             return;
         }
-        $questionAttributeEmails=$this->_EMProcessString($questionAttributeEmails,$oQuestion->qid);
+        $questionAttributeEmails=$this->_EMProcessString($questionAttributeEmails, $oQuestion->qid);
         $aRecipient=explode(";", $questionAttributeEmails);
         $aValidRecipient=array();
-        foreach($aRecipient as $sRecipient)
-        {
+        foreach ($aRecipient as $sRecipient) {
             $sRecipient=trim($sRecipient);
-            if(validateEmailAddress($sRecipient))
-            {
+            if (validateEmailAddress($sRecipient)) {
                 $aValidRecipient[]=$sRecipient;
             }
         }
@@ -763,21 +763,16 @@ class pdfReport extends PluginBase {
             $this->_getPdfSavedFileName($oQuestion),
         ));
         /* Add LS attachments */
-        if($aQuestionsAttributes['pdfReportSendByEmailAttachment']) {
-            $aAttachments = array_merge($this->_getEmailAttachements($aQuestionsAttributes['pdfReportSendByEmailContent']),$aAttachments);
+        if ($aQuestionsAttributes['pdfReportSendByEmailAttachment']) {
+            $aAttachments = array_merge($this->_getEmailAttachements($aQuestionsAttributes['pdfReportSendByEmailContent']), $aAttachments);
         }
-        foreach ($aValidRecipient as $sRecipient)
-        {
-            if (!SendEmailMessage($aMessage['message'], $aMessage['subject'],$sRecipient,"{$oSurvey->admin} <{$oSurvey->adminemail}>" , Yii::app()->getConfig("sitename"), true, getBounceEmail($this->_iSurveyId), $aAttachments))
-            {
-                Yii::log("Email with ".$sFile." can not be sent due to a mail error",'error','application.plugins.pdfReport');
-            }
-            else
-            {
-                Yii::log("Email with ".$sFile." sent",'info','application.plugins.pdfReport');
+        foreach ($aValidRecipient as $sRecipient) {
+            if (!SendEmailMessage($aMessage['message'], $aMessage['subject'], $sRecipient, "{$oSurvey->admin} <{$oSurvey->adminemail}>", Yii::app()->getConfig("sitename"), true, getBounceEmail($this->_iSurveyId), $aAttachments)) {
+                Yii::log("Email with ".$sFile." can not be sent due to a mail error", 'error', 'application.plugins.pdfReport');
+            } else {
+                Yii::log("Email with ".$sFile." sent", 'info', 'application.plugins.pdfReport');
             }
         }
-
     }
     /**
      * Generate unique pdf filename
@@ -785,26 +780,26 @@ class pdfReport extends PluginBase {
      * @param boolean $onlyFile return only the file name
      * @return string URI
      */
-    private function _getPdfFileName($qCode,$onlyFile=false)
+    private function _getPdfFileName($qCode, $onlyFile=false)
     {
         $aFilePdfName=array(
             $qCode,
             $this->_iSurveyId,
         );
         /* For unicity : make an unique responseId big number : only for testing or deactivated survey*/
-        if(empty($this->_iResponseId)){
-            $this->_iResponseId=hexdec(crc32(time().rand ( 1 , 1000 )));
+        if (empty($this->_iResponseId)) {
+            $this->_iResponseId=hexdec(crc32(time().rand(1, 1000)));
         }
-        if(!empty($_SESSION["survey_{$this->_iSurveyId}"]['token']) && $this->get("usetokenfilename",null,null,$this->settings['usetokenfilename']['default'])!=='none') {
+        if (!empty($_SESSION["survey_{$this->_iSurveyId}"]['token']) && $this->get("usetokenfilename", null, null, $this->settings['usetokenfilename']['default'])!=='none') {
             $aFilePdfName[]=$_SESSION["survey_{$this->_iSurveyId}"]['token'];
-            if($this->get("usetokenfilename",null,null,$this->settings['usetokenfilename']['default'])==!'alone'){
+            if ($this->get("usetokenfilename", null, null, $this->settings['usetokenfilename']['default'])==!'alone') {
                 $aFilePdfName[]=$this->_iResponseId;
             }
         } else {
-             $aFilePdfName[]=$this->_iResponseId;
+            $aFilePdfName[]=$this->_iResponseId;
         }
-        $sPdfFileName=implode("_",$aFilePdfName);
-        if($onlyFile) {
+        $sPdfFileName=implode("_", $aFilePdfName);
+        if ($onlyFile) {
             return $sPdfFileName;
         } else {
             return Yii::app()->getRuntimePath()."/".$sPdfFileName;
@@ -818,8 +813,8 @@ class pdfReport extends PluginBase {
             array(':attribute'=>'pdfReportSavedFileName',':qid'=>$oQuestion->qid)
         );
         $reportSavedFileName = "{$oQuestion->title}.pdf";
-        if(!empty($oQuestionAttribute->value) && trim($oQuestionAttribute->value) !="") {
-            $reportSavedFileName = $this->_EMProcessString(trim($oQuestionAttribute->value),$oQuestion->qid);
+        if (!empty($oQuestionAttribute->value) && trim($oQuestionAttribute->value) !="") {
+            $reportSavedFileName = $this->_EMProcessString(trim($oQuestionAttribute->value), $oQuestion->qid);
             $oQuestionAttributeFilter = QuestionAttribute::model()->find(
                 "attribute=:attribute and qid=:qid",
                 array(':attribute'=>'pdfReportSanitizeSavedFileName',':qid'=>$oQuestion->qid)
@@ -828,23 +823,25 @@ class pdfReport extends PluginBase {
             $alphanumeric = false;
             $lowercase = false;
             $beautify = false;
-            switch($sanitize) {
+            switch ($sanitize) {
                 case "none":
                     break;
                 case "alphanumericlower":
                     $lowercase = true;
+                    // no break
                 case "alphanumeric":
-                    $reportSavedFileName = preg_replace('/\s+/', App()->getConfig("pdfReportSpaceFilename","-"), $reportSavedFileName);
+                    $reportSavedFileName = preg_replace('/\s+/', App()->getConfig("pdfReportSpaceFilename", "-"), $reportSavedFileName);
                     /* replace accent see https://stackoverflow.com/a/16022459/2239406 */
                     $reportSavedFileName = $this->_transliterate($reportSavedFileName);
                     /* beautify_filename from santitize set lowercase : we don't want this … */
                     $reportSavedFileName = preg_replace(array('/ +/','/_+/','/-+/'), '-', $reportSavedFileName);
                     $reportSavedFileName = preg_replace(array('/-*\.-*/','/\.{2,}/'), '.', $reportSavedFileName);
                     $reportSavedFileName = trim($reportSavedFileName, '.-');
+                    // no break
                 case "base":
                 default:
-                    $reportSavedFileName = sanitize_filename($reportSavedFileName,$lowercase,false,false);
-                    $reportSavedFileName = mb_substr($reportSavedFileName,0,254,'UTF-8');
+                    $reportSavedFileName = sanitize_filename($reportSavedFileName, $lowercase, false, false);
+                    $reportSavedFileName = mb_substr($reportSavedFileName, 0, 254, 'UTF-8');
                     break;
             }
             $reportSavedFileName = $reportSavedFileName.'.pdf';
@@ -857,13 +854,13 @@ class pdfReport extends PluginBase {
     private function _getEmailContent($sType)
     {
         $aReplacementVars=$this->_getReplacementVars($sType=='confirm');
-        $aSurvey=getSurveyInfo($this->_iSurveyId,Yii::app()->language);
+        $aSurvey=getSurveyInfo($this->_iSurveyId, Yii::app()->language);
         $aReData=array(
             'saved_id'=>$this->_iResponseId,
             'thissurvey'=>$aSurvey,
         );
-        $sSubject=templatereplace($aSurvey["email_{$sType}_subj"],$aReplacementVars,$aReData,'',false,null,array(),true);
-        $sMessage=templatereplace($aSurvey["email_{$sType}"],$aReplacementVars,$aReData,'',false,null,array(),true);
+        $sSubject=templatereplace($aSurvey["email_{$sType}_subj"], $aReplacementVars, $aReData, '', false, null, array(), true);
+        $sMessage=templatereplace($aSurvey["email_{$sType}"], $aReplacementVars, $aReData, '', false, null, array(), true);
 
         return array(
             'subject'=>$sSubject,
@@ -879,10 +876,11 @@ class pdfReport extends PluginBase {
         switch ($sType) {
             case 'confirm':
                 $sType = 'confirmation';
-            default :
+                // no break
+            default:
         }
         $aRelevantAttachments = array();
-        $aSurvey=getSurveyInfo($this->_iSurveyId,Yii::app()->language);
+        $aSurvey=getSurveyInfo($this->_iSurveyId, Yii::app()->language);
         $aAttachments = unserialize($aSurvey['attachments']);
         /*
          * Iterate through attachments and check them for relevance.
@@ -904,7 +902,7 @@ class pdfReport extends PluginBase {
      */
     private function _getReplacementVars()
     {
-        $thissurvey=$aSurvey=getSurveyInfo($this->_iSurveyId,Yii::app()->language);
+        $thissurvey=$aSurvey=getSurveyInfo($this->_iSurveyId, Yii::app()->language);
         $aReplacementVars=array();
         $aReplacementVars['RELOADURL']='';
         $aReplacementVars['ADMINNAME'] = $aSurvey['adminname'];
@@ -913,21 +911,17 @@ class pdfReport extends PluginBase {
         $aReplacementVars['EDITRESPONSEURL']=Yii::app()->createAbsoluteUrl("/admin/dataentry/sa/editdata/subaction/edit/surveyid/{$this->_iSurveyId}/id/{$this->_iResponseId}");
         $aReplacementVars['STATISTICSURL']=Yii::app()->createAbsoluteUrl("/admin/statistics/sa/index/surveyid/{$this->_iSurveyId}");
         // Always HTML, TODO : fix it
-        if (true)
-        {
+        if (true) {
             $aReplacementVars['VIEWRESPONSEURL']="<a href='{$aReplacementVars['VIEWRESPONSEURL']}'>{$aReplacementVars['VIEWRESPONSEURL']}</a>";
             $aReplacementVars['EDITRESPONSEURL']="<a href='{$aReplacementVars['EDITRESPONSEURL']}'>{$aReplacementVars['EDITRESPONSEURL']}</a>";
             $aReplacementVars['STATISTICSURL']="<a href='{$aReplacementVars['STATISTICSURL']}'>{$aReplacementVars['STATISTICSURL']}</a>";
         }
         $aReplacementVars['ANSWERTABLE']='';
         $oSessionSurvey=Yii::app()->session["survey_{$this->_iSurveyId}"];
-        if($thissurvey['anonymized'] != 'Y' && !empty($oSessionSurvey['token']) && tableExists('{{tokens_' . $this->_iSurveyId . '}}'))
-        {
-            $oToken=Token::model($this->_iSurveyId)->find("token=:token",array('token' => $oSessionSurvey['token']));
-            if($oToken)
-            {
-                foreach($oToken->attributes as $attribute=>$value)
-                {
+        if ($thissurvey['anonymized'] != 'Y' && !empty($oSessionSurvey['token']) && tableExists('{{tokens_' . $this->_iSurveyId . '}}')) {
+            $oToken=Token::model($this->_iSurveyId)->find("token=:token", array('token' => $oSessionSurvey['token']));
+            if ($oToken) {
+                foreach ($oToken->attributes as $attribute=>$value) {
                     $aReplacementVars[strtoupper($attribute)]=$value;
                 }
             }
@@ -942,7 +936,7 @@ class pdfReport extends PluginBase {
     private function _getCss()
     {
         $oTemplate = \Template::model()->getInstance(null, $this->_iSurveyId);
-        if(is_file($oTemplate->filesPath.'pdfreport.css')){
+        if (is_file($oTemplate->filesPath.'pdfreport.css')) {
             /* @todo : get parent */
             return file_get_contents($oTemplate->filesPath.'/pdfreport.css');
         }
@@ -953,15 +947,17 @@ class pdfReport extends PluginBase {
      * @param string $string to translate
      * @return string
      */
-    private function _translate($string){
-        return Yii::t('',$string,array(),'pdfReport');
+    private function _translate($string)
+    {
+        return Yii::t('', $string, array(), 'pdfReport');
     }
 
     /**
      * Add this translation just after loaded all plugins
      * @see event afterPluginLoad
      */
-    public function afterPluginLoad(){
+    public function afterPluginLoad()
+    {
         // messageSource for this plugin:
         $pdfReportLang=array(
             'class' => 'CGettextMessageSource',
@@ -972,7 +968,7 @@ class pdfReport extends PluginBase {
             'basePath' => __DIR__ . DIRECTORY_SEPARATOR.'locale',
             'catalog'=>'messages',// default from Yii
         );
-        Yii::app()->setComponent('pdfReport',$pdfReportLang);
+        Yii::app()->setComponent('pdfReport', $pdfReportLang);
     }
 
     /**
@@ -983,7 +979,7 @@ class pdfReport extends PluginBase {
      */
     private function _EMProcessString($string, $questionNum = null)
     {
-        Yii::app()->setConfig('surveyID',$this->_iSurveyId);
+        Yii::app()->setConfig('surveyID', $this->_iSurveyId);
         $oSurvey=Survey::model()->findByPk($this->_iSurveyId);
         $replacementFields=array(
             'SAVEDID'=>$this->_iResponseId,
@@ -991,10 +987,10 @@ class pdfReport extends PluginBase {
             'SURVEYNAME'=>$oSurvey->getLocalizedTitle(),
             'SURVEYRESOURCESURL'=> Yii::app()->getConfig("uploadurl").'/surveys/'.$this->_iSurveyId.'/'
         );
-        if(intval(Yii::app()->getConfig('versionnumber'))<3) {
+        if (intval(Yii::app()->getConfig('versionnumber'))<3) {
             return \LimeExpressionManager::ProcessString($string, null, $replacementFields, false, 3, 0, false, false, true);
         }
-        if(version_compare(Yii::app()->getConfig('versionnumber'),"3.6.2","<")) {
+        if (version_compare(Yii::app()->getConfig('versionnumber'), "3.6.2", "<")) {
             return \LimeExpressionManager::ProcessString($string, null, $replacementFields, 3, 0, false, false, true);
         }
         return \LimeExpressionManager::ProcessStepString($string, true, 3, $replacementFields);
@@ -1007,7 +1003,7 @@ class pdfReport extends PluginBase {
      */
     private function _transliterate($string)
     {
-        if(class_exists("Transliterator")) {
+        if (class_exists("Transliterator")) {
             $myTrans = Transliterator::create('Any-Latin; Latin-ASCII; [\u0080-\u7fff] remove');
             return $myTrans->transliterate($string);
         }
@@ -1356,6 +1352,6 @@ class pdfReport extends PluginBase {
         $chars['l·l'] = 'll';
         $chars['Đ'] = 'DJ';
         $chars['đ'] = 'dj';
-        return strtr( $string, $chars );
+        return strtr($string, $chars);
     }
 }

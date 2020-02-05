@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.9.2
+ * @version 1.9.3
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -300,14 +300,19 @@ class pdfReport extends PluginBase
 
     /**
      * Do all reports needed
+     * @param integer $qid question id
+     * @return @void
      */
-    public function doPdfReports()
+    public function doPdfReports($qid = null)
     {
         // Only in next release $oQuestionAttribute = QuestionAttribute::model()->with('qid')->together()->findAll('sid=:sid and attribute=:attribute and value=:value',array(':sid'=>$iSid,':attribute'=>'pdfReport',':value'=>1));
         $criteria = new CDbCriteria;
-        $criteria->join='LEFT JOIN {{questions}} as question ON question.qid=t.qid';
-        $criteria->condition='question.sid = :sid and question.language=:language and attribute=:attribute and value=:value';
-        $criteria->params=array(':sid'=>$this->_iSurveyId,':language'=>Yii::app()->getLanguage(),':attribute'=>'pdfReport',':value'=>'1');
+        $criteria->join='LEFT JOIN {{questions}} as question ON '.App()->getDb()->quoteColumnName("question.qid").'='.App()->getDb()->quoteColumnName("t.qid");
+        $criteria->condition='question.sid = :sid and attribute=:attribute and value=:value';
+        $criteria->params=array(':sid'=>$this->_iSurveyId,':attribute'=>'pdfReport',':value'=>'1');
+        if($qid) {
+            $criteria->compare(App()->getDb()->quoteColumnName("question.qid"),$qid);
+        }
         $oQuestionAttribute = QuestionAttribute::model()->findAll($criteria);
         if ($oQuestionAttribute) {
             foreach ($oQuestionAttribute as $questionAttribute) {
@@ -349,19 +354,35 @@ class pdfReport extends PluginBase
         if ($oEvent->get('target') != get_class()) {
             return;
         }
+
+        /* The survey */
         $surveyid = Yii::app()->getRequest()->getParam("surveyid", Yii::app()->getRequest()->getParam("sid"));
         $oSurvey=Survey::model()->findByPk($surveyid);
         if (!$oSurvey) {
             throw new CHttpException(404, gT('Invalid survey ID'));
         }
+
+        /* The language , is set to default if not in url */
+        $language = Yii::app()->getRequest()->getParam("lang", App()->getLanguage());
+        if(!in_array($language,$oSurvey->getAllLanguages())) {
+            $language = $oSurvey->language;
+        }
+        App()->setLanguage($language);
+
+        /* The question */
         $qid = Yii::app()->getRequest()->getParam("qid");
         if (empty($qid)) {
             throw new CHttpException(400);
+        }
+        $aPdfAttribute = \QuestionAttribute::model()->find("qid = :qid AND attribute = :attribute", array(":qid"=>$qid,":attribute"=>'pdfReport'));
+        if (empty($aPdfAttribute) || empty($aPdfAttribute->value)) {
+            throw new CHttpException(401);
         }
         $aAllowAttribute = \QuestionAttribute::model()->find("qid = :qid AND attribute = :attribute", array(":qid"=>$qid,":attribute"=>'pdfReportPrintAnswer'));
         if (empty($aAllowAttribute) || empty($aAllowAttribute->value)) {
             throw new CHttpException(403);
         }
+
         /* Multi srid allowed */
         $srid = Yii::app()->getRequest()->getParam("srid");
         $currentSrid = isset($_SESSION['survey_'.$surveyid]['srid']) ? $_SESSION['survey_'.$surveyid]['srid'] : null;
@@ -381,12 +402,14 @@ class pdfReport extends PluginBase
         if (empty($srid)) {
             throw new CHttpException(400, 'Survey must be activated');
         }
+
+        /* OK : settings and param checked : we can go */
         $oResponse = Response::model($surveyid)->findByPk($srid);
         $aQuestionFiles = $oResponse->getFiles($qid);
-        if (Yii::app()->getRequest()->getParam("reset") || !$aQuestionFiles) {
+        if (Yii::app()->getRequest()->getParam("reset") || empty($aQuestionFiles)) {
             $this->_iSurveyId = $surveyid;
             $this->_iResponseId = $srid;
-            $this->doPdfReports();
+            $this->doPdfReports($qid);
         }
         $this->publicPdfDownload($surveyid, $qid, $srid);
     }

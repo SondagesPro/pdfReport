@@ -31,12 +31,22 @@ Use question text to create a pdf report : send it by email, save in survey.
 You can use inline style in the content of the question text. For example, you can use `<strong style='color:red;font-size:18pt'>A big and red sentence</strong>`.  Remind PDF is not web, usage of position:abolute or float didn't work exactly as excpected.
 
 #### With tcpdf 
-The plugin use [tcpdf](https://tcpdf.org/) and [WriteHTML function](https://tcpdf.org/docs/srcdoc/TCPDF/source-class-TCPDF/#17080). The plugin include a basic css file by default. You can replace the css included in the template used by the survey with a `pdfreport.css` in the files directory of the template.
 
+By default, the plugin use [tcpdf](https://tcpdf.org/) and [WriteHTML function](https://tcpdf.org/docs/srcdoc/TCPDF/source-class-TCPDF/#17080). The plugin include a basic css file by default. You can replace the css included in the template used by the survey with a `pdfreport.css` in the files directory of the template.
+
+See more example on tcdpf website : [inline style](https://tcpdf.org/examples/example_006/) or usage of a [css file](https://tcpdf.org/examples/example_061/).
+
+#### With limeMpdf plugin
+
+When using [limeMpdf plugin](https://gitlab.com/SondagesPro/coreAndTools/limeMpdf), there are already some CSS class inspired by [Bootstrap](https://getbootstrap.com/docs/3.3/css/). See [limeMdpf demo file](https://gitlab.com/SondagesPro/coreAndTools/limeMpdf/-/blob/master/assets/Demo%20of%20limeMpdf.pdf) for a lot of available class.
+
+You can update more content with limeMpdf using files in your adapted theme templete files.
 
 ### New page
 
 Tcpdf can use `<br pagebreak="true" />` or `<page> content </page>` for page broke, you can use it in the content of the question text. HTML is filtered leaving this part.
+
+LimeMpdf use `<pagebreak>` or `<pagebreak />` directly, plugin is adpated to allow `<br pagebreak="true" />` and `</page>` for pagebreak.
 
 ### Image inclusion
 

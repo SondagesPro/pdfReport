@@ -28,9 +28,11 @@ Use question text to create a pdf report : send it by email, save in survey.
 
 ### Style and css usage
 
+You can use inline style in the content of the question text. For example, you can use `<strong style='color:red;font-size:18pt'>A big and red sentence</strong>`.  Remind PDF is not web, usage of position:abolute or float didn't work exactly as excpected.
+
+#### With tcpdf 
 The plugin use [tcpdf](https://tcpdf.org/) and [WriteHTML function](https://tcpdf.org/docs/srcdoc/TCPDF/source-class-TCPDF/#17080). The plugin include a basic css file by default. You can replace the css included in the template used by the survey with a `pdfreport.css` in the files directory of the template.
 
-You can use inline style in the content of the question text. For example, you can use `<strong style='color:red;font-size:18pt'>A big and red sentence</strong>`. See more example on tcdpf website : [inline style](https://tcpdf.org/examples/example_006/) or usage of a [css file](https://tcpdf.org/examples/example_061/). Remind PDF is not web, usage of position:abolute or float didn't work exactly as excpected.
 
 ### New page
 

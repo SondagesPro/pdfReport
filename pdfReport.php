@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.9.3
+ * @version 1.9.4
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -1016,7 +1016,7 @@ class pdfReport extends PluginBase
         if (version_compare(Yii::app()->getConfig('versionnumber'), "3.6.2", "<")) {
             return \LimeExpressionManager::ProcessString($string, null, $replacementFields, 3, 0, false, false, true);
         }
-        return \LimeExpressionManager::ProcessStepString($string, true, 3, $replacementFields);
+        return \LimeExpressionManager::ProcessStepString($string, $replacementFields ,3 , true );
     }
 
     /**

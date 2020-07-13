@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.9.4
+ * @version 1.9.5
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -305,20 +305,27 @@ class pdfReport extends PluginBase
      */
     public function doPdfReports($qid = null)
     {
+        $language = Yii::app()->getLanguage();
+        if (!in_array($language, Survey::model()->findByPk($this->_iSurveyId)->getAllLanguages())) {
+            $language = Survey::model()->findByPk($this->_iSurveyId)->getAttribute('language');
+        }
         // Only in next release $oQuestionAttribute = QuestionAttribute::model()->with('qid')->together()->findAll('sid=:sid and attribute=:attribute and value=:value',array(':sid'=>$iSid,':attribute'=>'pdfReport',':value'=>1));
         $criteria = new CDbCriteria;
         $criteria->join='LEFT JOIN {{questions}} as question ON '.App()->getDb()->quoteColumnName("question.qid").'='.App()->getDb()->quoteColumnName("t.qid");
         $criteria->condition='question.sid = :sid and attribute=:attribute and value=:value';
         $criteria->params=array(':sid'=>$this->_iSurveyId,':attribute'=>'pdfReport',':value'=>'1');
+        /* language */
+        $criteria->compare(App()->getDb()->quoteColumnName("question.language"),$language);
         if($qid) {
             $criteria->compare(App()->getDb()->quoteColumnName("question.qid"),$qid);
         }
+
         $oQuestionAttribute = QuestionAttribute::model()->findAll($criteria);
         if ($oQuestionAttribute) {
             foreach ($oQuestionAttribute as $questionAttribute) {
                 $pdfFile=$this->_getPdfFile($questionAttribute->qid);
                 if ($pdfFile) {
-                    $oQuestion=Question::model()->findByPk(array('qid'=>$questionAttribute->qid,'language'=>Yii::app()->getLanguage()));
+                    $oQuestion=Question::model()->findByPk(array('qid'=>$questionAttribute->qid,'language'=>$language));
                     if ($oQuestion->type=="|") {
                         $this->_saveInFileUpload($oQuestion);
                         $this->_setSessionPrintAnswer($oQuestion);
@@ -791,9 +798,9 @@ class pdfReport extends PluginBase
         }
         foreach ($aValidRecipient as $sRecipient) {
             if (!SendEmailMessage($aMessage['message'], $aMessage['subject'], $sRecipient, "{$oSurvey->admin} <{$oSurvey->adminemail}>", Yii::app()->getConfig("sitename"), true, getBounceEmail($this->_iSurveyId), $aAttachments)) {
-                Yii::log("Email with ".$sFile." can not be sent due to a mail error", 'error', 'application.plugins.pdfReport');
+                Yii::log("Email with $sFile can not be sent to $sRecipient due to a mail error.", 'error', 'application.plugins.pdfReport');
             } else {
-                Yii::log("Email with ".$sFile." sent", 'info', 'application.plugins.pdfReport');
+                Yii::log("Email with $sFile sent to $sRecipient.", 'info', 'application.plugins.pdfReport');
             }
         }
     }

@@ -132,7 +132,7 @@ class pdfReport extends PluginBase
                 'default'=>'{SITENAME}',
                 'i18n'=>true,
                 'expression'=>1,
-                'help'=> sprintf($this->_translate('Set it as header in the final pdf, same behaviour than PDF header title at %s LimeSurvey global settings  %s.'), "<a href='$pdfSettingsLink'>", "</a>"),
+                'help'=> sprintf($this->_translate('Set it as header in the final pdf, same behaviour than PDF header title at %sLimeSurvey global settings%s.'), "<a href='$pdfSettingsLink'>", "</a>"),
                 'caption'=> $this->_translate('Title for the pdf.'),
             ),
             'pdfReportSubTitle'=>array(
@@ -143,7 +143,7 @@ class pdfReport extends PluginBase
                 'default'=>'{SURVEYNAME}',
                 'i18n'=>true,
                 'expression'=>1,
-                'help'=> sprintf($this->_translate('Set it as sub header in the final pdf, same behaviour than PDF header string at %s LimeSurvey global settinggs  %s.'), "<a href='$pdfSettingsLink'>", "</a>"),
+                'help'=> sprintf($this->_translate('Set it as sub header in the final pdf, same behaviour than PDF header string at %sLimeSurvey global settinggs%s.'), "<a href='$pdfSettingsLink'>", "</a>"),
                 'caption'=>$this->_translate('Sub title for the pdf.'),
             ),
             'pdfReportPrintAnswer'=>array(
@@ -157,7 +157,7 @@ class pdfReport extends PluginBase
                     2=>$this->_translate('Replace public print answer.'),
                 ),
                 'default'=>0,
-                'help'=>$this->_translate('Allow to download pdf after submitted the survey, see plugin settings for url.Optionnaly replace the default print answer by a dowload link of the pdf.'),
+                'help'=>$this->_translate('Allow to download pdf after submitted the survey, see plugin settings for url. Optionnaly replace the default print answer by a dowload link of the pdf.'),
                 'caption'=>$this->_translate('Replace public print answer.'),
             ),
             'pdfReportSavedFileName'=>array(

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: pdfReport\n"
-"POT-Creation-Date: 2020-09-21 12:51+0200\n"
+"POT-Creation-Date: 2020-09-21 12:58+0200\n"
 "PO-Revision-Date: 2017-03-09 15:09+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -157,5 +157,5 @@ msgstr ""
 
 #: pdfReport.php:258
 #, php-format
-msgid "Set it as sub header in the final pdfwith %s, same behaviour than PDF header string at %sLimeSurvey global settings%s. Used as %s in header.twig of %s theme twig files."
+msgid "Set it as sub header in the final pdf with %s, same behaviour than PDF header string at %sLimeSurvey global settings%s. Used as %s in %s of %s theme twig files."
 msgstr ""

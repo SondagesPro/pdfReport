@@ -2,176 +2,149 @@
 # This file is distributed under the same license as the pdfReport package.
 msgid ""
 msgstr ""
-"Project-Id-Version: pdfReport\n"
-"POT-Creation-Date: 2019-02-13 10:55+0100\n"
-"PO-Revision-Date: 2019-02-13 10:55+0100\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: fr\n"
+"PO-Revision-Date: 2020-09-21 11:03:59+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: GlotPress/2.3.1\n"
+"Language: fr\n"
+"Project-Id-Version: pdfReport\n"
 
-#: pdfReport.php:107
-#, php-format
-msgid ""
-"To allow user to get the file of the question number X at end : you can use "
-"this url: %s. Replacing %s by the question number (LimeSurvey replace %s by "
-"the survey number)."
-msgstr ""
-"Pour permettre à l'utilisateur de télécharger le pdf associé à une question "
-"à la fin du questionnaire : vous pouvez utiliser ce lien : %s. En remplaçant "
-"%s par le numéro de question (LimeSurvey remplace %s par le numéro de "
-"questionnaire)."
+#: pdfReport.php:258
+msgid "Set it as sub header in the final pdf with %s, same behaviour than PDF header string at %sLimeSurvey global settings%s. Used as %s in %s of %s theme twig files."
+msgstr "Utilisé en tant que sous-titre dans le pdf final avec %s, même comportement que l'entête PDF dans les %sparamètres généraux de LimeSurvey%s. Utilisé avec %s de %s dans les fichiers %s twig du thème."
 
-#: pdfReport.php:122 pdfReport.php:131 pdfReport.php:142 pdfReport.php:153
-#: pdfReport.php:167 pdfReport.php:181 pdfReport.php:196 pdfReport.php:207
-#: pdfReport.php:223 pdfReport.php:234 pdfReport.php:243
-msgid "PDF report"
-msgstr "Rapport PDF"
+#: pdfReport.php:249
+msgid "Set it as header in the final pdf with %s, same behaviour than PDF header title at %sLimeSurvey global settings%s. Used as %s in %s of %s theme twig files."
+msgstr "Utilisé en tant que sous-titre dans le pdf finel avec %s, même comportement que l'entête PDF dans les %sparamètres généraux de LimeSurvey%s. Utilisé avec %s dans le fichier %s des fichiers %s twig du modèle. "
 
-#: pdfReport.php:126
-msgid ""
-"The pdf are saved inside question answers, it‘s better if you hide the "
-"question, else only answers part are hidden."
-msgstr ""
-"Le fichier pdf sera sauvé en tant que réponse à la question, il est "
-"préférable de masquer la question, sinon seule la partie réponse sera "
-"masquée."
+#: pdfReport.php:216
+msgid "This don‘t deactivate limesurvey other email system. Remind to deactivate LimeSurvey system if you this one."
+msgstr "Ceci ne désactive pas les autres messages électroniques. Rappelez-vous de désactiver les fonctionnalité de LimeSurvey au besoin."
 
-#: pdfReport.php:127
-msgid "Use this question as pdf report."
-msgstr "Utiliser cette question pour le rapport pdf."
+#: pdfReport.php:200
+msgid "Optionnal email to send pdf Report. You can use Expression manager and multiple email. For multiple email : you must use <code>;</code> as separator. Each email was checked for validity."
+msgstr "Adresse de courriel optionnelle pour envoyer le rapport PDF. Vous pouvez utiliser le gestionnaire d'expression et des adresses multiples.. Pour de multiples adresses : vous devez utiliser <code>;</code> comme séparateur. Chaque adresse est testée séparément."
 
-#: pdfReport.php:138
-msgid "Title for the pdf."
-msgstr "Titre du pdf."
+#: pdfReport.php:146
+msgid "Use as sub-header in the final pdf, same behaviour than PDF header string at %sLimeSurvey global settings%s."
+msgstr "Utilisé en tant que sous-titre dans le pdf final, même comportement que l'entête PDF dans les %sparamètres généraux de LimeSurvey%s."
 
-#: pdfReport.php:149
-msgid "Sub title for the pdf."
-msgstr "Sous-titre du pdf."
+#: pdfReport.php:135
+msgid "Set it as header in the final pdf, same behaviour than PDF header title at %sLimeSurvey global settings%s."
+msgstr "Utilisé en tant que titre dans le pdf final, même comportement que l'entête PDF dans les %sparamètres généraux de LimeSurvey%s."
 
-#: pdfReport.php:158
-msgid "Allow public download (with the link)."
-msgstr "Permettre le téléchargement publique (avec le lien)."
+#: pdfReport.php:225
+msgid "Add existing attachements of the email templates from LimeSurvey."
+msgstr "Ajouter les fichiers joints existants du modèle de courriel de LimeSurvey."
 
-#: pdfReport.php:159 pdfReport.php:163
-msgid "Replace public print answer."
-msgstr "Remplacer le lien d'impression des réponses."
-
-#: pdfReport.php:162
-msgid ""
-"Allow to download pdf after submitted the survey, see plugin settings for "
-"url.Optionnaly replace the default print answer by a dowload link of the pdf."
-msgstr ""
-"Permettre au répondant de télécharger le rapport à la fin du questionnaire, "
-"voir le lien dans les paramètre de l‘extension. Peut remplacer le système "
-"d‘impression des réponses."
-
-#: pdfReport.php:176
-msgid ""
-"By default usage of the question code. You don‘t have to put the .pdf part."
-msgstr ""
-"Par défaut : utilisation du code de la question. Vous n‘avez pas à ajouter ."
-"pdf."
-
-#: pdfReport.php:177
-msgid "Name of saved PDF file."
-msgstr "Nom du fichier PDF."
-
-#: pdfReport.php:185
-msgid "No filter"
-msgstr "Aucun filtre"
-
-#: pdfReport.php:186
-msgid "Basic filter"
-msgstr "Filtre basique"
-
-#: pdfReport.php:187
-msgid "Alphanumeric only"
-msgstr "Seulement alphanumérique"
-
-#: pdfReport.php:188
-msgid "Alphanumeric and lower case"
-msgstr "Alphanumérique et minuscule"
-
-#: pdfReport.php:191
-msgid ""
-"Basic filter try to remove invalid an dangerous character, use “no filter” "
-"with caution. If there are a filter, filename is limited to 254 character. "
-"With alphanumeric space was replaced by -."
-msgstr ""
-"Le filtre basique tente de supprimer les caractères invalides et dangereux, "
-"utiliser «aucun filtre» avec précaution. Si un filtre est utilisé, le nom du "
-"fichier sera limité à 254 caractères. Avec alphanumérique, les espaces sont "
-"remplacé par -."
-
-#: pdfReport.php:192
+#: pdfReport.php:190
 msgid "Sanitization of the file name."
 msgstr "Nettoyage du nom de fichier."
 
-#: pdfReport.php:202
-msgid "Optionnal email to send pdf Report."
-msgstr "Adresse de messagerie optionnelle pour l'envoi du rapport."
+#: pdfReport.php:189
+msgid "Basic filter try to remove invalid an dangerous character, use “no filter” with caution. If there are a filter, filename is limited to 254 character. With alphanumeric space was replaced by -."
+msgstr "Le filtre basique tente de supprimer les caractères invalides et dangereux, utiliser «aucun filtre» avec précaution. Si un filtre est utilisé, le nom du fichier sera limité à 254 caractères. Avec alphanumérique, les espaces sont remplacé par -."
 
-#: pdfReport.php:203
-msgid "Send it by email to"
-msgstr "L'envoyer à l'adresse"
+#: pdfReport.php:186
+msgid "Alphanumeric and lower case"
+msgstr "Alphanumérique et minuscule"
 
-#: pdfReport.php:211
-msgid "Confirmation email"
-msgstr "Courriel de confirmation"
+#: pdfReport.php:185
+msgid "Alphanumeric only"
+msgstr "Seulement alphanumérique"
 
-#: pdfReport.php:212
-msgid "Basic admin notification"
-msgstr "Notification simple à l’administrateur"
+#: pdfReport.php:184
+msgid "Basic filter"
+msgstr "Filtre basique"
 
-#: pdfReport.php:213
-msgid "Detailed admin notification"
-msgstr "Notification détaillée à l’administrateur"
+#: pdfReport.php:183
+msgid "No filter"
+msgstr "Aucun filtre"
 
-#: pdfReport.php:218
-msgid "This don‘t deactivate limesurvey other email system."
-msgstr "Ceci ne désactive pas l'envoi par les autres système de LimeSurvey."
+#: pdfReport.php:246
+msgid "Create a PDF table of content"
+msgstr "Créer une table des matière PDF"
 
-#: pdfReport.php:219
-msgid "Content and subject of the email"
-msgstr "Contenu et sujet du courriel"
+#: pdfReport.php:245
+msgid "Plugin limeMpdf allow table of content using h1, h2 etc … then adding title in your pdf set a table of contents."
+msgstr "L‘extension limePdf permet de créer une table des matières avec les tags h1, h2 etc … donc ajouter des titres dans votre PDF vous permet de créer une table des matière."
 
-#: pdfReport.php:227
-msgid "Add existing attachements of the email templates from LimeSurvey."
-msgstr ""
-"Ajouter les fichiers joints existants du modèle de courriel de LimeSurvey."
-
-#: pdfReport.php:228
-msgid "Add attachements of email"
-msgstr "Ajouter les fichiers joints au message"
-
-#: pdfReport.php:238
-msgid ""
-"You have limeMpdf plugin allowing more class, but don‘t use pdfreport.css. "
-"Then if you need usage of pdfreport.css: you can choose to use old tcpdf "
-"system."
-msgstr ""
-"Vous avez l‘extension limeMpdf qui permet plus de class, mais n‘utilise pas "
-"pdfreport.css. Donc si vous avez l‘usage de pdfreport.css: vous pouvez "
-"choisir d‘utiliser l‘ancien système tcpdf."
-
-#: pdfReport.php:239
+#: pdfReport.php:237
 msgid "Use limeMpdf"
 msgstr "Utiliser limeMpdf"
 
-#: pdfReport.php:247
-msgid ""
-"Plugin limeMpdf allow table of content using h1, h2 etc … then adding title "
-"in your pdf set a table of contents."
-msgstr ""
-"L‘extension limePdf permet de créer une table des matières avec les tags h1, "
-"h2 etc … donc ajouter des titres dans votre PDF vous permet de créer une "
-"table des matière."
+#: pdfReport.php:236
+msgid "You have limeMpdf plugin allowing more class, but don‘t use pdfreport.css. Then if you need usage of pdfreport.css: you can choose to use old tcpdf system."
+msgstr "Vous avez l‘extension limeMpdf qui permet plus de class, mais n‘utilise pas pdfreport.css. Donc si vous avez l‘usage de pdfreport.css: vous pouvez choisir d‘utiliser l‘ancien système tcpdf."
 
-#: pdfReport.php:248
-msgid "Create a PDF table of content"
-msgstr "Créer une table des matière PDF"
+#: pdfReport.php:120 pdfReport.php:129 pdfReport.php:140 pdfReport.php:151
+#: pdfReport.php:165 pdfReport.php:179 pdfReport.php:194 pdfReport.php:205
+#: pdfReport.php:221 pdfReport.php:232 pdfReport.php:241
+msgid "PDF report"
+msgstr "Rapport PDF"
+
+#: pdfReport.php:226
+msgid "Add attachements of email"
+msgstr "Ajouter les fichiers joints au message"
+
+#: pdfReport.php:174
+msgid "By default usage of the question code. You don‘t have to put the .pdf part."
+msgstr "Par défaut : utilisation du code de la question. Vous n‘avez pas à ajouter .pdf."
+
+#: pdfReport.php:160
+msgid "Allow to download pdf after submitted the survey, see plugin settings for url. Optionnaly replace the default print answer by a dowload link of the pdf."
+msgstr "Permettre au répondant de télécharger le rapport à la fin du questionnaire, voir le lien dans les paramètre de l‘extension. Peut remplacer le système d‘impression des réponses."
+
+#: pdfReport.php:157 pdfReport.php:161
+msgid "Replace public print answer."
+msgstr "Remplacer le lien d'impression des réponses."
+
+#: pdfReport.php:156
+msgid "Allow public download (with the link)."
+msgstr "Permettre le téléchargement publique (avec le lien)."
+
+#: pdfReport.php:104
+msgid "To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."
+msgstr "Pour permettre à l'utilisateur de télécharger le pdf associé à une question à la fin du questionnaire : vous pouvez utiliser ce lien : %s. En remplaçant %s par le numéro de question (LimeSurvey remplace %s par le numéro de questionnaire)."
+
+#: pdfReport.php:217
+msgid "Content and subject of the email"
+msgstr "Contenu et sujet du courriel"
+
+#: pdfReport.php:211
+msgid "Detailed admin notification"
+msgstr "Notification détaillée à l’administrateur"
+
+#: pdfReport.php:210
+msgid "Basic admin notification"
+msgstr "Notification simple à l’administrateur"
+
+#: pdfReport.php:209
+msgid "Confirmation email"
+msgstr "Courriel de confirmation"
+
+#: pdfReport.php:201
+msgid "Send it by email to"
+msgstr "L'envoyer à l'adresse"
+
+#: pdfReport.php:175
+msgid "Name of saved PDF file."
+msgstr "Nom du fichier PDF."
+
+#: pdfReport.php:147
+msgid "Sub title for the pdf."
+msgstr "Sous-titre du pdf."
+
+#: pdfReport.php:136
+msgid "Title for the pdf."
+msgstr "Titre du pdf."
+
+#: pdfReport.php:125
+msgid "Use this question as pdf report."
+msgstr "Utiliser cette question pour le rapport pdf."
+
+#: pdfReport.php:124
+msgid "The pdf are saved inside question answers, it‘s better if you hide the question, else only answers part are hidden."
+msgstr "Le fichier pdf sera sauvé en tant que réponse à la question, il est préférable de masquer la question, sinon seule la partie réponse sera masquée."

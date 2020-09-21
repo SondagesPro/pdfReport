@@ -255,10 +255,11 @@ class pdfReport extends PluginBase
                 "<strong>limeMpdf</strong>"
             );
             $pdfReportAttribute['pdfReportSubTitle']['help'] = sprintf(
-                $this->_translate('Set it as sub header in the final pdfwith %s, same behaviour than PDF header string at %sLimeSurvey global settings%s. Used as %s in header.twig of %s theme twig files.'),
+                $this->_translate('Set it as sub header in the final pdf with %s, same behaviour than PDF header string at %sLimeSurvey global settings%s. Used as %s in %s of %s theme twig files.'),
                 "<strong>tcpdf</strong>",
                 "<a href='$pdfSettingsLink'>",
                 "</a>",
+                "header.twig",
                 "<code>{{ subtitle }}</code>",
                 "<strong>limeMpdf</strong>"
             );

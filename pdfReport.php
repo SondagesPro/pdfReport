@@ -4,11 +4,11 @@
  * Use question settings to create a report and send it by email.
  *
  * @author Denis Chenu <https://sondages.pro>
- * @copyright 2015-2019 Denis Chenu <https://sondages.pro>
+ * @copyright 2015-2020 Denis Chenu <https://sondages.pro>
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.9.5
+ * @version 1.9.6
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -143,7 +143,7 @@ class pdfReport extends PluginBase
                 'default'=>'{SURVEYNAME}',
                 'i18n'=>true,
                 'expression'=>1,
-                'help'=> sprintf($this->_translate('Set it as sub header in the final pdf, same behaviour than PDF header string at %sLimeSurvey global settinggs%s.'), "<a href='$pdfSettingsLink'>", "</a>"),
+                'help'=> sprintf($this->_translate('Use as sub-header in the final pdf, same behaviour than PDF header string at %sLimeSurvey global settings%s.'), "<a href='$pdfSettingsLink'>", "</a>"),
                 'caption'=>$this->_translate('Sub title for the pdf.'),
             ),
             'pdfReportPrintAnswer'=>array(
@@ -246,14 +246,21 @@ class pdfReport extends PluginBase
                 'caption'=>$this->_translate('Create a PDF table of content'),
             );
             $pdfReportAttribute['pdfReportTitle']['help'] = sprintf(
-                $this->_translate('Set it as header in the final pdf with <strong>tcpdf</strong>, same behaviour than PDF header title at %s LimeSurvey global settinggs  %s. Used as <code>{{ title }}</code> in header.twig of <strong>limeMpdf</strong> theme twig files.'),
+                $this->_translate('Set it as header in the final pdf with %s, same behaviour than PDF header title at %sLimeSurvey global settings%s. Used as %s in %s of %s theme twig files.'),
+                "<strong>tcpdf</strong>",
                 "<a href='$pdfSettingsLink'>",
-                "</a>"
+                "</a>",
+                "<code>{{ title }}</code>",
+                "header.twig",
+                "<strong>limeMpdf</strong>"
             );
             $pdfReportAttribute['pdfReportSubTitle']['help'] = sprintf(
-                $this->_translate('Set it as sub header in the final pdfwith <strong>tcpdf</strong>, same behaviour than PDF header string at %s LimeSurvey global settinggs  %s. Used as <code>{{ subtitle }}</code> in header.twig of <strong>limeMpdf</strong> theme twig files.'),
+                $this->_translate('Set it as sub header in the final pdfwith %s, same behaviour than PDF header string at %sLimeSurvey global settings%s. Used as %s in header.twig of %s theme twig files.'),
+                "<strong>tcpdf</strong>",
                 "<a href='$pdfSettingsLink'>",
-                "</a>"
+                "</a>",
+                "<code>{{ subtitle }}</code>",
+                "<strong>limeMpdf</strong>"
             );
         }
         if (method_exists($this->getEvent(), 'append')) {

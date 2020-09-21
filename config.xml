@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <config>
     <metadata>
         <name>pdfReport</name>
         <type>plugin</type>
         <creationDate>2015-10-06</creationDate>
-        <lastUpdate>2020-07-13</lastUpdate>
+        <lastUpdate>2020-09-21</lastUpdate>
         <author>Denis Chenu</author>
         <authorUrl>https://www.sondages.pro</authorUrl>
-        <version> 1.9.5</version>
+        <version> 1.9.6</version>
         <license>GNU Affero General Public License v3.0</license>
         <description><![CDATA[Use upload question type to create a pdf report, replace print pdf, save it as report in survey file and send it by email.]]></description>
     </metadata>

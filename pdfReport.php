@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.9.6
+ * @version 1.9.7
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -95,10 +95,13 @@ class pdfReport extends PluginBase
     );
 
     /**
-     * @see getPluginSettings
+     * @inheritdoc
      */
     public function getPluginSettings($getValues=true)
     {
+        if(!Permission::model()->hasGlobalPermission('settings','read')) {
+            throw new CHttpException(403);
+        }
         $dowloadurl=Yii::app()->getController()->createUrl('plugins/direct', array('plugin' => $this->getName(), 'surveyid' => 'SID','qid'=>'QID'));
         $dowloadurl=str_replace(array("SID","QID"), array("{SID}","{QID}"), $dowloadurl);
         $helpString=sprintf($this->_translate("To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."), "<code>".$dowloadurl."</code>", "<code>{QID}</code>", "{SID}");
@@ -113,6 +116,9 @@ class pdfReport extends PluginBase
      */
     public function addPdfReportAttribute()
     {
+        if (!$this->getEvent()) {
+            throw new CHttpException(403);
+        }
         $pdfSettingsLink = Yii::app()->createUrl("admin/globalsettings", array("#"=>'presentation'));
         $pdfReportAttribute = array(
             'pdfReport'=>array(
@@ -278,6 +284,9 @@ class pdfReport extends PluginBase
      */
     public function afterSurveyComplete()
     {
+        if (!$this->getEvent()) {
+            throw new CHttpException(403);
+        }
         $this->_iSurveyId = $this->getEvent()->get('surveyId');
         $this->_iResponseId = $this->getEvent()->get('responseId');
         $this->doPdfReports();
@@ -288,6 +297,9 @@ class pdfReport extends PluginBase
      */
     public function removeAnswersPart()
     {
+        if (!$this->getEvent()) {
+            throw new CHttpException(403);
+        }
         if ($this->getEvent()->get('type')=='|') {
             $oEvent=$this->getEvent();
             $oQuestionPdfReport = QuestionAttribute::model()->find(
@@ -311,7 +323,7 @@ class pdfReport extends PluginBase
      * @param integer $qid question id
      * @return @void
      */
-    public function doPdfReports($qid = null)
+    private function doPdfReports($qid = null)
     {
         $language = Yii::app()->getLanguage();
         if (!in_array($language, Survey::model()->findByPk($this->_iSurveyId)->getAllLanguages())) {
@@ -352,6 +364,9 @@ class pdfReport extends PluginBase
      */
     public function setPrintAnswer()
     {
+        if (!$this->getEvent()) {
+            throw new CHttpException(403);
+        }
         if ($this->event->get('controller')=='printanswers') {
             $aPdfReportPrintRight=Yii::app()->session["pdfReportPrintRight"];
             $surveyid=Yii::app()->getRequest()->getQuery('surveyid');
@@ -365,6 +380,9 @@ class pdfReport extends PluginBase
 
     public function newDirectRequest()
     {
+        if (!$this->getEvent()) {
+            throw new CHttpException(403);
+        }
         $oEvent = $this->event;
         if ($oEvent->get('target') != get_class()) {
             return;
@@ -436,7 +454,7 @@ class pdfReport extends PluginBase
      * @param int $srid : responseId
      * @return void
      */
-    public function publicPdfDownload($surveyid, $qid=null, $srid=null)
+    private function publicPdfDownload($surveyid, $qid=null, $srid=null)
     {
         $oSurvey=Survey::model()->findByPk($surveyid);
         if (!$oSurvey) {
@@ -487,6 +505,7 @@ class pdfReport extends PluginBase
         }
         throw new CHttpException(404, gT("Sorry, this file was not found."));
     }
+
     /**
      * set session for print answer to this question if settings
      * @param Question $oQuestion
@@ -526,6 +545,7 @@ class pdfReport extends PluginBase
         }
         Yii::app()->session["pdfReportPrintRight"]=$aSessionPrintRigth;
     }
+
     /**
      * Get a pdf file from a string
      * @param integer $iQid
@@ -545,6 +565,7 @@ class pdfReport extends PluginBase
         }
         return $this->_mpdfGenerator($oQuestion, $aQuestionsAttributes);
     }
+
     private function _mpdfGenerator($oQuestion, $aQuestionsAttributes)
     {
         $sText = $oQuestion->question;
@@ -576,6 +597,7 @@ class pdfReport extends PluginBase
         $pdfHelper->doPdfContent($sText, \Mpdf\Output\Destination::FILE);
         return $sFilePdfName;
     }
+
     private function _tcpdfGenerator($oQuestion, $aQuestionsAttributes)
     {
         $sText = $oQuestion->question;
@@ -669,6 +691,7 @@ class pdfReport extends PluginBase
         Yii::log("getPdfFile done for {$oQuestion->qid} in {$this->_iSurveyId} with tcpdf.", 'trace', 'application.plugins.sendPdfReport');
         return $sFilePdfName;
     }
+
     /**
      * Get the logo file name
      * @return string : URI for pdf file

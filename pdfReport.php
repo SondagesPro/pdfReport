@@ -4,11 +4,11 @@
  * Use question settings to create a report and send it by email.
  *
  * @author Denis Chenu <https://sondages.pro>
- * @copyright 2015-2020 Denis Chenu <https://sondages.pro>
+ * @copyright 2015-2021 Denis Chenu <https://sondages.pro>
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.9.7
+ * @version 1.10.0
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -151,6 +151,17 @@ class pdfReport extends PluginBase
                 'expression'=>1,
                 'help'=> sprintf($this->_translate('Use as sub-header in the final pdf, same behaviour than PDF header string at %sLimeSurvey global settings%s.'), "<a href='$pdfSettingsLink'>", "</a>"),
                 'caption'=>$this->_translate('Sub title for the pdf.'),
+            ),
+            'pdfReportContent'=>array(
+                'types'=>'|', /* upload question type */
+                'category'=>$this->_translate('PDF report'),
+                'sortorder'=>15,
+                'inputtype'=>'textarea',
+                'default'=>"",
+                'i18n'=>true,
+                'expression'=>1,
+                'help'=>$this->_translate('This allow better edition without HTML editor and/or XSS.'),
+                'caption'=>$this->_translate('Content of the PDF, leave empty to use question text.'),
             ),
             'pdfReportPrintAnswer'=>array(
                 'types'=>'|', /* upload question type */
@@ -568,18 +579,42 @@ class pdfReport extends PluginBase
 
     private function _mpdfGenerator($oQuestion, $aQuestionsAttributes)
     {
-        $sText = $oQuestion->question;
+        $sText = trim($aQuestionsAttributes['pdfReportContent'][Yii::app()->getLanguage()]);
+        if(empty($sText)) {
+            $sText = $oQuestion->question;
+        }
         $sHeader = trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
         $sSubHeader = trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);
         $sText = $this->_EMProcessString($sText, $oQuestion->qid);
         $sHeader = $this->_EMProcessString($sHeader, $oQuestion->qid);
         $sSubHeader = $this->_EMProcessString($sSubHeader, $oQuestion->qid);
-        /* tcpd use br, mpdf use pagebreak */
-        $sText=str_replace(
-            array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<page>','</page>'),
-            array('<pagebreak>','<pagebreak>','<pagebreak>','','<pagebreak>'),
-            $sText
+        /* Fix html text */
+        /* tcpdf use br, mpdf use pagebreak */
+        $pdfSpecific=array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<page>','</page>');
+        $pdfReplaced=array('<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>page</span>','<span>/page</span>');
+        $sText=str_replace($pdfSpecific, $pdfReplaced, $sText);
+        $oPurifier = new CHtmlPurifier();
+        $oPurifier->options = array(
+            'AutoFormat.RemoveEmpty'=>false,
+            'Core.NormalizeNewlines'=>false,
+            'CSS.AllowTricky'=>true, // Allow display:none; (and other)
+            'CSS.Trusted' => true,
+            'Attr.EnableID'=>true, // Allow to set id
+            'Attr.AllowedFrameTargets'=>array('_blank','_self'),
+            'URI.AllowedSchemes'=>array(
+                'http' => true,
+                'https' => true,
+                'mailto' => true,
+                'ftp' => true,
+                'nntp' => true,
+                'news' => true,
+                'data' => true,
+                )
         );
+        $sText = $oPurifier->purify($sText);
+        $sHeader = $oPurifier->purify($sHeader);
+        $sSubHeader = $oPurifier->purify($sSubHeader);
+        $sText=str_replace($pdfReplaced, $pdfSpecific, $sText);
 
         /* OK, we go */
         $pdfHelper = new \limeMpdf\helper\limeMpdfHelper($this->_iSurveyId);
@@ -600,7 +635,10 @@ class pdfReport extends PluginBase
 
     private function _tcpdfGenerator($oQuestion, $aQuestionsAttributes)
     {
-        $sText = $oQuestion->question;
+        $sText = trim($aQuestionsAttributes['pdfReportContent'][Yii::app()->getLanguage()]);
+        if(empty($sText)) {
+            $sText = $oQuestion->question;
+        }
         $sHeader = trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
         $sSubHeader = trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);
 
@@ -667,7 +705,9 @@ class pdfReport extends PluginBase
                 'data' => true,
                 )
         );
-        $sText=$oPurifier->purify($sText);
+        $sText = $oPurifier->purify($sText);
+        $sHeader = $oPurifier->purify($sHeader);
+        $sSubHeader = $oPurifier->purify($sSubHeader);
 
         $sText=str_replace($pdfReplaced, $pdfSpecific, $sText);
         $sText="<style>\n{$sCssContent}\n</style>\n$sText\n";

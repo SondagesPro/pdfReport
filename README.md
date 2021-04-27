@@ -46,7 +46,7 @@ You can update more content with limeMpdf using files in your adapted theme temp
 
 Tcpdf can use `<br pagebreak="true" />` or `<page> content </page>` for page broke, you can use it in the content of the question text. HTML is filtered leaving this part.
 
-LimeMpdf use `<pagebreak>` or `<pagebreak />` directly, plugin is adpated to allow `<br pagebreak="true" />` and `</page>` for pagebreak.
+LimeMpdf use `<pagebreak>` or `<pagebreak />` directly, plugin is adpated to allow `<br pagebreak="true" />` for pagebreak.
 
 ### Image inclusion
 

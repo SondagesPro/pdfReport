@@ -3,7 +3,9 @@ pdfReport
 
 Use question text to create a pdf report : send it by email, save in survey.
 
-**This plugin is currently not compatible with LimeSurvey 4.X version and up**
+**This plugin is not compatible with LimeSurvey 4.X version and up**
+
+**This plugin is currently testable with LimeSurvey 5.X version and up (without LimeMPDF)**
 
 ## Installation
 

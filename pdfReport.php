@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.10.2
+ * @version 2.0.0-beta1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -346,7 +346,9 @@ class pdfReport extends PluginBase
         $criteria->condition='question.sid = :sid and attribute=:attribute and value=:value';
         $criteria->params=array(':sid'=>$this->_iSurveyId,':attribute'=>'pdfReport',':value'=>'1');
         /* language */
-        $criteria->compare(App()->getDb()->quoteColumnName("question.language"),$language);
+        if(intval(App()->getConfig("versionnumber")) <= 3) {
+            $criteria->compare(App()->getDb()->quoteColumnName("question.language"),$language);
+        }
         if($qid) {
             $criteria->compare(App()->getDb()->quoteColumnName("question.qid"),$qid);
         }
@@ -356,7 +358,11 @@ class pdfReport extends PluginBase
             foreach ($oQuestionAttribute as $questionAttribute) {
                 $pdfFile=$this->_getPdfFile($questionAttribute->qid);
                 if ($pdfFile) {
-                    $oQuestion=Question::model()->findByPk(array('qid'=>$questionAttribute->qid,'language'=>$language));
+                    if(intval(App()->getConfig("versionnumber")) <= 3) {
+                        $oQuestion=Question::model()->findByPk(array('qid'=>$questionAttribute->qid,'language'=>$language));
+                    } else {
+                        $oQuestion=Question::model()->findByPk($questionAttribute->qid);
+                    }
                     if ($oQuestion->type=="|") {
                         $this->_saveInFileUpload($oQuestion);
                         $this->_setSessionPrintAnswer($oQuestion);
@@ -564,9 +570,13 @@ class pdfReport extends PluginBase
      */
     private function _getPdfFile($iQid)
     {
-        $oQuestion=Question::model()->findByPk(array('qid'=>$iQid,'language'=>Yii::app()->getLanguage()));
+        if (intval(App()->getConfig('versionnumber')) <= 3 ) {
+            $oQuestion=Question::model()->findByPk(array('qid'=>$iQid,'language'=>Yii::app()->getLanguage()));
+        } else {
+            $oQuestion=Question::model()->findByPk($iQid);
+        }
         if (!$oQuestion) {
-            Yii::log("Question number {$iQid} invalid", 'error', 'application.plugins.sendPdfReport');
+            Yii::log("Question number {$iQid} invalid with current language", 'error', 'application.plugins.sendPdfReport');
             return null;
         }
 
@@ -581,7 +591,19 @@ class pdfReport extends PluginBase
     {
         $sText = trim($aQuestionsAttributes['pdfReportContent'][Yii::app()->getLanguage()]);
         if(empty($sText)) {
-            $sText = $oQuestion->question;
+            if (intval(App()->getConfig('versionnumber')) <= 3 ) {
+               $sText = $oQuestion->question;
+            } else {
+                $QuestionL10n = QuestionL10n::model()->find(
+                    "qid = :qid AND language = :language",
+                    array('qid'=>$oQuestion->qid,'language'=>Yii::app()->getLanguage())
+                );
+                if (!$QuestionL10n) {
+                    Yii::log("Question number {$oQuestion->qid} invalid", 'error', 'application.plugins.sendPdfReport');
+                    return null;
+                }
+                $sText = $QuestionL10n->question;
+            }
         }
         $sHeader = trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
         $sSubHeader = trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);
@@ -614,7 +636,19 @@ class pdfReport extends PluginBase
     {
         $sText = trim($aQuestionsAttributes['pdfReportContent'][Yii::app()->getLanguage()]);
         if(empty($sText)) {
-            $sText = $oQuestion->question;
+            if (intval(App()->getConfig('versionnumber')) <= 3 ) {
+               $sText = $oQuestion->question;
+            } else {
+                $QuestionL10n = QuestionL10n::model()->find(
+                    "qid = :qid AND language = :language",
+                    array('qid'=>$oQuestion->qid,'language'=>Yii::app()->getLanguage())
+                );
+                if (!$QuestionL10n) {
+                    Yii::log("Question number {$oQuestion->qid} invalid with current language", 'error', 'application.plugins.sendPdfReport');
+                    return null;
+                }
+                $sText = $QuestionL10n->question;
+            }
         }
         $sHeader = trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
         $sSubHeader = trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);

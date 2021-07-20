@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 1.10.1
+ * @version 1.10.2
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -591,30 +591,8 @@ class pdfReport extends PluginBase
         /* Fix html text */
         /* tcpdf use br, mpdf use pagebreak */
         $pdfSpecific=array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<pagebreak>', '<pagebreak />');
-        $pdfReplaced=array('<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>','<span>br pagebreak="true"</span>');
+        $pdfReplaced=array('<pagebreak>','<pagebreak>','<pagebreak>','<pagebreak>','<pagebreak>');
         $sText=str_replace($pdfSpecific, $pdfReplaced, $sText);
-        $oPurifier = new CHtmlPurifier();
-        $oPurifier->options = array(
-            'AutoFormat.RemoveEmpty'=>false,
-            'Core.NormalizeNewlines'=>false,
-            'CSS.AllowTricky'=>true, // Allow display:none; (and other)
-            'CSS.Trusted' => true,
-            'Attr.EnableID'=>true, // Allow to set id
-            'Attr.AllowedFrameTargets'=>array('_blank','_self'),
-            'URI.AllowedSchemes'=>array(
-                'http' => true,
-                'https' => true,
-                'mailto' => true,
-                'ftp' => true,
-                'nntp' => true,
-                'news' => true,
-                'data' => true,
-                )
-        );
-        $sText = $oPurifier->purify($sText);
-        $sHeader = $oPurifier->purify($sHeader);
-        $sSubHeader = $oPurifier->purify($sSubHeader);
-        $sText=str_replace('<span>br pagebreak="true"</span>', '<pagebreak>', $sText);
         /* OK, we go */
         $pdfHelper = new \limeMpdf\helper\limeMpdfHelper($this->_iSurveyId);
         $extraOtions = array();

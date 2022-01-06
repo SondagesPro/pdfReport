@@ -4,11 +4,11 @@
  * Use question settings to create a report and send it by email.
  *
  * @author Denis Chenu <https://sondages.pro>
- * @copyright 2015-2021 Denis Chenu <https://sondages.pro>
+ * @copyright 2015-2022 Denis Chenu <https://sondages.pro>
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 2.0.0-beta1
+ * @version 2.0.2
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -426,7 +426,7 @@ class pdfReport extends PluginBase
         }
         $aPdfAttribute = \QuestionAttribute::model()->find("qid = :qid AND attribute = :attribute", array(":qid"=>$qid,":attribute"=>'pdfReport'));
         if (empty($aPdfAttribute) || empty($aPdfAttribute->value)) {
-            throw new CHttpException(401);
+            throw new CHttpException(403);
         }
         $aAllowAttribute = \QuestionAttribute::model()->find("qid = :qid AND attribute = :attribute", array(":qid"=>$qid,":attribute"=>'pdfReportPrintAnswer'));
         if (empty($aAllowAttribute) || empty($aAllowAttribute->value)) {
@@ -757,35 +757,34 @@ class pdfReport extends PluginBase
         $surveyUploadDir=Yii::app()->getConfig('uploaddir')."/surveys/".$this->_iSurveyId;
         $surveyUploadUrl=Yii::app()->getConfig('uploadurl')."/surveys/".$this->_iSurveyId;
         $oTemplate = \Template::model()->getInstance(null, $this->_iSurveyId);
-        $oSurvey=Survey::model()->findByPk($this->_iSurveyId);
-        $templateUploadDir=$oTemplate->filesPath;
-        $templateUploadUrl = Template::getTemplateURL($oSurvey->template)."/";
-        $templateUploadUrl.= isset($oTemplate->config->engine->filesdirectory)? $oTemplate->config->engine->filesdirectory."/":"";
+        $oSurvey = Survey::model()->findByPk($this->_iSurveyId);
+        $templateUploadDir = $oTemplate->filesPath;
+        $templateUploadUrl = $oTemplate->sTemplateurl;
+        $templateUploadUrl.= isset($oTemplate->config->engine->filesdirectory) ? $oTemplate->config->engine->filesdirectory."/":"";
         $aDirectories=array(
             array(
-                'path'=>$surveyUploadDir."/files/",
-                'url'=>$surveyUploadUrl."/files/",
+                'path' => $surveyUploadDir . "/files/",
+                'url' => $surveyUploadUrl . "/files/",
             ),
             array(
-                'path'=>$surveyUploadDir."/images/",
-                'url'=>$surveyUploadUrl."/images/",
+                'path' => $surveyUploadDir . "/images/",
+                'url' => $surveyUploadUrl . "/images/",
             ),
             array(
-                'path'=>$templateUploadDir,
-                'url'=>$templateUploadUrl,
+                'path' => $templateUploadDir,
+                'url' => $templateUploadUrl,
             ),
         );
         foreach ($aDirectories as $aDir) {
             foreach ($aLogoNames as $sLogoName) {
                 if (is_file($aDir['path'].$sLogoName)) {
                     return array(
-                        'path'=>$aDir['path'].$sLogoName,
-                        'url'=>$aDir['url'].$sLogoName,
+                        'path' => $aDir['path'].$sLogoName,
+                        'url' => $aDir['url'].$sLogoName,
                     );
                 }
             }
         }
-
         return array('error'=>"File not found in your survey.");
     }
 
@@ -1048,9 +1047,9 @@ class pdfReport extends PluginBase
     private function _getCss()
     {
         $oTemplate = \Template::model()->getInstance(null, $this->_iSurveyId);
-        if (is_file($oTemplate->filesPath.'pdfreport.css')) {
+        if (is_file($oTemplate->filesPath . 'pdfreport.css')) {
             /* @todo : get parent */
-            return file_get_contents($oTemplate->filesPath.'/pdfreport.css');
+            return file_get_contents($oTemplate->filesPath . '/pdfreport.css');
         }
         return file_get_contents(dirname(__FILE__).'/pdfreport.css');
     }

@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 2.0.2
+ * @version 2.0.3
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -162,6 +162,7 @@ class pdfReport extends PluginBase
                 'expression'=>1,
                 'help'=>$this->_translate('This allow better edition without HTML editor and/or XSS.'),
                 'caption'=>$this->_translate('Content of the PDF, leave empty to use question text.'),
+                'xssFilter' => false
             ),
             'pdfReportPrintAnswer'=>array(
                 'types'=>'|', /* upload question type */
@@ -281,6 +282,7 @@ class pdfReport extends PluginBase
                 "<strong>limeMpdf</strong>"
             );
         }
+        
         if (method_exists($this->getEvent(), 'append')) {
             $this->getEvent()->append('questionAttributes', $pdfReportAttribute);
         } else {
@@ -342,8 +344,9 @@ class pdfReport extends PluginBase
         }
         // Only in next release $oQuestionAttribute = QuestionAttribute::model()->with('qid')->together()->findAll('sid=:sid and attribute=:attribute and value=:value',array(':sid'=>$iSid,':attribute'=>'pdfReport',':value'=>1));
         $criteria = new CDbCriteria;
+        $criteria->select='question.qid as qid';
         $criteria->join='LEFT JOIN {{questions}} as question ON '.App()->getDb()->quoteColumnName("question.qid").'='.App()->getDb()->quoteColumnName("t.qid");
-        $criteria->condition='question.sid = :sid and attribute=:attribute and value=:value';
+        $criteria->condition='question.sid = :sid and attribute = :attribute and value = :value';
         $criteria->params=array(':sid'=>$this->_iSurveyId,':attribute'=>'pdfReport',':value'=>'1');
         /* language */
         if(intval(App()->getConfig("versionnumber")) <= 3) {
@@ -353,15 +356,16 @@ class pdfReport extends PluginBase
             $criteria->compare(App()->getDb()->quoteColumnName("question.qid"),$qid);
         }
 
-        $oQuestionAttribute = QuestionAttribute::model()->findAll($criteria);
-        if ($oQuestionAttribute) {
-            foreach ($oQuestionAttribute as $questionAttribute) {
-                $pdfFile=$this->_getPdfFile($questionAttribute->qid);
+        $aQuestionsQid = QuestionAttribute::model()->findAllAsArray($criteria, array(), true);
+        if ($aQuestionsQid) {
+            foreach ($aQuestionsQid as $aQuestionQid) {
+                $qid = $aQuestionQid['qid'];
+                $pdfFile=$this->_getPdfFile($qid);
                 if ($pdfFile) {
                     if(intval(App()->getConfig("versionnumber")) <= 3) {
-                        $oQuestion=Question::model()->findByPk(array('qid'=>$questionAttribute->qid,'language'=>$language));
+                        $oQuestion=Question::model()->findByPk(array('qid'=>$qid,'language'=>$language));
                     } else {
-                        $oQuestion=Question::model()->findByPk($questionAttribute->qid);
+                        $oQuestion=Question::model()->findByPk($qid);
                     }
                     if ($oQuestion->type=="|") {
                         $this->_saveInFileUpload($oQuestion);

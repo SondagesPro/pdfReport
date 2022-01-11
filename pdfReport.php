@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 2.0.3
+ * @version 2.0.4
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -850,45 +850,52 @@ class pdfReport extends PluginBase
     }
 
     /**
-     * Save the pdf by email
+     * Send the pdf by email
      * @param
      * @retuen void
      */
     private function _sendByEmail($oQuestion)
     {
-        $aQuestionsAttributes=QuestionAttribute::model()->getQuestionAttributes($oQuestion->qid, Yii::app()->getLanguage());
-        $questionAttributeEmails=trim($aQuestionsAttributes['pdfReportSendByEmailMail']);
-        if ($questionAttributeEmails=="") {
+        if(version_compare(Yii::app()->getConfig('versionnumber'), "4.0.0", "<")) {
+            $this->_sendByEmailLegacy($oQuestion);
+        }
+        $aQuestionsAttributes = QuestionAttribute::model()->getQuestionAttributes($oQuestion->qid, Yii::app()->getLanguage());
+        $questionAttributeEmails = trim($aQuestionsAttributes['pdfReportSendByEmailMail']);
+        if ($questionAttributeEmails == "") {
             return;
         }
-        $questionAttributeEmails=$this->_EMProcessString($questionAttributeEmails, $oQuestion->qid);
-        $aRecipient=explode(";", $questionAttributeEmails);
-        $aValidRecipient=array();
-        foreach ($aRecipient as $sRecipient) {
-            $sRecipient=trim($sRecipient);
-            if (validateEmailAddress($sRecipient)) {
-                $aValidRecipient[]=$sRecipient;
-            }
+
+        $questionAttributeEmails = $this->_EMProcessString($questionAttributeEmails, $oQuestion->qid);
+        $aValidRecipient = LimeMailer::validateAddresses($questionAttributeEmails);
+        if (empty($aValidRecipient)) {
+           return; 
         }
-        $oSurvey=Survey::model()->findByPk($this->_iSurveyId);
-        $aMessage=$this->_getEmailContent($aQuestionsAttributes['pdfReportSendByEmailContent']);
-        $sFile=$this->_getPdfFileName($oQuestion->title);
-        $aAttachments = array(array(
-            $this->_getPdfFileName($oQuestion->title),
+        $oSurvey = Survey::model()->findByPk($this->_iSurveyId);
+        $mailer = \LimeMailer::getInstance();
+        $mailer->mailLanguage = App()->getLanguage();
+        $mailer->setSurvey($this->_iSurveyId);
+        $mailer->setTypeWithRaw($aQuestionsAttributes['pdfReportSendByEmailContent'], App()->getLanguage() );
+        $sFile = $this->_getPdfFileName($oQuestion->title);
+        $mailer->addAttachment(
+            $sFile,
             $this->_getPdfSavedFileName($oQuestion),
-        ));
-        /* Add LS attachments */
+        );
         if ($aQuestionsAttributes['pdfReportSendByEmailAttachment']) {
-            $aAttachments = array_merge($this->_getEmailAttachements($aQuestionsAttributes['pdfReportSendByEmailContent']), $aAttachments);
+            $mailer->addAttachementsByType();
         }
+        /* Update type */
+        $mailer->emailType = 'plugin_pdfReport';
+
         foreach ($aValidRecipient as $sRecipient) {
-            if (!SendEmailMessage($aMessage['message'], $aMessage['subject'], $sRecipient, "{$oSurvey->admin} <{$oSurvey->adminemail}>", Yii::app()->getConfig("sitename"), true, getBounceEmail($this->_iSurveyId), $aAttachments)) {
+            $mailer->setTo($sRecipient);
+            if (!$mailer->SendMessage()) {
                 Yii::log("Email with $sFile can not be sent to $sRecipient due to a mail error.", 'error', 'application.plugins.pdfReport');
             } else {
                 Yii::log("Email with $sFile sent to $sRecipient.", 'info', 'application.plugins.pdfReport');
             }
         }
     }
+
     /**
      * Generate unique pdf filename
      * @param string $qCode question code
@@ -1469,4 +1476,46 @@ class pdfReport extends PluginBase
         $chars['đ'] = 'dj';
         return strtr($string, $chars);
     }
+
+    /**
+     * Send  the pdf by email
+     * @param \Question
+     * @return void
+     */
+    private function _sendByEmailLegacy($oQuestion)
+    {
+        $aQuestionsAttributes=QuestionAttribute::model()->getQuestionAttributes($oQuestion->qid, Yii::app()->getLanguage());
+        $questionAttributeEmails=trim($aQuestionsAttributes['pdfReportSendByEmailMail']);
+        if ($questionAttributeEmails=="") {
+            return;
+        }
+        $questionAttributeEmails=$this->_EMProcessString($questionAttributeEmails, $oQuestion->qid);
+        $aRecipient=explode(";", $questionAttributeEmails);
+        $aValidRecipient=array();
+        foreach ($aRecipient as $sRecipient) {
+            $sRecipient=trim($sRecipient);
+            if (validateEmailAddress($sRecipient)) {
+                $aValidRecipient[]=$sRecipient;
+            }
+        }
+        $oSurvey=Survey::model()->findByPk($this->_iSurveyId);
+        $aMessage=$this->_getEmailContent($aQuestionsAttributes['pdfReportSendByEmailContent']);
+        $sFile=$this->_getPdfFileName($oQuestion->title);
+        $aAttachments = array(array(
+            $this->_getPdfFileName($oQuestion->title),
+            $this->_getPdfSavedFileName($oQuestion),
+        ));
+        /* Add LS attachments */
+        if ($aQuestionsAttributes['pdfReportSendByEmailAttachment']) {
+            $aAttachments = array_merge($this->_getEmailAttachements($aQuestionsAttributes['pdfReportSendByEmailContent']), $aAttachments);
+        }
+        foreach ($aValidRecipient as $sRecipient) {
+            if (!SendEmailMessage($aMessage['message'], $aMessage['subject'], $sRecipient, "{$oSurvey->admin} <{$oSurvey->adminemail}>", Yii::app()->getConfig("sitename"), true, getBounceEmail($this->_iSurveyId), $aAttachments)) {
+                Yii::log("Email with $sFile can not be sent to $sRecipient due to a mail error.", 'error', 'application.plugins.pdfReport');
+            } else {
+                Yii::log("Email with $sFile sent to $sRecipient.", 'info', 'application.plugins.pdfReport');
+            }
+        }
+    }
+
 }

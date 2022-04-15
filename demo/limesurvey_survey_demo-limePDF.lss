@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+ <LimeSurveyDocType>Survey</LimeSurveyDocType>
+ <DBVersion>366</DBVersion>
+ <languages>
+  <language>en</language>
+ </languages>
+ <answers>
+  <fields>
+   <fieldname>qid</fieldname>
+   <fieldname>code</fieldname>
+   <fieldname>answer</fieldname>
+   <fieldname>sortorder</fieldname>
+   <fieldname>assessment_value</fieldname>
+   <fieldname>language</fieldname>
+   <fieldname>scale_id</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <qid><![CDATA[9250]]></qid>
+    <code><![CDATA[1]]></code>
+    <answer><![CDATA[Not at all Interested]]></answer>
+    <sortorder><![CDATA[1]]></sortorder>
+    <assessment_value><![CDATA[1]]></assessment_value>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+   </row>
+   <row>
+    <qid><![CDATA[9250]]></qid>
+    <code><![CDATA[2]]></code>
+    <answer><![CDATA[Not Very Interested]]></answer>
+    <sortorder><![CDATA[2]]></sortorder>
+    <assessment_value><![CDATA[2]]></assessment_value>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+   </row>
+   <row>
+    <qid><![CDATA[9250]]></qid>
+    <code><![CDATA[3]]></code>
+    <answer><![CDATA[Neither Interested nor Uninterested]]></answer>
+    <sortorder><![CDATA[3]]></sortorder>
+    <assessment_value><![CDATA[3]]></assessment_value>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+   </row>
+   <row>
+    <qid><![CDATA[9250]]></qid>
+    <code><![CDATA[4]]></code>
+    <answer><![CDATA[Somewhat Interested]]></answer>
+    <sortorder><![CDATA[4]]></sortorder>
+    <assessment_value><![CDATA[4]]></assessment_value>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+   </row>
+   <row>
+    <qid><![CDATA[9257]]></qid>
+    <code><![CDATA[1]]></code>
+    <answer><![CDATA[Not at all Interested]]></answer>
+    <sortorder><![CDATA[1]]></sortorder>
+    <assessment_value><![CDATA[1]]></assessment_value>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+   </row>
+   <row>
+    <qid><![CDATA[9257]]></qid>
+    <code><![CDATA[2]]></code>
+    <answer><![CDATA[Not Very Interested]]></answer>
+    <sortorder><![CDATA[2]]></sortorder>
+    <assessment_value><![CDATA[2]]></assessment_value>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+   </row>
+   <row>
+    <qid><![CDATA[9257]]></qid>
+    <code><![CDATA[3]]></code>
+    <answer><![CDATA[Neither Interested nor Uninterested]]></answer>
+    <sortorder><![CDATA[3]]></sortorder>
+    <assessment_value><![CDATA[3]]></assessment_value>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+   </row>
+   <row>
+    <qid><![CDATA[9257]]></qid>
+    <code><![CDATA[4]]></code>
+    <answer><![CDATA[Somewhat Interested]]></answer>
+    <sortorder><![CDATA[4]]></sortorder>
+    <assessment_value><![CDATA[4]]></assessment_value>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+   </row>
+  </rows>
+ </answers>
+ <groups>
+  <fields>
+   <fieldname>gid</fieldname>
+   <fieldname>sid</fieldname>
+   <fieldname>group_name</fieldname>
+   <fieldname>group_order</fieldname>
+   <fieldname>description</fieldname>
+   <fieldname>language</fieldname>
+   <fieldname>randomization_group</fieldname>
+   <fieldname>grelevance</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <gid><![CDATA[963]]></gid>
+    <sid><![CDATA[226435]]></sid>
+    <group_name><![CDATA[My first question group]]></group_name>
+    <group_order><![CDATA[1]]></group_order>
+    <description/>
+    <language><![CDATA[en]]></language>
+    <randomization_group/>
+    <grelevance><![CDATA[1]]></grelevance>
+   </row>
+  </rows>
+ </groups>
+ <questions>
+  <fields>
+   <fieldname>qid</fieldname>
+   <fieldname>parent_qid</fieldname>
+   <fieldname>sid</fieldname>
+   <fieldname>gid</fieldname>
+   <fieldname>type</fieldname>
+   <fieldname>title</fieldname>
+   <fieldname>question</fieldname>
+   <fieldname>preg</fieldname>
+   <fieldname>help</fieldname>
+   <fieldname>other</fieldname>
+   <fieldname>mandatory</fieldname>
+   <fieldname>question_order</fieldname>
+   <fieldname>language</fieldname>
+   <fieldname>scale_id</fieldname>
+   <fieldname>same_default</fieldname>
+   <fieldname>relevance</fieldname>
+   <fieldname>modulename</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <qid><![CDATA[9249]]></qid>
+    <parent_qid><![CDATA[0]]></parent_qid>
+    <sid><![CDATA[226435]]></sid>
+    <gid><![CDATA[963]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[Text]]></title>
+    <question><![CDATA[A first example question. Please answer this question:]]></question>
+    <preg/>
+    <help><![CDATA[This is a question help text.]]></help>
+    <other><![CDATA[N]]></other>
+    <mandatory><![CDATA[N]]></mandatory>
+    <question_order><![CDATA[1]]></question_order>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[9250]]></qid>
+    <parent_qid><![CDATA[0]]></parent_qid>
+    <sid><![CDATA[226435]]></sid>
+    <gid><![CDATA[963]]></gid>
+    <type><![CDATA[L]]></type>
+    <title><![CDATA[Single]]></title>
+    <question><![CDATA[A single choice]]></question>
+    <preg/>
+    <help/>
+    <other><![CDATA[Y]]></other>
+    <mandatory><![CDATA[N]]></mandatory>
+    <question_order><![CDATA[2]]></question_order>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+    <modulename/>
+   </row>
+   <row>
+    <qid><![CDATA[9251]]></qid>
+    <parent_qid><![CDATA[0]]></parent_qid>
+    <sid><![CDATA[226435]]></sid>
+    <gid><![CDATA[963]]></gid>
+    <type><![CDATA[M]]></type>
+    <title><![CDATA[Multi]]></title>
+    <question><![CDATA[A multiple choice]]></question>
+    <preg/>
+    <help><![CDATA[An help]]></help>
+    <other><![CDATA[N]]></other>
+    <mandatory><![CDATA[N]]></mandatory>
+    <question_order><![CDATA[3]]></question_order>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+   </row>
+   <row>
+    <qid><![CDATA[9257]]></qid>
+    <parent_qid><![CDATA[0]]></parent_qid>
+    <sid><![CDATA[226435]]></sid>
+    <gid><![CDATA[963]]></gid>
+    <type><![CDATA[F]]></type>
+    <title><![CDATA[Array]]></title>
+    <question><![CDATA[An array]]></question>
+    <preg/>
+    <help/>
+    <other><![CDATA[N]]></other>
+    <mandatory><![CDATA[N]]></mandatory>
+    <question_order><![CDATA[5]]></question_order>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+   </row>
+   <row>
+    <qid><![CDATA[9263]]></qid>
+    <parent_qid><![CDATA[0]]></parent_qid>
+    <sid><![CDATA[226435]]></sid>
+    <gid><![CDATA[963]]></gid>
+    <type><![CDATA[|]]></type>
+    <title><![CDATA[Report]]></title>
+    <question><![CDATA[<h1>Example of pdf report : first group</h1>
+<div class="well" style="background:#fff;">
+<div class="questiontext strong h5">A first example question. Please answer this question: </div>
+<pre class="form-control input-text"></pre></div>{Text.shown} 
+
+
+
+<div class="well" style="background:#fff;">
+<div class="questiontext strong h5">A single choice</div>
+<ul class="list-unstyled">
+<li></li></ul></div>{if(Single.NAOK==1,"","")} Not at all Interested
+{if(Single.NAOK==2,"","")} Not Very Interested
+<div></div>{if(Single.NAOK==3,"","")} Neither Interested nor Uninterested
+<div></div>{if(Single.NAOK==4,"","")} Somewhat Interested
+
+        <div class="col-sm-2"><div class="control-label"></div></div>{if(Single.NAOK=="-oth-","","")}Other
+        <div class="col-sm-8"><div class="&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"></div></div>{if(Single.NAOK=="-oth-","form-control input-text")}"&gt;{if(Single.NAOK=="-oth-",Single_other.shown)}
+
+
+
+
+<div class="well" style="background:#fff;">
+<div class="questiontext strong h5">A multiple choice </div>
+<ul class="list-unstyled">
+<li></li></ul></div>{if(Multi_SQ01.NAOK=="Y","","")} Some example subquestion
+{if(Multi_SQ02.NAOK=="Y","","")} New answer subquestion
+{if(Multi_SQ03.NAOK=="Y","","")} Third subquestion
+{if(Multi_SQ04.NAOK=="Y","","")} Last subquestion
+
+
+
+
+
+<div class="well" style="background:#fff;">
+<div class="questiontext strong h5"> An array  </div>
+<table class="table table-bordered">
+<thead><tr>
+    <td style="width:33%;"> </td>
+    <td style="width:13.4%;" class="text-center"> Not at all Interested </td>
+    <td style="width:13.4%;" class="text-center"> Not Very Interested </td>
+    <td style="width:13.4%;" class="text-center"> Neither Interested nor Uninterested  </td>
+    <td style="width:13.4%;" class="text-center"> Somewhat Interested  </td>
+</tr></thead><tbody>
+<tr><td></td></tr></tbody></table></div>{Array_SQ01.question}
+{if(Array_SQ01.NAOK==1,"","")}
+{if(Array_SQ01.NAOK==2,"","")}
+{if(Array_SQ01.NAOK==3,"","")}
+{if(Array_SQ01.NAOK==4,"","")}
+
+{Array_SQ02.question}
+{if(Array_SQ02.NAOK==1,"","")}
+{if(Array_SQ02.NAOK==2,"","")}
+{if(Array_SQ02.NAOK==3,"","")}
+{if(Array_SQ02.NAOK==4,"","")}
+
+{Array_SQ03.question}
+{if(Array_SQ03.NAOK==1,"","")}
+{if(Array_SQ03.NAOK==2,"","")}
+{if(Array_SQ03.NAOK==3,"","")}
+{if(Array_SQ03.NAOK==4,"","")}
+
+{Array_SQ04.question}
+{if(Array_SQ04.NAOK==1,"","")}
+{if(Array_SQ04.NAOK==2,"","")}
+{if(Array_SQ04.NAOK==3,"","")}
+{if(Array_SQ04.NAOK==4,"","")}
+
+
+]]></question>
+    <preg/>
+    <help/>
+    <other><![CDATA[N]]></other>
+    <mandatory><![CDATA[N]]></mandatory>
+    <question_order><![CDATA[6]]></question_order>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+    <modulename/>
+   </row>
+  </rows>
+ </questions>
+ <subquestions>
+  <fields>
+   <fieldname>qid</fieldname>
+   <fieldname>parent_qid</fieldname>
+   <fieldname>sid</fieldname>
+   <fieldname>gid</fieldname>
+   <fieldname>type</fieldname>
+   <fieldname>title</fieldname>
+   <fieldname>question</fieldname>
+   <fieldname>preg</fieldname>
+   <fieldname>help</fieldname>
+   <fieldname>other</fieldname>
+   <fieldname>mandatory</fieldname>
+   <fieldname>question_order</fieldname>
+   <fieldname>language</fieldname>
+   <fieldname>scale_id</fieldname>
+   <fieldname>same_default</fieldname>
+   <fieldname>relevance</fieldname>
+   <fieldname>modulename</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <qid><![CDATA[9253]]></qid>
+    <parent_qid><![CDATA[9251]]></parent_qid>
+    <sid><![CDATA[226435]]></sid>
+    <gid><![CDATA[963]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[SQ01]]></title>
+    <question><![CDATA[Some example subquestion]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[1]]></question_order>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+   </row>
+   <row>
+    <qid><![CDATA[9254]]></qid>
+    <parent_qid><![CDATA[9251]]></parent_qid>
+    <sid><![CDATA[226435]]></sid>
+    <gid><![CDATA[963]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[SQ02]]></title>
+    <question><![CDATA[New answer subquestion]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[2]]></question_order>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+   </row>
+   <row>
+    <qid><![CDATA[9255]]></qid>
+    <parent_qid><![CDATA[9251]]></parent_qid>
+    <sid><![CDATA[226435]]></sid>
+    <gid><![CDATA[963]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[SQ03]]></title>
+    <question><![CDATA[Third subquestion]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[3]]></question_order>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+   </row>
+   <row>
+    <qid><![CDATA[9256]]></qid>
+    <parent_qid><![CDATA[9251]]></parent_qid>
+    <sid><![CDATA[226435]]></sid>
+    <gid><![CDATA[963]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[SQ04]]></title>
+    <question><![CDATA[Last subquestion]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[4]]></question_order>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+   </row>
+   <row>
+    <qid><![CDATA[9259]]></qid>
+    <parent_qid><![CDATA[9257]]></parent_qid>
+    <sid><![CDATA[226435]]></sid>
+    <gid><![CDATA[963]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[SQ01]]></title>
+    <question><![CDATA[Some example subquestion]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[1]]></question_order>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+   </row>
+   <row>
+    <qid><![CDATA[9260]]></qid>
+    <parent_qid><![CDATA[9257]]></parent_qid>
+    <sid><![CDATA[226435]]></sid>
+    <gid><![CDATA[963]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[SQ02]]></title>
+    <question><![CDATA[New answer subquestion]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[2]]></question_order>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+   </row>
+   <row>
+    <qid><![CDATA[9261]]></qid>
+    <parent_qid><![CDATA[9257]]></parent_qid>
+    <sid><![CDATA[226435]]></sid>
+    <gid><![CDATA[963]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[SQ03]]></title>
+    <question><![CDATA[Third subquestion]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[3]]></question_order>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+   </row>
+   <row>
+    <qid><![CDATA[9262]]></qid>
+    <parent_qid><![CDATA[9257]]></parent_qid>
+    <sid><![CDATA[226435]]></sid>
+    <gid><![CDATA[963]]></gid>
+    <type><![CDATA[T]]></type>
+    <title><![CDATA[SQ04]]></title>
+    <question><![CDATA[Last subquestion]]></question>
+    <other><![CDATA[N]]></other>
+    <question_order><![CDATA[4]]></question_order>
+    <language><![CDATA[en]]></language>
+    <scale_id><![CDATA[0]]></scale_id>
+    <same_default><![CDATA[0]]></same_default>
+    <relevance><![CDATA[1]]></relevance>
+   </row>
+  </rows>
+ </subquestions>
+ <question_attributes>
+  <fields>
+   <fieldname>qid</fieldname>
+   <fieldname>attribute</fieldname>
+   <fieldname>value</fieldname>
+   <fieldname>language</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <qid><![CDATA[9263]]></qid>
+    <attribute><![CDATA[hidden]]></attribute>
+    <value><![CDATA[1]]></value>
+   </row>
+   <row>
+    <qid><![CDATA[9263]]></qid>
+    <attribute><![CDATA[pdfReport]]></attribute>
+    <value><![CDATA[1]]></value>
+   </row>
+   <row>
+    <qid><![CDATA[9263]]></qid>
+    <attribute><![CDATA[pdfReportContent]]></attribute>
+    <value><![CDATA[<h1>Example of pdf report : first group</h1>
+<div class="well" style="background:#fff;">
+<div class="questiontext strong h5">A first example question. Please answer this question: </div>
+<pre class="form-control input-text"></pre></div>{Text.shown} 
+
+
+
+<div class="well" style="background:#fff;">
+<div class="questiontext strong h5">A single choice</div>
+<ul class="list-unstyled">
+<li></li></ul></div>{if(Single.NAOK==1,"","")} Not at all Interested
+{if(Single.NAOK==2,"","")} Not Very Interested
+<div></div>{if(Single.NAOK==3,"","")} Neither Interested nor Uninterested
+<div></div>{if(Single.NAOK==4,"","")} Somewhat Interested
+
+        <div class="col-sm-2"><div class="control-label"></div></div>{if(Single.NAOK=="-oth-","","")}Other
+        <div class="col-sm-8"><div class="&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;"></div></div>{if(Single.NAOK=="-oth-","form-control input-text")}"&gt;{if(Single.NAOK=="-oth-",Single_other.shown)}
+
+
+
+
+<div class="well" style="background:#fff;">
+<div class="questiontext strong h5">A multiple choice </div>
+<ul class="list-unstyled">
+<li></li></ul></div>{if(Multi_SQ01.NAOK=="Y","","")} Some example subquestion
+{if(Multi_SQ02.NAOK=="Y","","")} New answer subquestion
+{if(Multi_SQ03.NAOK=="Y","","")} Third subquestion
+{if(Multi_SQ04.NAOK=="Y","","")} Last subquestion
+
+
+
+
+
+<div class="well" style="background:#fff;">
+<div class="questiontext strong h5"> An array  </div>
+<table class="table table-bordered">
+<thead><tr>
+    <td style="width:33%;"> </td>
+    <td style="width:13.4%;" class="text-center"> Not at all Interested </td>
+    <td style="width:13.4%;" class="text-center"> Not Very Interested </td>
+    <td style="width:13.4%;" class="text-center"> Neither Interested nor Uninterested  </td>
+    <td style="width:13.4%;" class="text-center"> Somewhat Interested  </td>
+</tr></thead><tbody>
+<tr><td></td></tr></tbody></table></div>{Array_SQ01.question}
+{if(Array_SQ01.NAOK==1,"","")}
+{if(Array_SQ01.NAOK==2,"","")}
+{if(Array_SQ01.NAOK==3,"","")}
+{if(Array_SQ01.NAOK==4,"","")}
+
+{Array_SQ02.question}
+{if(Array_SQ02.NAOK==1,"","")}
+{if(Array_SQ02.NAOK==2,"","")}
+{if(Array_SQ02.NAOK==3,"","")}
+{if(Array_SQ02.NAOK==4,"","")}
+
+{Array_SQ03.question}
+{if(Array_SQ03.NAOK==1,"","")}
+{if(Array_SQ03.NAOK==2,"","")}
+{if(Array_SQ03.NAOK==3,"","")}
+{if(Array_SQ03.NAOK==4,"","")}
+
+{Array_SQ04.question}
+{if(Array_SQ04.NAOK==1,"","")}
+{if(Array_SQ04.NAOK==2,"","")}
+{if(Array_SQ04.NAOK==3,"","")}
+{if(Array_SQ04.NAOK==4,"","")}
+
+
+]]></value>
+    <language><![CDATA[en]]></language>
+   </row>
+   <row>
+    <qid><![CDATA[9263]]></qid>
+    <attribute><![CDATA[pdfReportCreateToc]]></attribute>
+    <value><![CDATA[0]]></value>
+   </row>
+   <row>
+    <qid><![CDATA[9263]]></qid>
+    <attribute><![CDATA[pdfReportPrintAnswer]]></attribute>
+    <value><![CDATA[2]]></value>
+   </row>
+   <row>
+    <qid><![CDATA[9263]]></qid>
+    <attribute><![CDATA[pdfReportSubTitle]]></attribute>
+    <value><![CDATA[{SURVEYNAME}]]></value>
+    <language><![CDATA[en]]></language>
+   </row>
+   <row>
+    <qid><![CDATA[9263]]></qid>
+    <attribute><![CDATA[pdfReportTitle]]></attribute>
+    <value><![CDATA[{SITENAME}]]></value>
+    <language><![CDATA[en]]></language>
+   </row>
+  </rows>
+ </question_attributes>
+ <surveys>
+  <fields>
+   <fieldname>sid</fieldname>
+   <fieldname>admin</fieldname>
+   <fieldname>expires</fieldname>
+   <fieldname>startdate</fieldname>
+   <fieldname>adminemail</fieldname>
+   <fieldname>anonymized</fieldname>
+   <fieldname>faxto</fieldname>
+   <fieldname>format</fieldname>
+   <fieldname>savetimings</fieldname>
+   <fieldname>template</fieldname>
+   <fieldname>language</fieldname>
+   <fieldname>additional_languages</fieldname>
+   <fieldname>datestamp</fieldname>
+   <fieldname>usecookie</fieldname>
+   <fieldname>allowregister</fieldname>
+   <fieldname>allowsave</fieldname>
+   <fieldname>autonumber_start</fieldname>
+   <fieldname>autoredirect</fieldname>
+   <fieldname>allowprev</fieldname>
+   <fieldname>printanswers</fieldname>
+   <fieldname>ipaddr</fieldname>
+   <fieldname>refurl</fieldname>
+   <fieldname>publicstatistics</fieldname>
+   <fieldname>publicgraphs</fieldname>
+   <fieldname>listpublic</fieldname>
+   <fieldname>htmlemail</fieldname>
+   <fieldname>sendconfirmation</fieldname>
+   <fieldname>tokenanswerspersistence</fieldname>
+   <fieldname>assessments</fieldname>
+   <fieldname>usecaptcha</fieldname>
+   <fieldname>usetokens</fieldname>
+   <fieldname>bounce_email</fieldname>
+   <fieldname>attributedescriptions</fieldname>
+   <fieldname>emailresponseto</fieldname>
+   <fieldname>emailnotificationto</fieldname>
+   <fieldname>tokenlength</fieldname>
+   <fieldname>showxquestions</fieldname>
+   <fieldname>showgroupinfo</fieldname>
+   <fieldname>shownoanswer</fieldname>
+   <fieldname>showqnumcode</fieldname>
+   <fieldname>bouncetime</fieldname>
+   <fieldname>bounceprocessing</fieldname>
+   <fieldname>bounceaccounttype</fieldname>
+   <fieldname>bounceaccounthost</fieldname>
+   <fieldname>bounceaccountpass</fieldname>
+   <fieldname>bounceaccountencryption</fieldname>
+   <fieldname>bounceaccountuser</fieldname>
+   <fieldname>showwelcome</fieldname>
+   <fieldname>showprogress</fieldname>
+   <fieldname>questionindex</fieldname>
+   <fieldname>navigationdelay</fieldname>
+   <fieldname>nokeyboard</fieldname>
+   <fieldname>alloweditaftercompletion</fieldname>
+   <fieldname>googleanalyticsstyle</fieldname>
+   <fieldname>googleanalyticsapikey</fieldname>
+   <fieldname>gsid</fieldname>
+   <fieldname>showsurveypolicynotice</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <sid><![CDATA[226435]]></sid>
+    <admin><![CDATA[Denis Chenu]]></admin>
+    <adminemail><![CDATA[denis@sondages.pro]]></adminemail>
+    <anonymized><![CDATA[N]]></anonymized>
+    <faxto/>
+    <format><![CDATA[A]]></format>
+    <savetimings><![CDATA[N]]></savetimings>
+    <template><![CDATA[skelvanilla]]></template>
+    <language><![CDATA[en]]></language>
+    <additional_languages/>
+    <datestamp><![CDATA[N]]></datestamp>
+    <usecookie><![CDATA[N]]></usecookie>
+    <allowregister><![CDATA[N]]></allowregister>
+    <allowsave><![CDATA[Y]]></allowsave>
+    <autonumber_start><![CDATA[0]]></autonumber_start>
+    <autoredirect><![CDATA[N]]></autoredirect>
+    <allowprev><![CDATA[N]]></allowprev>
+    <printanswers><![CDATA[Y]]></printanswers>
+    <ipaddr><![CDATA[N]]></ipaddr>
+    <refurl><![CDATA[N]]></refurl>
+    <publicstatistics><![CDATA[N]]></publicstatistics>
+    <publicgraphs><![CDATA[N]]></publicgraphs>
+    <listpublic><![CDATA[N]]></listpublic>
+    <htmlemail><![CDATA[Y]]></htmlemail>
+    <sendconfirmation><![CDATA[Y]]></sendconfirmation>
+    <tokenanswerspersistence><![CDATA[N]]></tokenanswerspersistence>
+    <assessments><![CDATA[N]]></assessments>
+    <usecaptcha><![CDATA[N]]></usecaptcha>
+    <usetokens><![CDATA[N]]></usetokens>
+    <bounce_email><![CDATA[denis@sondages.pro]]></bounce_email>
+    <emailresponseto/>
+    <emailnotificationto/>
+    <tokenlength><![CDATA[15]]></tokenlength>
+    <showxquestions><![CDATA[Y]]></showxquestions>
+    <showgroupinfo><![CDATA[B]]></showgroupinfo>
+    <shownoanswer><![CDATA[Y]]></shownoanswer>
+    <showqnumcode><![CDATA[X]]></showqnumcode>
+    <bounceprocessing><![CDATA[N]]></bounceprocessing>
+    <showwelcome><![CDATA[Y]]></showwelcome>
+    <showprogress><![CDATA[Y]]></showprogress>
+    <questionindex><![CDATA[0]]></questionindex>
+    <navigationdelay><![CDATA[0]]></navigationdelay>
+    <nokeyboard><![CDATA[N]]></nokeyboard>
+    <alloweditaftercompletion><![CDATA[N]]></alloweditaftercompletion>
+    <googleanalyticsstyle/>
+    <googleanalyticsapikey/>
+    <gsid><![CDATA[1]]></gsid>
+    <showsurveypolicynotice><![CDATA[0]]></showsurveypolicynotice>
+   </row>
+  </rows>
+ </surveys>
+ <surveys_languagesettings>
+  <fields>
+   <fieldname>surveyls_survey_id</fieldname>
+   <fieldname>surveyls_language</fieldname>
+   <fieldname>surveyls_title</fieldname>
+   <fieldname>surveyls_description</fieldname>
+   <fieldname>surveyls_welcometext</fieldname>
+   <fieldname>surveyls_endtext</fieldname>
+   <fieldname>surveyls_url</fieldname>
+   <fieldname>surveyls_urldescription</fieldname>
+   <fieldname>surveyls_email_invite_subj</fieldname>
+   <fieldname>surveyls_email_invite</fieldname>
+   <fieldname>surveyls_email_remind_subj</fieldname>
+   <fieldname>surveyls_email_remind</fieldname>
+   <fieldname>surveyls_email_register_subj</fieldname>
+   <fieldname>surveyls_email_register</fieldname>
+   <fieldname>surveyls_email_confirm_subj</fieldname>
+   <fieldname>surveyls_email_confirm</fieldname>
+   <fieldname>surveyls_dateformat</fieldname>
+   <fieldname>surveyls_attributecaptions</fieldname>
+   <fieldname>email_admin_notification_subj</fieldname>
+   <fieldname>email_admin_notification</fieldname>
+   <fieldname>email_admin_responses_subj</fieldname>
+   <fieldname>email_admin_responses</fieldname>
+   <fieldname>surveyls_numberformat</fieldname>
+   <fieldname>attachments</fieldname>
+   <fieldname>surveyls_policy_notice</fieldname>
+   <fieldname>surveyls_policy_error</fieldname>
+   <fieldname>surveyls_policy_notice_label</fieldname>
+  </fields>
+  <rows>
+   <row>
+    <surveyls_survey_id><![CDATA[226435]]></surveyls_survey_id>
+    <surveyls_language><![CDATA[en]]></surveyls_language>
+    <surveyls_title><![CDATA[Pdf Report with LimeMpdf]]></surveyls_title>
+    <surveyls_description><![CDATA[This survey use plugin pdfReport with content produced by LimeMpdf.]]></surveyls_description>
+    <surveyls_welcometext/>
+    <surveyls_endtext/>
+    <surveyls_url/>
+    <surveyls_urldescription/>
+    <surveyls_email_invite_subj><![CDATA[Invitation to participate in a survey]]></surveyls_email_invite_subj>
+    <surveyls_email_invite></surveyls_email_invite>
+    <surveyls_email_remind_subj><![CDATA[Reminder to participate in a survey]]></surveyls_email_remind_subj>
+    <surveyls_email_remind></surveyls_email_remind>
+    <surveyls_email_register_subj><![CDATA[Survey registration confirmation]]></surveyls_email_register_subj>
+    <surveyls_email_register></surveyls_email_register>
+    <surveyls_email_confirm_subj><![CDATA[Confirmation of your participation in our survey]]></surveyls_email_confirm_subj>
+    <surveyls_email_confirm></surveyls_email_confirm>
+    <surveyls_dateformat><![CDATA[1]]></surveyls_dateformat>
+    <email_admin_notification_subj><![CDATA[Response submission for survey {SURVEYNAME}]]></email_admin_notification_subj>
+    <email_admin_notification></email_admin_notification>
+    <email_admin_responses_subj><![CDATA[Response submission for survey {SURVEYNAME} with results]]></email_admin_responses_subj>
+    <email_admin_responses></email_admin_responses>
+    <surveyls_numberformat><![CDATA[0]]></surveyls_numberformat>
+   </row>
+  </rows>
+ </surveys_languagesettings>
+</document>

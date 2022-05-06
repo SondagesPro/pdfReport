@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 2.0.4
+ * @version 2.0.5
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -858,6 +858,7 @@ class pdfReport extends PluginBase
     {
         if(version_compare(Yii::app()->getConfig('versionnumber'), "4.0.0", "<")) {
             $this->_sendByEmailLegacy($oQuestion);
+            return;
         }
         $aQuestionsAttributes = QuestionAttribute::model()->getQuestionAttributes($oQuestion->qid, Yii::app()->getLanguage());
         $questionAttributeEmails = trim($aQuestionsAttributes['pdfReportSendByEmailMail']);

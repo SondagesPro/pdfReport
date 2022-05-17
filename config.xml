@@ -7,6 +7,7 @@
         <lastUpdate>2022-05-06</lastUpdate>
         <author>Denis Chenu</author>
         <authorUrl>https://www.sondages.pro</authorUrl>
+        <supportUrl>https://support.sondages.pro</supportUrl>
         <version>2.0.5</version>
         <license>GNU Affero General Public License v3.0</license>
         <description><![CDATA[Use upload question type to create a pdf report, replace print pdf, save it as report in survey file and send it by email.]]></description>

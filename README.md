@@ -52,6 +52,12 @@ LimeMpdf use `<pagebreak>` or `<pagebreak />` directly, plugin is adpated to all
 
 You can include image with `<img src="/upload/files/picture.png" />` or with [Data URI](https://en.wikipedia.org/wiki/Data_URI_scheme). All image are validated before included in the pdf and replaced by a white 1px size picture if not available. It's better to use local image (or DATA uri) for speedest generation of the pdf.
 
+### Sample survey
+
+You can check two sample of pdf report: 
+
+- [Pdf report simple test survey with picture and style](https://demo.sondages.pro/476956?newtest=Y)
+- [Pdf Report with LimeMpdf and usage od Bootstrap CSS](https://demo.sondages.pro/226435?newtest=Y)
 
 ## Home page & Copyright
 - HomePage <http://extensions.sondages.pro/>

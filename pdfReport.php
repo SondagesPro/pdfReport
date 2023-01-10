@@ -8,7 +8,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 2.0.6
+ * @version 2.0.7
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -372,7 +372,6 @@ class pdfReport extends PluginBase
                         $this->_setSessionPrintAnswer($oQuestion);
                     }
                     $this->_sendByEMail($oQuestion);
-                    $this->_saveInDirectory($oQuestion);
                     unlink($pdfFile);
                 }
             }
@@ -794,15 +793,6 @@ class pdfReport extends PluginBase
 
     /**
      * Save the generated file in file upload
-     * @todo
-     * @param object question object
-     * @return void
-     */
-    private function _saveInDirectory($oQuestion)
-    {
-    }
-    /**
-     * Save the generated file in file upload
      * @param object question object
      * @return void
      */
@@ -844,7 +834,12 @@ class pdfReport extends PluginBase
         $oResponse=Response::model($this->_iSurveyId)->find('id=:id', array(':id'=>$this->_iResponseId));
         $oResponse->$sAnswerColumn=ls_json_encode($aAnswer);
         $oResponse->$sAnswerCountColumn=1;
-        if (!$oResponse->save()) {
+        if (method_exists($oResponse, 'encryptSave')) {
+            $saveResult = $oResponse->encryptSave();
+        } else {
+            $saveResult = $oResponse->save();
+        }
+        if (!$saveResult) {
             Yii::log($oResponse->getErrors(), 'error', 'application.plugins.pdfReport');
         }
     }

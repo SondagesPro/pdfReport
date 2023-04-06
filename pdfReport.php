@@ -9,7 +9,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 2.2.0
+ * @version 2.2.1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -124,6 +124,9 @@ class pdfReport extends PluginBase
         self::$pdfReportDone = true;
         $this->unsubscribe('beforeTwigRenderTemplate');
         $sessionSurvey = Yii::app()->session["survey_{$this->surveyId}"];
+        if (empty($sessionSurvey['pdfreport'])) {
+            return;
+        }
         $prevStep = $sessionSurvey['prevstep'] ?? 0;
         $actualStep = $sessionSurvey['step'] ?? 0;
         if ($actualStep < $prevStep) {

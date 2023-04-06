@@ -9,7 +9,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 2.1.0
+ * @version 2.2.0
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -75,31 +75,31 @@ class pdfReport extends PluginBase
         }
         if (!isset($sessionSurvey['pdfreport'])) {
             $oSurvey = Survey::model()->findByPk($surveyId);
-            $criteria = new CDbCriteria();
-            $criteria->select = 't.qid as qid, t.gid as gid';
-            $criteria->with = ['questionAttributes'];
-            $criteria->condition = 't.sid = :sid and attribute = :attribute and value = :value';
-            $criteria->params = array(':sid' => $surveyId, ':attribute' => 'pdfReport', ':value' => '1');
+            $criteria = new CDbCriteria;
+            $criteria->select='question.qid as qid';
+            $criteria->join='LEFT JOIN {{questions}} as question ON '.App()->getDb()->quoteColumnName("question.qid").'='.App()->getDb()->quoteColumnName("t.qid");
+            $criteria->condition='question.sid = :sid and attribute = :attribute and value = :value';
+            $criteria->params=array(':sid'=>$surveyId,':attribute'=>'pdfReport',':value'=>'1');
             /* language */
             if(intval(App()->getConfig("versionnumber")) <= 3) {
-                $criteria->compare(App()->getDb()->quoteColumnName("t.language"), $language);
+                $criteria->compare(App()->getDb()->quoteColumnName("question.language"),$language);
             }
-            $oQuestionsPdfreports = Question::model()->findAll($criteria);
+            $oQuestionsQid = QuestionAttribute::model()->findAll($criteria);
             $sessionPdfReports = array();
-            if (!empty($oQuestionsPdfreports)) {
-                foreach ($oQuestionsPdfreports as $oQuestionsPdfreport) {
+            if (!empty($oQuestionsQid)) {
+                foreach ($oQuestionsQid as $oQuestionQid) {
                     switch($oSurvey->format){
                         case 'S':
-                            $step = LimeExpressionManager::GetQuestionSeq($oQuestionsPdfreport->qid);
+                            $step = LimeExpressionManager::GetQuestionSeq($oQuestionQid->qid);
                             break;
                         case 'G':
-                            $step = LimeExpressionManager::GetGroupSeq($oQuestionsPdfreport->gid);
+                            $step = LimeExpressionManager::GetGroupSeq($oQuestionQid->gid);
                             break;
                         case 'A':
                         default:
                             $step=0;
                     }
-                    $sessionPdfReports[$oQuestionsPdfreport->qid] = $step;
+                    $sessionPdfReports[$oQuestionQid->qid] = $step;
                 }
             }
             $sessionSurvey['pdfreport'] = $sessionPdfReports;
@@ -379,7 +379,6 @@ class pdfReport extends PluginBase
      */
     public function afterSurveyComplete()
     {
-        return;
         if (!$this->getEvent()) {
             throw new CHttpException(403);
         }
@@ -451,7 +450,6 @@ class pdfReport extends PluginBase
         if($qid) {
             $criteria->compare(App()->getDb()->quoteColumnName("question.qid"),$qid);
         }
-
         $aQuestionsQid = QuestionAttribute::model()->findAllAsArray($criteria, array(), true);
         if ($aQuestionsQid) {
             foreach ($aQuestionsQid as $aQuestionQid) {

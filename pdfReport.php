@@ -9,7 +9,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 2.2.1
+ * @version 2.2.2
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -76,15 +76,15 @@ class pdfReport extends PluginBase
         if (!isset($sessionSurvey['pdfreport'])) {
             $oSurvey = Survey::model()->findByPk($surveyId);
             $criteria = new CDbCriteria;
-            $criteria->select='question.qid as qid';
-            $criteria->join='LEFT JOIN {{questions}} as question ON '.App()->getDb()->quoteColumnName("question.qid").'='.App()->getDb()->quoteColumnName("t.qid");
-            $criteria->condition='question.sid = :sid and attribute = :attribute and value = :value';
-            $criteria->params=array(':sid'=>$surveyId,':attribute'=>'pdfReport',':value'=>'1');
+            $criteria->select = ['t.qid as qid', 'gid'];
+            $criteria->join='JOIN {{question_attributes}} as questionattributes ON '.App()->getDb()->quoteColumnName("t.qid").'='.App()->getDb()->quoteColumnName("questionattributes.qid");
+            $criteria->condition = 't.sid = :sid and questionattributes.attribute = :attribute and questionattributes.value = :value';
+            $criteria->params = [':sid' => $surveyId, ':attribute' => 'pdfReport', ':value' => '<>0'];
             /* language */
             if(intval(App()->getConfig("versionnumber")) <= 3) {
-                $criteria->compare(App()->getDb()->quoteColumnName("question.language"),$language);
+                $criteria->compare(App()->getDb()->quoteColumnName("t.language"),$language);
             }
-            $oQuestionsQid = QuestionAttribute::model()->findAll($criteria);
+            $oQuestionsQid = Question::model()->findAll($criteria);
             $sessionPdfReports = array();
             if (!empty($oQuestionsQid)) {
                 foreach ($oQuestionsQid as $oQuestionQid) {

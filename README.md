@@ -64,7 +64,8 @@ You can check two sample of pdf report:
 - Copyright © 2015-2022 Denis Chenu <https://sondages.pro>
 - Copyright © 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
 - Copyright © 2015 Ingeus <http://www.ingeus.fr/>
-- [Support](https://support.sondages.pro)
-- [![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/SondagesPro/) : [Donate on Liberapay](https://liberapay.com/SondagesPro/)
+- [Issue](https://gitlab.com/SondagesPro/ExportAndStats/pdfReport/-/issues) and [code contribution](https://gitlab.com/SondagesPro/ExportAndStats/pdfReport/-/merge_requests) _No free support_ 
+- [Professional Support](https://support.sondages.pro)
+- [Donate](https://support.sondages.pro/open.php?topicId=12), [Liberapay](https://liberapay.com/SondagesPro/), [OpenCollective](https://opencollective.com/sondagespro)
 
 Distributed under [GNU AFFERO GENERAL PUBLIC LICENSE Version 3](http://www.gnu.org/licenses/agpl.txt) licence

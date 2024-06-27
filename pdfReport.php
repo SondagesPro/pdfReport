@@ -1175,7 +1175,7 @@ class pdfReport extends PluginBase
     */
     private function translate($sToTranslate, $sEscapeMode = 'unescaped', $sLanguage = null)
     {
-        if (is_callable($this, 'gT')) {
+        if (method_exists($this, 'gT')) {
             return $this->gT($sToTranslate, $sEscapeMode, $sLanguage);
         }
         return $sToTranslate;

@@ -61,7 +61,7 @@ class pdfReportHelper extends pdf
         }
         /* data:image : didn't touch */
         if (strpos($file, "data:image") === 0) {
-            if (!$this->_isValidDataImageInfo($file)) {
+            if (!$this->isValidDataImageInfo($file)) {
                 return parent::Image($this->sImageBlank, $x, $y, 1, 1, '', $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, true, true);
             }
             return parent::Image("@" . $file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
@@ -87,7 +87,7 @@ class pdfReportHelper extends pdf
             $file = $this->sAbsoluteUrl . $file;
         }
         /* Test loading image and image have width and height (else broke pdf) */
-        if ($this->_isValidUrlImageInfo($file)) {
+        if ($this->isValidUrlImageInfo($file)) {
             return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, $alt, $altimgs);
         }
         Yii::log("Image " . $file . " not found or invalid: replaced by a white image", 'warning', 'application.plugins.sendPdfReport.pdfReportHelper.Image');
@@ -99,7 +99,7 @@ class pdfReportHelper extends pdf
      * @param $url to be tested
      * @return boolean
      */
-    private function _isValidUrlImageInfo($url)
+    private function isValidUrlImageInfo($url)
     {
         /* preferred method : curl */
         if ((extension_loaded("curl"))) {
@@ -145,7 +145,7 @@ class pdfReportHelper extends pdf
      * @param $url to be tested
      * @return boolean
      */
-    private function _isValidDataImageInfo($string)
+    private function isValidDataImageInfo($string)
     {
         /* Start by remove the data:image part to get only base64 string */
         $imageData = @file_get_contents($string);

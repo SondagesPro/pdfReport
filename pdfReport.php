@@ -53,8 +53,6 @@ class pdfReport extends PluginBase
         $this->subscribe('beforeSurveyPage');
         /* Remove answers (and help) part And do needed pdf (hidden group) */
         $this->subscribe('beforeQuestionRender', 'hideAnswerPart');
-        /* To add own translation message source */
-        $this->subscribe('afterPluginLoad');
         /* Allow printing on current */
         $this->subscribe('newDirectRequest');
         /* To replace if needed printanswer */
@@ -189,7 +187,7 @@ class pdfReport extends PluginBase
         }
         $dowloadurl = Yii::app()->getController()->createUrl('plugins/direct', array('plugin' => $this->getName(), 'surveyid' => 'SID','qid' => 'QID'));
         $dowloadurl = str_replace(array("SID","QID"), array("{SID}","{QID}"), $dowloadurl);
-        $helpString = sprintf($this->_translate("To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."), "<code>" . $dowloadurl . "</code>", "<code>{QID}</code>", "{SID}");
+        $helpString = sprintf($this->translate("To allow user to get the file of the question number X at end : you can use this url: %s. Replacing %s by the question number (LimeSurvey replace %s by the survey number)."), "<code>" . $dowloadurl . "</code>", "<code>{QID}</code>", "{SID}");
         $this->settings['basicDocumentation']['content'] = "<div class='well'>{$helpString}</div>";
         return parent::getPluginSettings($getValues);
     }
@@ -207,64 +205,64 @@ class pdfReport extends PluginBase
         $pdfReportAttribute = array(
             'pdfReport' => array(
                 'types' => '|', /* upload question type */
-                'category' => $this->_translate('PDF report'),
+                'category' => $this->translate('PDF report'),
                 'sortorder' => 1,
                 'inputtype' => 'switch',
                 'default' => 0,
-                'help' => $this->_translate('The pdf are saved inside question answers, it‘s better if you hide the question, else only answers part are hidden.'),
-                'caption' => $this->_translate('Use this question as pdf report.'),
+                'help' => $this->translate('The pdf are saved inside question answers, it‘s better if you hide the question, else only answers part are hidden.'),
+                'caption' => $this->translate('Use this question as pdf report.'),
             ),
             'pdfReportTitle' => array(
                 'types' => '|', /* upload question type */
-                'category' => $this->_translate('PDF report'),
+                'category' => $this->translate('PDF report'),
                 'sortorder' => 10,
                 'inputtype' => 'text',
                 'default' => '{SITENAME}',
                 'i18n' => true,
                 'expression' => 1,
-                'help' => sprintf($this->_translate('Set it as header in the final pdf, same behaviour than PDF header title at %sLimeSurvey global settings%s.'), "<a href='$pdfSettingsLink'>", "</a>"),
-                'caption' => $this->_translate('Title for the pdf.'),
+                'help' => sprintf($this->translate('Set it as header in the final pdf, same behaviour than PDF header title at %sLimeSurvey global settings%s.'), "<a href='$pdfSettingsLink'>", "</a>"),
+                'caption' => $this->translate('Title for the pdf.'),
             ),
             'pdfReportSubTitle' => array(
                 'types' => '|', /* upload question type */
-                'category' => $this->_translate('PDF report'),
+                'category' => $this->translate('PDF report'),
                 'sortorder' => 11,
                 'inputtype' => 'text',
                 'default' => '{SURVEYNAME}',
                 'i18n' => true,
                 'expression' => 1,
-                'help' => sprintf($this->_translate('Use as sub-header in the final pdf, same behaviour than PDF header string at %sLimeSurvey global settings%s.'), "<a href='$pdfSettingsLink'>", "</a>"),
-                'caption' => $this->_translate('Sub title for the pdf.'),
+                'help' => sprintf($this->translate('Use as sub-header in the final pdf, same behaviour than PDF header string at %sLimeSurvey global settings%s.'), "<a href='$pdfSettingsLink'>", "</a>"),
+                'caption' => $this->translate('Sub title for the pdf.'),
             ),
             'pdfReportContent' => array(
                 'types' => '|', /* upload question type */
-                'category' => $this->_translate('PDF report'),
+                'category' => $this->translate('PDF report'),
                 'sortorder' => 15,
                 'inputtype' => 'textarea',
                 'default' => "",
                 'i18n' => true,
                 'expression' => 1,
-                'help' => $this->_translate('This allow better edition without HTML editor and/or XSS.'),
-                'caption' => $this->_translate('Content of the PDF, leave empty to use question text.'),
+                'help' => $this->translate('This allow better edition without HTML editor and/or XSS.'),
+                'caption' => $this->translate('Content of the PDF, leave empty to use question text.'),
                 'xssFilter' => false
             ),
             'pdfReportPrintAnswer' => array(
                 'types' => '|', /* upload question type */
-                'category' => $this->_translate('PDF report'),
+                'category' => $this->translate('PDF report'),
                 'sortorder' => 20,
                 'inputtype' => 'singleselect',
                 'options' => array(
                     0 => gT('No'),
-                    1 => $this->_translate('Allow public download (with the link).'),
-                    2 => $this->_translate('Replace public print answer.'),
+                    1 => $this->translate('Allow public download (with the link).'),
+                    2 => $this->translate('Replace public print answer.'),
                 ),
                 'default' => 0,
-                'help' => $this->_translate('Allow to download pdf after submitted the survey, see plugin settings for url. Optionnaly replace the default print answer by a dowload link of the pdf.'),
-                'caption' => $this->_translate('Replace public print answer.'),
+                'help' => $this->translate('Allow to download pdf after submitted the survey, see plugin settings for url. Optionnaly replace the default print answer by a dowload link of the pdf.'),
+                'caption' => $this->translate('Replace public print answer.'),
             ),
             'pdfReportSavedFileName' => array(
                 'types' => '|', /* upload question type */
-                'category' => $this->_translate('PDF report'),
+                'category' => $this->translate('PDF report'),
                 'sortorder' => 30,
                 'inputtype' => 'text',
                 'default' => '',
@@ -273,82 +271,82 @@ class pdfReport extends PluginBase
                     'placeholder' => 'questioncode',
                 ),
                 'expression' => 1,
-                'help' => $this->_translate('By default usage of the question code. You don‘t have to put the .pdf part.'),
-                'caption' => $this->_translate('Name of saved PDF file.'),
+                'help' => $this->translate('By default usage of the question code. You don‘t have to put the .pdf part.'),
+                'caption' => $this->translate('Name of saved PDF file.'),
             ),
             'pdfReportSanitizeSavedFileName' => array(
                 'types' => '|', /* upload question type */
-                'category' => $this->_translate('PDF report'),
+                'category' => $this->translate('PDF report'),
                 'sortorder' => 30,
                 'inputtype' => 'singleselect',//'buttongroup',
                 'options' => array(
-                    'none' => $this->_translate('No filter'),
-                    'base' => $this->_translate('Basic filter'),
-                    'alphanumeric' => $this->_translate('Alphanumeric only'),
-                    'alphanumericlower' => $this->_translate('Alphanumeric and lower case'),
+                    'none' => $this->translate('No filter'),
+                    'base' => $this->translate('Basic filter'),
+                    'alphanumeric' => $this->translate('Alphanumeric only'),
+                    'alphanumericlower' => $this->translate('Alphanumeric and lower case'),
                 ),
                 'default' => 'base',
-                'help' => $this->_translate('Basic filter try to remove invalid an dangerous character, use “no filter” with caution. If there are a filter, filename is limited to 254 character. With alphanumeric space was replaced by -.'),
-                'caption' => $this->_translate('Sanitization of the file name.'),
+                'help' => $this->translate('Basic filter try to remove invalid an dangerous character, use “no filter” with caution. If there are a filter, filename is limited to 254 character. With alphanumeric space was replaced by -.'),
+                'caption' => $this->translate('Sanitization of the file name.'),
             ),
             'pdfReportSendByEmailMail' => array(
                 'types' => '|', /* upload question type */
-                'category' => $this->_translate('PDF report'),
+                'category' => $this->translate('PDF report'),
                 'sortorder' => 40,
                 'inputtype' => 'text',
                 'default' => '',
                 'i18n' => false,
                 'expression' => 1,
-                'help' => $this->_translate('Optionnal email to send pdf Report. You can use Expression manager and multiple email. For multiple email : you must use <code>;</code> as separator. Each email was checked for validity.'),
-                'caption' => $this->_translate('Send it by email to'),
+                'help' => $this->translate('Optionnal email to send pdf Report. You can use Expression manager and multiple email. For multiple email : you must use <code>;</code> as separator. Each email was checked for validity.'),
+                'caption' => $this->translate('Send it by email to'),
             ),
             'pdfReportSendByEmailContent' => array(
                 'types' => '|', /* upload question type */
-                'category' => $this->_translate('PDF report'),
+                'category' => $this->translate('PDF report'),
                 'sortorder' => 45,
                 'inputtype' => 'singleselect',//'buttongroup',
                 'options' => array(
-                    'confirm' => $this->_translate('Confirmation email'),
-                    'admin_notification' => $this->_translate('Basic admin notification'),
-                    'admin_responses' => $this->_translate('Detailed admin notification'),
+                    'confirm' => $this->translate('Confirmation email'),
+                    'admin_notification' => $this->translate('Basic admin notification'),
+                    'admin_responses' => $this->translate('Detailed admin notification'),
                 ),
                 'default' => 'admin_notification',
                 'i18n' => false,
                 'expression' => 1,
-                'help' => $this->_translate('This don‘t deactivate limesurvey other email system. Remind to deactivate LimeSurvey system if you this one.'),
-                'caption' => $this->_translate('Content and subject of the email'),
+                'help' => $this->translate('This don‘t deactivate limesurvey other email system. Remind to deactivate LimeSurvey system if you this one.'),
+                'caption' => $this->translate('Content and subject of the email'),
             ),
             'pdfReportSendByEmailAttachment' => array(
                 'types' => '|', /* upload question type */
-                'category' => $this->_translate('PDF report'),
+                'category' => $this->translate('PDF report'),
                 'sortorder' => 50,
                 'inputtype' => 'switch',
                 'default' => 1,
-                'help' => $this->_translate('Add existing attachements of the email templates from LimeSurvey.'),
-                'caption' => $this->_translate('Add attachements of email'),
+                'help' => $this->translate('Add existing attachements of the email templates from LimeSurvey.'),
+                'caption' => $this->translate('Add attachements of email'),
             ),
         );
         if (Yii::getPathOfAlias("limeMpdf")) {
             $pdfReportAttribute['pdfReportPdfGenerator'] = array(
                 'types' => '|', /* upload question type */
-                'category' => $this->_translate('PDF report'),
+                'category' => $this->translate('PDF report'),
                 'sortorder' => 100,
                 'inputtype' => 'switch',
                 'default' => 1,
-                'help' => $this->_translate('You have limeMpdf plugin allowing more class, but don‘t use pdfreport.css. Then if you need usage of pdfreport.css: you can choose to use old tcpdf system.'),
-                'caption' => $this->_translate('Use limeMpdf'),
+                'help' => $this->translate('You have limeMpdf plugin allowing more class, but don‘t use pdfreport.css. Then if you need usage of pdfreport.css: you can choose to use old tcpdf system.'),
+                'caption' => $this->translate('Use limeMpdf'),
             );
             $pdfReportAttribute['pdfReportCreateToc'] = array(
                 'types' => '|', /* upload question type */
-                'category' => $this->_translate('PDF report'),
+                'category' => $this->translate('PDF report'),
                 'sortorder' => 110,
                 'inputtype' => 'switch',
                 'default' => 1,
-                'help' => $this->_translate('Plugin limeMpdf allow table of content using h1, h2 etc … then adding title in your pdf set a table of contents.'),
-                'caption' => $this->_translate('Create a PDF table of content'),
+                'help' => $this->translate('Plugin limeMpdf allow table of content using h1, h2 etc … then adding title in your pdf set a table of contents.'),
+                'caption' => $this->translate('Create a PDF table of content'),
             );
             $pdfReportAttribute['pdfReportTitle']['help'] = sprintf(
-                $this->_translate('Set it as header in the final pdf with %s, same behaviour than PDF header title at %sLimeSurvey global settings%s. Used as %s in %s of %s theme twig files.'),
+                $this->translate('Set it as header in the final pdf with %s, same behaviour than PDF header title at %sLimeSurvey global settings%s. Used as %s in %s of %s theme twig files.'),
                 "<strong>tcpdf</strong>",
                 "<a href='$pdfSettingsLink'>",
                 "</a>",
@@ -357,7 +355,7 @@ class pdfReport extends PluginBase
                 "<strong>limeMpdf</strong>"
             );
             $pdfReportAttribute['pdfReportSubTitle']['help'] = sprintf(
-                $this->_translate('Set it as sub header in the final pdf with %s, same behaviour than PDF header string at %sLimeSurvey global settings%s. Used as %s in %s of %s theme twig files.'),
+                $this->translate('Set it as sub header in the final pdf with %s, same behaviour than PDF header string at %sLimeSurvey global settings%s. Used as %s in %s of %s theme twig files.'),
                 "<strong>tcpdf</strong>",
                 "<a href='$pdfSettingsLink'>",
                 "</a>",
@@ -456,7 +454,7 @@ class pdfReport extends PluginBase
         if ($aQuestionsQid) {
             foreach ($aQuestionsQid as $aQuestionQid) {
                 $qid = $aQuestionQid['qid'];
-                $pdfFile = $this->_getPdfFile($qid);
+                $pdfFile = $this->pdfReportGetPdfFile($qid);
                 if ($pdfFile) {
                     if (intval(App()->getConfig("versionnumber")) <= 3) {
                         $oQuestion = Question::model()->findByPk(array('qid' => $qid,'language' => $language));
@@ -464,11 +462,11 @@ class pdfReport extends PluginBase
                         $oQuestion = Question::model()->findByPk($qid);
                     }
                     if ($oQuestion->type == "|") {
-                        $this->_saveInFileUpload($oQuestion);
-                        $this->_setSessionPrintAnswer($oQuestion);
+                        $this->pdfReportSaveInFileUpload($oQuestion);
+                        $this->setSessionPrintAnswer($oQuestion);
                     }
                     if ($submit) {
-                        $this->_sendByEMail($oQuestion);
+                        $this->pdfReportSendByEmail($oQuestion);
                     }
                     unlink($pdfFile);
                 }
@@ -631,7 +629,7 @@ class pdfReport extends PluginBase
      * @param Question $oQuestion
      * @return void
      */
-    private function _setSessionPrintAnswer($oQuestion)
+    private function setSessionPrintAnswer($oQuestion)
     {
         $oQuestionAttribute = QuestionAttribute::model()->find(
             "attribute=:attribute and qid=:qid",
@@ -671,7 +669,7 @@ class pdfReport extends PluginBase
      * @param integer $iQid
      * @return string : URI for pdf file
      */
-    private function _getPdfFile($iQid)
+    private function pdfReportGetPdfFile($iQid)
     {
         if (intval(App()->getConfig('versionnumber')) <= 3) {
             $oQuestion = Question::model()->findByPk(array('qid' => $iQid,'language' => Yii::app()->getLanguage()));
@@ -685,12 +683,12 @@ class pdfReport extends PluginBase
 
         $aQuestionsAttributes = QuestionAttribute::model()->getQuestionAttributes($iQid, Yii::app()->getLanguage());
         if (empty($aQuestionsAttributes['pdfReportPdfGenerator'])) {
-            return $this->_tcpdfGenerator($oQuestion, $aQuestionsAttributes);
+            return $this->pdfReportTcpdfGenerator($oQuestion, $aQuestionsAttributes);
         }
-        return $this->_mpdfGenerator($oQuestion, $aQuestionsAttributes);
+        return $this->pdfReportMpdfGenerator($oQuestion, $aQuestionsAttributes);
     }
 
-    private function _mpdfGenerator($oQuestion, $aQuestionsAttributes)
+    private function pdfReportMpdfGenerator($oQuestion, $aQuestionsAttributes)
     {
         $sText = trim($aQuestionsAttributes['pdfReportContent'][Yii::app()->getLanguage()]);
         if (empty($sText)) {
@@ -710,9 +708,9 @@ class pdfReport extends PluginBase
         }
         $sHeader = trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
         $sSubHeader = trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);
-        $sText = $this->_EMProcessString($sText, $oQuestion->qid);
-        $sHeader = $this->_EMProcessString($sHeader, $oQuestion->qid);
-        $sSubHeader = $this->_EMProcessString($sSubHeader, $oQuestion->qid);
+        $sText = self::EMProcessString($sText, $oQuestion->qid);
+        $sHeader = self::EMProcessString($sHeader, $oQuestion->qid);
+        $sSubHeader = self::EMProcessString($sSubHeader, $oQuestion->qid);
         /* Fix html text */
         /* tcpdf use br, mpdf use pagebreak */
         $pdfSpecific = array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<pagebreak>', '<pagebreak />');
@@ -729,13 +727,13 @@ class pdfReport extends PluginBase
             $pdfHelper->setOptions($extraOtions);
         }
         $pdfHelper->setTitle($sHeader, $sSubHeader);
-        $sFilePdfName = $this->_getPdfFileName($oQuestion->title);
+        $sFilePdfName = $this->pdfReportGetPdfFileName($oQuestion->title);
         $pdfHelper->filename = $sFilePdfName;
         $pdfHelper->doPdfContent($sText, \Mpdf\Output\Destination::FILE);
         return $sFilePdfName;
     }
 
-    private function _tcpdfGenerator($oQuestion, $aQuestionsAttributes)
+    private function pdfReportTcpdfGenerator($oQuestion, $aQuestionsAttributes)
     {
         $sText = trim($aQuestionsAttributes['pdfReportContent'][Yii::app()->getLanguage()]);
         if (empty($sText)) {
@@ -756,11 +754,11 @@ class pdfReport extends PluginBase
         $sHeader = trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
         $sSubHeader = trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);
 
-        $sText = $this->_EMProcessString($sText, $oQuestion->qid);
-        $sHeader = $this->_EMProcessString($sHeader, $oQuestion->qid);
-        $sSubHeader = $this->_EMProcessString($sSubHeader, $oQuestion->qid);
+        $sText = self::EMProcessString($sText, $oQuestion->qid);
+        $sHeader = self::EMProcessString($sHeader, $oQuestion->qid);
+        $sSubHeader = self::EMProcessString($sSubHeader, $oQuestion->qid);
 
-        $sCssContent = $this->_getCss();
+        $sCssContent = $this->getTcpdfCss();
         $sHeader = strip_tags($sHeader);
         $sSubHeader = strip_tags($sSubHeader);
         $aSurvey = getSurveyInfo($this->surveyId, Yii::app()->getLanguage());
@@ -826,7 +824,7 @@ class pdfReport extends PluginBase
         $sText = str_replace($pdfReplaced, $pdfSpecific, $sText);
         $sText = "<style>\n{$sCssContent}\n</style>\n$sText\n";
 
-        $aLogo = $this->_getLogoPaths($this->surveyId);
+        $aLogo = $this->pdfReportGetLogoPaths($this->surveyId);
         if (!empty($aLogo['path'])) {
             $oPDF->sLogoFile = $aLogo['path'];
         }
@@ -839,7 +837,7 @@ class pdfReport extends PluginBase
 
         $oPDF->lastPage();
 
-        $sFilePdfName = $this->_getPdfFileName($oQuestion->title);
+        $sFilePdfName = $this->pdfReportGetPdfFileName($oQuestion->title);
         $oPDF->Output($sFilePdfName, 'F');
 
         Yii::log("getPdfFile done for {$oQuestion->qid} in {$this->surveyId} with tcpdf.", 'trace', 'application.plugins.sendPdfReport');
@@ -850,7 +848,7 @@ class pdfReport extends PluginBase
      * Get the logo file name
      * @return string : URI for pdf file
      */
-    private function _getLogoPaths()
+    private function pdfReportGetLogoPaths()
     {
         $aLogoNames = array(
             'pdflogo.png',
@@ -896,7 +894,7 @@ class pdfReport extends PluginBase
      * @param object question object
      * @return void
      */
-    private function _saveInFileUpload($oQuestion)
+    private function pdfReportSaveInFileUpload($oQuestion)
     {
         if ($oQuestion->type != '|') {
             return;
@@ -918,10 +916,10 @@ class pdfReport extends PluginBase
         if (!is_dir($uploadSurveyDir)) {
             mkdir($uploadSurveyDir, 0777, true);
         }
-        $fileName = $this->_getPdfFileName($oQuestion->title);
+        $fileName = $this->pdfReportGetPdfFileName($oQuestion->title);
         $fileSize = 0.001 * filesize($fileName); // Same than controller
 
-        $reportSavedFileName = $this->_getPdfSavedFileName($oQuestion);
+        $reportSavedFileName = $this->pdfReportGetPdfSavedFileName($oQuestion);
 
         $sDestinationFileName = 'fu_' . hexdec(crc32($this->responseId . rand(1, 10000) . $oQuestion->title));
         if (!copy($fileName, $uploadSurveyDir . $sDestinationFileName)) {
@@ -960,10 +958,10 @@ class pdfReport extends PluginBase
      * @param
      * @retuen void
      */
-    private function _sendByEmail($oQuestion)
+    private function pdfReportSendByEmail($oQuestion)
     {
         if (version_compare(Yii::app()->getConfig('versionnumber'), "4.0.0", "<")) {
-            $this->_sendByEmailLegacy($oQuestion);
+            $this->pdfReportSendByEmailLegacy($oQuestion);
             return;
         }
         $aQuestionsAttributes = QuestionAttribute::model()->getQuestionAttributes($oQuestion->qid, Yii::app()->getLanguage());
@@ -972,7 +970,7 @@ class pdfReport extends PluginBase
             return;
         }
 
-        $questionAttributeEmails = $this->_EMProcessString($questionAttributeEmails, $oQuestion->qid);
+        $questionAttributeEmails = self::EMProcessString($questionAttributeEmails, $oQuestion->qid);
         $aValidRecipient = LimeMailer::validateAddresses($questionAttributeEmails);
         if (empty($aValidRecipient)) {
             return;
@@ -982,10 +980,10 @@ class pdfReport extends PluginBase
         $mailer->mailLanguage = App()->getLanguage();
         $mailer->setSurvey($this->surveyId);
         $mailer->setTypeWithRaw($aQuestionsAttributes['pdfReportSendByEmailContent'], App()->getLanguage());
-        $sFile = $this->_getPdfFileName($oQuestion->title);
+        $sFile = $this->pdfReportGetPdfFileName($oQuestion->title);
         $mailer->addAttachment(
             $sFile,
-            $this->_getPdfSavedFileName($oQuestion)
+            $this->pdfReportGetPdfSavedFileName($oQuestion)
         );
         if ($aQuestionsAttributes['pdfReportSendByEmailAttachment']) {
             $mailer->addAttachementsByType();
@@ -1009,7 +1007,7 @@ class pdfReport extends PluginBase
      * @param boolean $onlyFile return only the file name
      * @return string URI
      */
-    private function _getPdfFileName($qCode, $onlyFile = false)
+    private function pdfReportGetPdfFileName($qCode, $onlyFile = false)
     {
         $aFilePdfName = array(
             $qCode,
@@ -1035,7 +1033,7 @@ class pdfReport extends PluginBase
         }
     }
 
-    private function _getPdfSavedFileName($oQuestion)
+    private function pdfReportGetPdfSavedFileName($oQuestion)
     {
         $oQuestionAttribute = QuestionAttribute::model()->find(
             "attribute=:attribute and qid=:qid",
@@ -1043,7 +1041,7 @@ class pdfReport extends PluginBase
         );
         $reportSavedFileName = "{$oQuestion->title}.pdf";
         if (!empty($oQuestionAttribute->value) && trim($oQuestionAttribute->value) != "") {
-            $reportSavedFileName = $this->_EMProcessString(trim($oQuestionAttribute->value), $oQuestion->qid);
+            $reportSavedFileName = self::EMProcessString(trim($oQuestionAttribute->value), $oQuestion->qid);
             $oQuestionAttributeFilter = QuestionAttribute::model()->find(
                 "attribute=:attribute and qid=:qid",
                 array(':attribute' => 'pdfReportSanitizeSavedFileName',':qid' => $oQuestion->qid)
@@ -1061,7 +1059,7 @@ class pdfReport extends PluginBase
                 case "alphanumeric":
                     $reportSavedFileName = preg_replace('/\s+/', App()->getConfig("pdfReportSpaceFilename", "-"), $reportSavedFileName);
                     /* replace accent see https://stackoverflow.com/a/16022459/2239406 */
-                    $reportSavedFileName = $this->_transliterate($reportSavedFileName);
+                    $reportSavedFileName = $this->pdfReportTransliterate($reportSavedFileName);
                     /* beautify_filename from santitize set lowercase : we don't want this … */
                     $reportSavedFileName = preg_replace(array('/ +/','/_+/','/-+/'), '-', $reportSavedFileName);
                     $reportSavedFileName = preg_replace(array('/-*\.-*/','/\.{2,}/'), '.', $reportSavedFileName);
@@ -1080,9 +1078,9 @@ class pdfReport extends PluginBase
     /**
      * Get fixed content by email
      */
-    private function _getEmailContent($sType)
+    private function pdfReportGetEmailContent($sType)
     {
-        $aReplacementVars = $this->_getReplacementVars($sType == 'confirm');
+        $aReplacementVars = $this->pdfReportGetReplacementVars($sType == 'confirm');
         $aSurvey = getSurveyInfo($this->surveyId, Yii::app()->language);
         $aReData = array(
             'saved_id' => $this->responseId,
@@ -1099,7 +1097,7 @@ class pdfReport extends PluginBase
     /**
      * Get attachement content by email
      */
-    private function _getEmailAttachements($sType)
+    private function pdfReportGetEmailAttachements($sType)
     {
         /* @todo : search the for needed other replace (invite and remind) */
         switch ($sType) {
@@ -1129,7 +1127,7 @@ class pdfReport extends PluginBase
      * @param boolean : wit or wothout token value
      * @return string[]
      */
-    private function _getReplacementVars()
+    private function pdfReportGetReplacementVars()
     {
         $thissurvey = $aSurvey = getSurveyInfo($this->surveyId, Yii::app()->language);
         $aReplacementVars = array();
@@ -1162,7 +1160,7 @@ class pdfReport extends PluginBase
      * get css for this survey
      * @return string : css
      */
-    private function _getCss()
+    private function getTcpdfCss()
     {
         $oTemplate = \Template::model()->getInstance(null, $this->surveyId);
         if (is_file($oTemplate->filesPath . 'pdfreport.css')) {
@@ -1171,33 +1169,16 @@ class pdfReport extends PluginBase
         }
         return file_get_contents(dirname(__FILE__) . '/pdfreport.css');
     }
-    /**
-     * Translate a plugin string
-     * @param string $string to translate
-     * @return string
-     */
-    private function _translate($string)
-    {
-        return Yii::t('', $string, array(), 'pdfReport');
-    }
 
     /**
-     * Add this translation just after loaded all plugins
-     * @see event afterPluginLoad
-     */
-    public function afterPluginLoad()
+    * @see parent::gT
+    */
+    private function translate($sToTranslate, $sEscapeMode = 'unescaped', $sLanguage = null)
     {
-        // messageSource for this plugin:
-        $pdfReportLang = array(
-            'class' => 'CGettextMessageSource',
-            'cacheID' => 'pdfReportLang',
-            'cachingDuration' => 3600,
-            'forceTranslation' => true,
-            'useMoFile' => true,
-            'basePath' => __DIR__ . DIRECTORY_SEPARATOR . 'locale',
-            'catalog' => 'messages',// default from Yii
-        );
-        Yii::app()->setComponent('pdfReport', $pdfReportLang);
+        if (is_callable($this, 'gT')) {
+            return $this->gT($sToTranslate, $sEscapeMode, $sLanguage);
+        }
+        return $sToTranslate;
     }
 
     /**
@@ -1206,7 +1187,7 @@ class pdfReport extends PluginBase
      * @param null|integer $questionNum the $qid of question being replaced - needed for properly alignment of question-level relevance and tailoring
      * @return string
      */
-    private function _EMProcessString($string, $questionNum = null)
+    private static function EMProcessString($string, $questionNum = null)
     {
         Yii::app()->setConfig('surveyID', $this->surveyId);
         $oSurvey = Survey::model()->findByPk($this->surveyId);
@@ -1230,7 +1211,7 @@ class pdfReport extends PluginBase
      * @param string
      * @return string
      */
-    private function _transliterate($string)
+    private function pdfReportTransliterate($string)
     {
         if (class_exists("Transliterator")) {
             $myTrans = Transliterator::create('Any-Latin; Latin-ASCII; [\u0080-\u7fff] remove');
@@ -1589,14 +1570,14 @@ class pdfReport extends PluginBase
      * @param \Question
      * @return void
      */
-    private function _sendByEmailLegacy($oQuestion)
+    private function pdfReportSendByEmailLegacy($oQuestion)
     {
         $aQuestionsAttributes = QuestionAttribute::model()->getQuestionAttributes($oQuestion->qid, Yii::app()->getLanguage());
         $questionAttributeEmails = trim($aQuestionsAttributes['pdfReportSendByEmailMail']);
         if ($questionAttributeEmails == "") {
             return;
         }
-        $questionAttributeEmails = $this->_EMProcessString($questionAttributeEmails, $oQuestion->qid);
+        $questionAttributeEmails = self::EMProcessString($questionAttributeEmails, $oQuestion->qid);
         $aRecipient = explode(";", $questionAttributeEmails);
         $aValidRecipient = array();
         foreach ($aRecipient as $sRecipient) {
@@ -1606,15 +1587,15 @@ class pdfReport extends PluginBase
             }
         }
         $oSurvey = Survey::model()->findByPk($this->surveyId);
-        $aMessage = $this->_getEmailContent($aQuestionsAttributes['pdfReportSendByEmailContent']);
-        $sFile = $this->_getPdfFileName($oQuestion->title);
+        $aMessage = $this->pdfReportGetEmailContent($aQuestionsAttributes['pdfReportSendByEmailContent']);
+        $sFile = $this->pdfReportGetPdfFileName($oQuestion->title);
         $aAttachments = array(array(
-            $this->_getPdfFileName($oQuestion->title),
-            $this->_getPdfSavedFileName($oQuestion),
+            $this->pdfReportGetPdfFileName($oQuestion->title),
+            $this->pdfReportGetPdfSavedFileName($oQuestion),
         ));
         /* Add LS attachments */
         if ($aQuestionsAttributes['pdfReportSendByEmailAttachment']) {
-            $aAttachments = array_merge($this->_getEmailAttachements($aQuestionsAttributes['pdfReportSendByEmailContent']), $aAttachments);
+            $aAttachments = array_merge($this->pdfReportGetEmailAttachements($aQuestionsAttributes['pdfReportSendByEmailContent']), $aAttachments);
         }
         foreach ($aValidRecipient as $sRecipient) {
             if (!SendEmailMessage($aMessage['message'], $aMessage['subject'], $sRecipient, "{$oSurvey->admin} <{$oSurvey->adminemail}>", Yii::app()->getConfig("sitename"), true, getBounceEmail($this->surveyId), $aAttachments)) {

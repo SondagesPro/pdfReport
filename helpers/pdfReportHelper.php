@@ -3,7 +3,7 @@
 /**
  * This file is part of pdfReport plugin
  * @see sendPdfReport <http://extensions.sondages.pro/sendpdfreport>
- * @version 1.0.2
+ * @version 2.3.1
  **/
 class pdfReportHelper extends pdf
 {
@@ -15,6 +15,8 @@ class pdfReportHelper extends pdf
     public $sImageBlank;
     public $sAbsoluteUrl;
     public $sAbsolutePath = '';
+    /* avoid  Creation of dynamic property is deprecated in PHP82 */
+    public $cMargin;
 
     public function __construct()
     {

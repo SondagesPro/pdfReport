@@ -5,11 +5,11 @@
  * Use question settings to create a report and send it by email.
  *
  * @author Denis Chenu <https://sondages.pro>
- * @copyright 2015-2023 Denis Chenu <https://sondages.pro>
+ * @copyright 2015-2024 Denis Chenu <https://sondages.pro>
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 2.2.2
+ * @version 2.3.1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -708,9 +708,9 @@ class pdfReport extends PluginBase
         }
         $sHeader = trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
         $sSubHeader = trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);
-        $sText = self::EMProcessString($sText, $oQuestion->qid);
-        $sHeader = self::EMProcessString($sHeader, $oQuestion->qid);
-        $sSubHeader = self::EMProcessString($sSubHeader, $oQuestion->qid);
+        $sText = $this->EMProcessString($sText, $oQuestion->qid);
+        $sHeader = $this->EMProcessString($sHeader, $oQuestion->qid);
+        $sSubHeader = $this->EMProcessString($sSubHeader, $oQuestion->qid);
         /* Fix html text */
         /* tcpdf use br, mpdf use pagebreak */
         $pdfSpecific = array('<br pagebreak="true" />','<br pagebreak="true"/>','<br pagebreak="true">','<pagebreak>', '<pagebreak />');
@@ -754,9 +754,9 @@ class pdfReport extends PluginBase
         $sHeader = trim($aQuestionsAttributes['pdfReportTitle'][Yii::app()->getLanguage()]);
         $sSubHeader = trim($aQuestionsAttributes['pdfReportSubTitle'][Yii::app()->getLanguage()]);
 
-        $sText = self::EMProcessString($sText, $oQuestion->qid);
-        $sHeader = self::EMProcessString($sHeader, $oQuestion->qid);
-        $sSubHeader = self::EMProcessString($sSubHeader, $oQuestion->qid);
+        $sText = $this->EMProcessString($sText, $oQuestion->qid);
+        $sHeader = $this->EMProcessString($sHeader, $oQuestion->qid);
+        $sSubHeader = $this->EMProcessString($sSubHeader, $oQuestion->qid);
 
         $sCssContent = $this->getTcpdfCss();
         $sHeader = strip_tags($sHeader);
@@ -817,7 +817,11 @@ class pdfReport extends PluginBase
                 'data' => true,
                 )
         );
+        /* With PHP8.2 : have  Use of "self" in callables is deprecated  in vendor/phpseclib/bcmath_compat/src/BCMath.php(492) */
+        $error_reporting = error_reporting();
+        error_reporting(0);
         $sText = $oPurifier->purify($sText);
+        error_reporting($error_reporting);
         $sHeader = $oPurifier->purify($sHeader);
         $sSubHeader = $oPurifier->purify($sSubHeader);
 
@@ -970,7 +974,7 @@ class pdfReport extends PluginBase
             return;
         }
 
-        $questionAttributeEmails = self::EMProcessString($questionAttributeEmails, $oQuestion->qid);
+        $questionAttributeEmails = $this->EMProcessString($questionAttributeEmails, $oQuestion->qid);
         $aValidRecipient = LimeMailer::validateAddresses($questionAttributeEmails);
         if (empty($aValidRecipient)) {
             return;
@@ -1041,7 +1045,7 @@ class pdfReport extends PluginBase
         );
         $reportSavedFileName = "{$oQuestion->title}.pdf";
         if (!empty($oQuestionAttribute->value) && trim($oQuestionAttribute->value) != "") {
-            $reportSavedFileName = self::EMProcessString(trim($oQuestionAttribute->value), $oQuestion->qid);
+            $reportSavedFileName = $this->EMProcessString(trim($oQuestionAttribute->value), $oQuestion->qid);
             $oQuestionAttributeFilter = QuestionAttribute::model()->find(
                 "attribute=:attribute and qid=:qid",
                 array(':attribute' => 'pdfReportSanitizeSavedFileName',':qid' => $oQuestion->qid)
@@ -1187,7 +1191,7 @@ class pdfReport extends PluginBase
      * @param null|integer $questionNum the $qid of question being replaced - needed for properly alignment of question-level relevance and tailoring
      * @return string
      */
-    private static function EMProcessString($string, $questionNum = null)
+    private function EMProcessString($string, $questionNum = null)
     {
         Yii::app()->setConfig('surveyID', $this->surveyId);
         $oSurvey = Survey::model()->findByPk($this->surveyId);
@@ -1577,7 +1581,7 @@ class pdfReport extends PluginBase
         if ($questionAttributeEmails == "") {
             return;
         }
-        $questionAttributeEmails = self::EMProcessString($questionAttributeEmails, $oQuestion->qid);
+        $questionAttributeEmails = $this->EMProcessString($questionAttributeEmails, $oQuestion->qid);
         $aRecipient = explode(";", $questionAttributeEmails);
         $aValidRecipient = array();
         foreach ($aRecipient as $sRecipient) {

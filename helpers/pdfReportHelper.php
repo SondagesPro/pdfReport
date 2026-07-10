@@ -75,7 +75,7 @@ class pdfReportHelper extends pdf
         }
         if ($file[0] === '/') {
             $docRoot = isset($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : "";
-            $candidatePath = $docRoot . "/" . $file;
+            $candidatePath = $docRoot . DIRECTORY_SEPARATOR . $file;
             $resolvedPath = realpath($candidatePath);
             $resolvedDocRoot = realpath($docRoot);
             if ($resolvedPath && $resolvedDocRoot && strpos($resolvedPath, $resolvedDocRoot . DIRECTORY_SEPARATOR) === 0) {

@@ -75,9 +75,11 @@ class pdfReportHelper extends pdf
         }
         if ($file[0] === '/') {
             $docRoot = isset($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : "";
-            if (@file_exists($docRoot . "/" . $file)) {
-                // @todo : check if it's a valid image
-                return parent::Image($docRoot . "/" . $file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
+            $candidatePath = $docRoot . "/" . $file;
+            $resolvedPath = realpath($candidatePath);
+            $resolvedDocRoot = realpath($docRoot);
+            if ($resolvedPath && $resolvedDocRoot && strpos($resolvedPath, $resolvedDocRoot . DIRECTORY_SEPARATOR) === 0) {
+                return parent::Image($resolvedPath, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
             }
         }
         if (@file_exists($this->sAbsolutePath . "/" . $file)) {

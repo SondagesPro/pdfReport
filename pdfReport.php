@@ -5,11 +5,11 @@
  * Use question settings to create a report and send it by email.
  *
  * @author Denis Chenu <https://sondages.pro>
- * @copyright 2015-2024 Denis Chenu <https://sondages.pro>
+ * @copyright 2015-2026 Denis Chenu <https://sondages.pro>
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 2.3.3
+ * @version 2.4.1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -1008,7 +1008,11 @@ class pdfReport extends PluginBase
             $this->pdfReportGetPdfSavedFileName($oQuestion)
         );
         if ($aQuestionsAttributes['pdfReportSendByEmailAttachment']) {
-            $mailer->addAttachementsByType();
+            if (intval(App()->getConfig('versionnumber')) >= 7) {
+                $mailer->addAttachmentsByType();
+            } else {
+                $mailer->addAttachementsByType();
+            }
         }
         /* Update type */
         $mailer->emailType = 'plugin_pdfReport';

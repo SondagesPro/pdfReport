@@ -926,7 +926,7 @@ class pdfReport extends PluginBase
         if (intval(App()->getConfig('versionnumber')) < 7) {
             $sAnswerColumn = "{$this->surveyId}X{$oQuestion->gid}X{$oQuestion->qid}";
         }
-        $sAnswerCountColumn = "{$sAnswerColumn}_filecount";
+        $sAnswerCountColumn = "{$sAnswerColumn}_Cfilecount";
         $uploadSurveyDir = App()->getConfig("uploaddir")
             . DIRECTORY_SEPARATOR
             . "surveys"

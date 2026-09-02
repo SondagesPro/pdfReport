@@ -424,7 +424,10 @@ class pdfReport extends PluginBase
                 array(':attribute' => 'pdfReport',':qid' => $oEvent->get('qid'))
             );
             if ($oQuestionPdfReport && intval($oQuestionPdfReport->value)) {
-                $inputName = "{$oEvent->get('surveyId')}X{$oEvent->get('gid')}X{$oEvent->get('qid')}";
+                $inputName = "Q{$oEvent->get('qid')}";
+                if (intval(App()->getConfig('versionnumber') < 7) {
+                    $inputName = "{$this->surveyId}X{$oQuestion->gid}X{$oQuestion->qid}";
+                }
                 $sessionSurvey = Yii::app()->session["survey_{$this->surveyId}"];
                 $value = $sessionSurvey[$inputName] ?? "";
                 $value_count = $sessionSurvey["{$inputName}_filecount"] ?? 0;
@@ -919,7 +922,10 @@ class pdfReport extends PluginBase
         if (!$oSurvey || $oSurvey->active != 'Y') {
             return;
         }
-        $sAnswerColumn = "{$this->surveyId}X{$oQuestion->gid}X{$oQuestion->qid}";
+        $sAnswerColumn = "Q{$oQuestion->qid}";
+        if (intval(App()->getConfig('versionnumber') < 7) {
+            $sAnswerColumn = "{$this->surveyId}X{$oQuestion->gid}X{$oQuestion->qid}";
+        }
         $sAnswerCountColumn = "{$sAnswerColumn}_filecount";
         $uploadSurveyDir = App()->getConfig("uploaddir")
             . DIRECTORY_SEPARATOR

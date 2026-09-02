@@ -3,7 +3,7 @@ pdfReport
 
 Use question text to create a pdf report : send it by email, save in survey.
 
-This plugin is currently compatible with LimeSurvey 3.X and 5.X version
+This plugin is currently compatible with LimeSurvey 3, 5,  6 and 7
 
 ## Installation
 
@@ -61,7 +61,7 @@ You can check two sample of pdf report:
 
 ## Home page & Copyright
 - HomePage <http://extensions.sondages.pro/>
-- Copyright © 2015-2022 Denis Chenu <https://sondages.pro>
+- Copyright © 2015-2026 Denis Chenu <https://sondages.pro>
 - Copyright © 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
 - Copyright © 2015 Ingeus <http://www.ingeus.fr/>
 - [Issue](https://gitlab.com/SondagesPro/ExportAndStats/pdfReport/-/issues) and [code contribution](https://gitlab.com/SondagesPro/ExportAndStats/pdfReport/-/merge_requests) _No free support_ 

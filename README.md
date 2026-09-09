@@ -64,8 +64,17 @@ You can check two sample of pdf report:
 - Copyright © 2015-2026 Denis Chenu <https://sondages.pro>
 - Copyright © 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
 - Copyright © 2015 Ingeus <http://www.ingeus.fr/>
-- [Issue](https://gitlab.com/SondagesPro/ExportAndStats/pdfReport/-/issues) and [code contribution](https://gitlab.com/SondagesPro/ExportAndStats/pdfReport/-/merge_requests) _No free support_ 
-- [Professional Support](https://support.sondages.pro)
-- [Donate](https://support.sondages.pro/open.php?topicId=12), [Liberapay](https://liberapay.com/SondagesPro/), [OpenCollective](https://opencollective.com/sondagespro)
 
 Distributed under [GNU AFFERO GENERAL PUBLIC LICENSE Version 3](http://www.gnu.org/licenses/agpl.txt) licence
+
+## Support
+- Report Issues <https://gitlab.com/SondagesPro/ExportAndStats/pdfReport/-/work_items>
+- Professional support <https://support.sondages.pro/>
+
+## Acknowledgements
+
+If you find this project useful, you can support its development through [Donate](https://support.sondages.pro/open.php?topicId=12), [Liberapay](https://liberapay.com/SondagesPro/), or [OpenCollective](https://opencollective.com/sondagespro). Thank you!
+
+Code quality and security are continuously analyzed by [SonarCloud](https://sonarcloud.io/) [CodeRabbit](https://coderabbit.ai/), [Snyk](https://snyk.io/), and [Semgrep](https://semgrep.dev/).
+
+Thanks to GitLab for providing the hosting platform, and to SonarCloud, CodeRabbit, Snyk, and Semgrep for making their services available to open source projects.

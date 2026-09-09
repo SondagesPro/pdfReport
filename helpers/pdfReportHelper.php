@@ -124,7 +124,7 @@ class pdfReportHelper extends pdf
             curl_close($curl);
         } else {
             $headers = @get_headers($url);
-            if ($header) {
+            if ($headers) {
                 $aImageInfo['code'] = substr($headers[0], 9, 3);
             }
         }

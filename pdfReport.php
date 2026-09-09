@@ -949,7 +949,7 @@ class pdfReport extends PluginBase
 
         $reportSavedFileName = $this->pdfReportGetPdfSavedFileName($oQuestion);
 
-        $sDestinationFileName = 'fu_' . hexdec(crc32($this->responseId . rand(1, 10000) . $oQuestion->title));
+        $sDestinationFileName = 'fu_' . randomChars(15);
         if (!copy($fileName, $uploadSurveyDir . $sDestinationFileName)) {
             Yii::log("Error moving file $fileName to $uploadSurveyDir", 'error', 'application.plugins.pdfReport');
             return;
@@ -1047,11 +1047,11 @@ class pdfReport extends PluginBase
         );
         /* For unicity : make an unique responseId big number : only for testing or deactivated survey*/
         if (empty($this->responseId)) {
-            $this->responseId = hexdec(crc32(time() . rand(1, 1000)));
+            $this->responseId = random_int(1, 1000000000);
         }
         if (!empty($_SESSION["survey_{$this->surveyId}"]['token']) && $this->get("usetokenfilename", null, null, $this->settings['usetokenfilename']['default']) !== 'none') {
             $aFilePdfName[] = $_SESSION["survey_{$this->surveyId}"]['token'];
-            if ($this->get("usetokenfilename", null, null, $this->settings['usetokenfilename']['default']) == !'alone') {
+            if ($this->get("usetokenfilename", null, null, $this->settings['usetokenfilename']['default']) ==! 'alone') {
                 $aFilePdfName[] = $this->responseId;
             }
         } else {

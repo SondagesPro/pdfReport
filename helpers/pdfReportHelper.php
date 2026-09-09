@@ -58,7 +58,7 @@ class pdfReportHelper extends pdf
     {
         Yii::log("Image " . $file . " tested", 'trace', 'application.plugins.sendPdfReport.pdfReportHelper.Image');
         /* Specific system of pdf : didn't touch */
-        if ($file !== '' && $file[0] === '@' || $file[0] === '*') {
+        if ($file !== '' && ($file[0] === '@' || $file[0] === '*')) {
             return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
         }
         /* data:image : didn't touch */
@@ -103,17 +103,21 @@ class pdfReportHelper extends pdf
         ];
         $docRoot = realpath(isset($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : "");
         if ($docRoot) {
-            $allowedPaths[] = ['/', $docRoot];
+            $allowedPaths[] = [
+                'url' => '/',
+                'path' => $docRoot
+            ];
         }
         foreach ($allowedPaths as $allowed) {
-            if (strpos($file, $allowed['url']) !== 0) {
+            if (empty($allowed['url']) || strpos($file, $allowed['url']) !== 0) {
                 continue;
             }
             $basePath = realpath($allowed['path']);
             if (!$basePath) {
                 continue;
             }
-            $resolvedPath = realpath($basePath . DIRECTORY_SEPARATOR . $file);
+            $relativePath = ltrim(substr($file, strlen($allowed['url'])), '/\\');
+            $resolvedPath = realpath($basePath . DIRECTORY_SEPARATOR . $relativePath);
             if (
                 $resolvedPath &&
                 strpos($resolvedPath, $basePath . DIRECTORY_SEPARATOR) === 0
@@ -121,6 +125,7 @@ class pdfReportHelper extends pdf
                 return self::fileIsImage($resolvedPath) ? $resolvedPath : false;
             }
         }
+        return false;
     }
 
     /**
@@ -142,7 +147,7 @@ class pdfReportHelper extends pdf
             "image/x-icon",
             "image/vnd.microsoft.icon"
         );
-        $checkImage = CFileHelper::getMimeType($filename, null, false);
+        $checkImage = CFileHelper::getMimeType($filename, null, true);
         if (
             !empty($checkImage)
             && in_array($checkImage, $allowedImageFormats)
@@ -180,7 +185,7 @@ class pdfReportHelper extends pdf
             curl_close($curl);
         } else {
             $headers = @get_headers($url);
-            if ($header) {
+            if (!empty($headers[0])) {
                 $aImageInfo['code'] = substr($headers[0], 9, 3);
             }
         }

@@ -522,7 +522,10 @@ class pdfReport extends PluginBase
         }
 
         /* The survey */
-        $surveyid = Yii::app()->getRequest()->getParam("surveyid", Yii::app()->getRequest()->getParam("sid"));
+        $surveyid = intval(App()->getRequest()->getParam("surveyid", Yii::app()->getRequest()->getParam("sid")));
+        if (!$surveyid) {
+            throw new CHttpException(400, gT('Invalid request'));
+        }
         $oSurvey = Survey::model()->findByPk($surveyid);
         if (!$oSurvey) {
             throw new CHttpException(404, gT('Invalid survey ID'));

@@ -501,8 +501,8 @@ class pdfReport extends PluginBase
             throw new CHttpException(403);
         }
         if ($this->event->get('controller') == 'printanswers') {
-            $aPdfReportPrintRight = Yii::app()->session["pdfReportPrintRight"];
-            $surveyid = Yii::app()->getRequest()->getQuery('surveyid');
+            $aPdfReportPrintRight = App()->session["pdfReportPrintRight"];
+            $surveyid = intval(App()->getRequest()->getQuery('surveyid'));
             /* find if one question have print settings */
             if (isset($aPdfReportPrintRight[$surveyid]['replace'])) {
                 $this->publicPdfDownload($surveyid, $aPdfReportPrintRight[$surveyid]['replace']);

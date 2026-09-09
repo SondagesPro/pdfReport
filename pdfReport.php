@@ -5,11 +5,11 @@
  * Use question settings to create a report and send it by email.
  *
  * @author Denis Chenu <https://sondages.pro>
- * @copyright 2015-2024 Denis Chenu <https://sondages.pro>
+ * @copyright 2015-2026 Denis Chenu <https://sondages.pro>
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 2.3.3
+ * @version 2.4.2
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -424,7 +424,10 @@ class pdfReport extends PluginBase
                 array(':attribute' => 'pdfReport',':qid' => $oEvent->get('qid'))
             );
             if ($oQuestionPdfReport && intval($oQuestionPdfReport->value)) {
-                $inputName = "{$oEvent->get('surveyId')}X{$oEvent->get('gid')}X{$oEvent->get('qid')}";
+                $inputName = "Q{$oEvent->get('qid')}";
+                if (intval(App()->getConfig('versionnumber')) < 7) {
+                    $inputName = "{$this->surveyId}X{$oEvent->get('gid')}X{$oEvent->get('qid')}";
+                }
                 $sessionSurvey = Yii::app()->session["survey_{$this->surveyId}"];
                 $value = $sessionSurvey[$inputName] ?? "";
                 $value_count = $sessionSurvey["{$inputName}_filecount"] ?? 0;
@@ -498,8 +501,8 @@ class pdfReport extends PluginBase
             throw new CHttpException(403);
         }
         if ($this->event->get('controller') == 'printanswers') {
-            $aPdfReportPrintRight = Yii::app()->session["pdfReportPrintRight"];
-            $surveyid = Yii::app()->getRequest()->getQuery('surveyid');
+            $aPdfReportPrintRight = App()->session["pdfReportPrintRight"];
+            $surveyid = intval(App()->getRequest()->getQuery('surveyid'));
             /* find if one question have print settings */
             if (isset($aPdfReportPrintRight[$surveyid]['replace'])) {
                 $this->publicPdfDownload($surveyid, $aPdfReportPrintRight[$surveyid]['replace']);
@@ -519,7 +522,10 @@ class pdfReport extends PluginBase
         }
 
         /* The survey */
-        $surveyid = Yii::app()->getRequest()->getParam("surveyid", Yii::app()->getRequest()->getParam("sid"));
+        $surveyid = intval(App()->getRequest()->getParam("surveyid", Yii::app()->getRequest()->getParam("sid")));
+        if (!$surveyid) {
+            throw new CHttpException(400, gT('Invalid request'));
+        }
         $oSurvey = Survey::model()->findByPk($surveyid);
         if (!$oSurvey) {
             throw new CHttpException(404, gT('Invalid survey ID'));
@@ -919,8 +925,14 @@ class pdfReport extends PluginBase
         if (!$oSurvey || $oSurvey->active != 'Y') {
             return;
         }
-        $sAnswerColumn = "{$this->surveyId}X{$oQuestion->gid}X{$oQuestion->qid}";
-        $sAnswerCountColumn = "{$sAnswerColumn}_filecount";
+        $sAnswerColumn = "Q{$oQuestion->qid}";
+        if (intval(App()->getConfig('versionnumber')) < 7) {
+            $sAnswerColumn = "{$this->surveyId}X{$oQuestion->gid}X{$oQuestion->qid}";
+        }
+        $sAnswerCountColumn = "{$sAnswerColumn}_Cfilecount";
+        if (intval(App()->getConfig('versionnumber')) < 7) {
+            $sAnswerCountColumn = "{$sAnswerColumn}_filecount";
+        }
         $uploadSurveyDir = App()->getConfig("uploaddir")
             . DIRECTORY_SEPARATOR
             . "surveys"
@@ -937,7 +949,7 @@ class pdfReport extends PluginBase
 
         $reportSavedFileName = $this->pdfReportGetPdfSavedFileName($oQuestion);
 
-        $sDestinationFileName = 'fu_' . hexdec(crc32($this->responseId . rand(1, 10000) . $oQuestion->title));
+        $sDestinationFileName = 'fu_' . randomChars(15);
         if (!copy($fileName, $uploadSurveyDir . $sDestinationFileName)) {
             Yii::log("Error moving file $fileName to $uploadSurveyDir", 'error', 'application.plugins.pdfReport');
             return;
@@ -1002,7 +1014,11 @@ class pdfReport extends PluginBase
             $this->pdfReportGetPdfSavedFileName($oQuestion)
         );
         if ($aQuestionsAttributes['pdfReportSendByEmailAttachment']) {
-            $mailer->addAttachementsByType();
+            if (intval(App()->getConfig('versionnumber')) >= 7) {
+                $mailer->addAttachmentsByType();
+            } else {
+                $mailer->addAttachementsByType();
+            }
         }
         /* Update type */
         $mailer->emailType = 'plugin_pdfReport';
@@ -1031,11 +1047,11 @@ class pdfReport extends PluginBase
         );
         /* For unicity : make an unique responseId big number : only for testing or deactivated survey*/
         if (empty($this->responseId)) {
-            $this->responseId = hexdec(crc32(time() . rand(1, 1000)));
+            $this->responseId = random_int(1, 1000000000);
         }
         if (!empty($_SESSION["survey_{$this->surveyId}"]['token']) && $this->get("usetokenfilename", null, null, $this->settings['usetokenfilename']['default']) !== 'none') {
             $aFilePdfName[] = $_SESSION["survey_{$this->surveyId}"]['token'];
-            if ($this->get("usetokenfilename", null, null, $this->settings['usetokenfilename']['default']) == !'alone') {
+            if ($this->get("usetokenfilename", null, null, $this->settings['usetokenfilename']['default']) ==! 'alone') {
                 $aFilePdfName[] = $this->responseId;
             }
         } else {

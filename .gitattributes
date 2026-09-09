@@ -1,0 +1,25 @@
+.gitattributes export-ignore
+.gitlab-ci.yml export-ignore
+sonar-project.properties export-ignore
+README.md export-ignore
+SECURITY.md export-ignore
+demo/** export-ignore
+
+# Set default behaviour, in case users don't have core.autocrlf set.
+* text=auto
+
+# Declare files that will always have LF line endings on checkout.
+*.php text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.html text eol=lf
+*.twig text eol=lf
+*.md text eol=lf
+
+# Denote all files that are truly binary and should not be modified.
+*.jpg binary
+*.png binary
+*.gif binary
+*.ico binary
+*.mo binary
+*.zip binary

@@ -9,7 +9,7 @@
  * @copyright 2017 Réseau en scène Languedoc-Roussillon <https://www.reseauenscene.fr/>
  * @copyright 2015 Ingeus <http://www.ingeus.fr/>
  * @license AGPL v3
- * @version 2.4.1
+ * @version 2.4.2
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -927,6 +927,9 @@ class pdfReport extends PluginBase
             $sAnswerColumn = "{$this->surveyId}X{$oQuestion->gid}X{$oQuestion->qid}";
         }
         $sAnswerCountColumn = "{$sAnswerColumn}_Cfilecount";
+        if (intval(App()->getConfig('versionnumber')) < 7) {
+            $sAnswerCountColumn = "{$sAnswerColumn}_filecount";
+        }
         $uploadSurveyDir = App()->getConfig("uploaddir")
             . DIRECTORY_SEPARATOR
             . "surveys"

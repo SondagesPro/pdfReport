@@ -56,9 +56,9 @@ class pdfReportHelper extends pdf
 
     public function Image($file, $x = '', $y = '', $w = 0, $h = 0, $type = '', $link = '', $align = '', $resize = false, $dpi = 300, $palign = '', $ismask = false, $imgmask = false, $border = 0, $fitbox = false, $hidden = false, $fitonpage = false, $alt = false, $altimgs = array())
     {
-        Yii::log("Image " . $file . " tested", 'info', 'application.plugins.sendPdfReport.pdfReportHelper.Image');
+        Yii::log("Image " . $file . " tested", 'trace', 'application.plugins.sendPdfReport.pdfReportHelper.Image');
         /* Specific system of pdf : didn't touch */
-        if ($file[0] === '@' || $file[0] === '*') {
+        if ($file !== '' && ($file[0] === '@' || $file[0] === '*')) {
             return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
         }
         /* data:image : didn't touch */
@@ -68,25 +68,9 @@ class pdfReportHelper extends pdf
             }
             return parent::Image("@" . $file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
         }
-        /* File in server : 3 part : direct, in DOCUMENT_ROOT (if set) absolutePath from Yii */
-        if (@file_exists($file)) {
-            // @todo : check if it's a valid image
-            return parent::Image($file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
-        }
-        if ($file[0] === '/') {
-            $docRoot = isset($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : "";
-            if (@file_exists($docRoot . "/" . $file)) {
-                // @todo : check if it's a valid image
-                return parent::Image($docRoot . "/" . $file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
-            }
-        }
-        if (@file_exists($this->sAbsolutePath . "/" . $file)) {
-            // @todo : check if it's a valid image
-            return parent::Image($this->sAbsolutePath . "/" . $file, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
-        }
-        /* Same server but didn't find with previous (can be deleted or DOCUMENT_ROOT is broken, or using alias etc … */
-        if ($file[0] === '/') {
-            $file = $this->sAbsoluteUrl . $file;
+        /* File in server  */
+        if ($filepath = self::validateImageFile($file)) {
+            return parent::Image($filepath, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, $ismask, $imgmask, $border, $fitbox, $hidden, true, $alt, $altimgs);
         }
         /* Test loading image and image have width and height (else broke pdf) */
         if ($this->isValidUrlImageInfo($file)) {
@@ -97,11 +81,88 @@ class pdfReportHelper extends pdf
     }
 
     /**
+     * Check if a file is inside an allowed directory and is an image
+     * @param string
+     * @return string|false
+     */
+    private static function validateImageFile($file)
+    {
+        $allowedPaths = [
+            [
+                'url'  => App()->getConfig('uploaddir'),
+                'path' => App()->getConfig('uploaddir'),
+            ],
+            [
+                'url'  => App()->assetManager->getBaseUrl(),
+                'path' => App()->assetManager->getBasePath(),
+            ],
+            [
+                'url'  => App()->getConfig('publicurl'),
+                'path' => App()->getConfig('publicdir'),
+            ],
+        ];
+        $docRoot = realpath(isset($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] : "");
+        if ($docRoot) {
+            $allowedPaths[] = [
+                'url' => '/',
+                'path' => $docRoot
+            ];
+        }
+        foreach ($allowedPaths as $allowed) {
+            if (empty($allowed['url']) || strpos($file, $allowed['url']) !== 0) {
+                continue;
+            }
+            $basePath = realpath($allowed['path']);
+            if (!$basePath) {
+                continue;
+            }
+            $relativePath = ltrim(substr($file, strlen($allowed['url'])), '/\\');
+            $resolvedPath = realpath($basePath . DIRECTORY_SEPARATOR . $relativePath);
+            if (
+                $resolvedPath &&
+                strpos($resolvedPath, $basePath . DIRECTORY_SEPARATOR) === 0
+            ) {
+                return self::fileIsImage($resolvedPath) ? $resolvedPath : false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if a file is an image
+     * @param $filename with complete path
+     * @return boolean
+     */
+    private static function fileIsImage($filename)
+    {
+        /** @var string[] */
+        $allowedImageFormats = array(
+            "image/png",
+            "image/jpg",
+            "image/jpeg",
+            "image/ico",
+            "image/gif",
+            "image/svg+xml",
+            "image/svg",
+            "image/x-icon",
+            "image/vnd.microsoft.icon"
+        );
+        $checkImage = CFileHelper::getMimeType($filename, null, true);
+        if (
+            !empty($checkImage)
+            && in_array($checkImage, $allowedImageFormats)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Get the header code
      * @param $url to be tested
      * @return boolean
      */
-    private function isValidUrlImageInfo($url)
+    private static function isValidUrlImageInfo($url)
     {
         /* preferred method : curl */
         if ((extension_loaded("curl"))) {
@@ -124,11 +185,11 @@ class pdfReportHelper extends pdf
             curl_close($curl);
         } else {
             $headers = @get_headers($url);
-            if ($headers) {
+            if (!empty($headers[0])) {
                 $aImageInfo['code'] = substr($headers[0], 9, 3);
             }
         }
-        if ($aImageInfo['code'] != 200) {
+        if (empty($aImageInfo['code']) || $aImageInfo['code'] != 200) {
             Yii::log("Image " . $url . " invalid header " . $aImageInfo['code'], 'warning', 'application.plugins.sendPdfReport.pdfReportHelper.isValidUrlImageInfo');
             return false;
         }
